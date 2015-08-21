@@ -15,6 +15,7 @@
 		96C249231B85660F00AF01BE /* OnTheClock1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C249221B85660F00AF01BE /* OnTheClock1Tests.swift */; };
 		96C2492E1B862CCF00AF01BE /* TimeRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2492D1B862CCF00AF01BE /* TimeRecord.swift */; };
 		96C2492F1B862CCF00AF01BE /* TimeRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2492D1B862CCF00AF01BE /* TimeRecord.swift */; };
+		96C249311B86A76700AF01BE /* TimeRecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C249301B86A76700AF01BE /* TimeRecordViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +40,7 @@
 		96C249221B85660F00AF01BE /* OnTheClock1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnTheClock1Tests.swift; sourceTree = "<group>"; };
 		96C249241B85660F00AF01BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		96C2492D1B862CCF00AF01BE /* TimeRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeRecord.swift; sourceTree = "<group>"; };
+		96C249301B86A76700AF01BE /* TimeRecordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeRecordViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,7 @@
 				96C2490D1B85660F00AF01BE /* AppDelegate.swift */,
 				96C2490F1B85660F00AF01BE /* ViewController.swift */,
 				96C249111B85660F00AF01BE /* Main.storyboard */,
+				96C249301B86A76700AF01BE /* TimeRecordViewController.swift */,
 				96C249141B85660F00AF01BE /* Assets.xcassets */,
 				96C249161B85660F00AF01BE /* LaunchScreen.storyboard */,
 				96C249191B85660F00AF01BE /* Info.plist */,
@@ -202,6 +205,7 @@
 			files = (
 				96C249101B85660F00AF01BE /* ViewController.swift in Sources */,
 				96C2492E1B862CCF00AF01BE /* TimeRecord.swift in Sources */,
+				96C249311B86A76700AF01BE /* TimeRecordViewController.swift in Sources */,
 				96C2490E1B85660F00AF01BE /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
