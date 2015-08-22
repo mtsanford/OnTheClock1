@@ -83,7 +83,13 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, UINavigat
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if doneButton === sender {
             pause()
-            timeRecord = TimeRecord(activity: activityString!, start: startTime!, duration: Int(accumulatedTime/60.0))
+            
+            
+            //let minutes = Int(accumulatedTime/60.0)
+            let minutes = Int(ceil(accumulatedTime/60.0)) //!!! FORCE < 60 seconds to 1 min for testing, or we get nil TimeRecord
+            
+            
+            timeRecord = TimeRecord(activity: activityString!, start: startTime!, duration: minutes)
             print("done")
             print("accumulatedTime: + \(accumulatedTime)")
             print("firstStartTime: + \(firstStartTime!)")
