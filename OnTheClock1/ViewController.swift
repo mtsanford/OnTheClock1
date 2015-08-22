@@ -22,6 +22,15 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    @IBAction func unwindToMainView(sender: UIStoryboardSegue) {
+        print("unwindToMainView")
+        if let sourceViewController = sender.sourceViewController as? TimeRecordViewController, timeRecord = sourceViewController.timeRecord {
+            print(timeRecord.start);
+            print(timeRecord.duration);
+            print(timeRecord.activity);
+        }
+    }
 
 }
 

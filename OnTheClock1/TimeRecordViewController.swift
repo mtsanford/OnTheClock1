@@ -8,30 +8,37 @@
 
 import UIKit
 
-class TimeRecordViewController: UIViewController {
+class TimeRecordViewController: UIViewController, UITextFieldDelegate, UINavigationControllerDelegate {
     
     // MARK: Properties
     @IBOutlet weak var cancelButton: UIBarButtonItem!
     @IBOutlet weak var doneButton: UIBarButtonItem!
+    @IBOutlet weak var activityTextField: UITextField!
     @IBOutlet weak var startStopButton: UIButton!
     @IBOutlet weak var startTimeLabel: UILabel!
     @IBOutlet weak var timeWorkedLabel: UILabel!
 
     var timer: NSTimer?
     var startTime: NSDate?
+    var firstStartTime: NSDate?
+    var accumulatedTimeLastPause: NSTimeInterval
+    var accumulatedTime: NSTimeInterval
+    var activityString: String?
     var running: Bool = false
     
-    var timeRecord = TimeRecord?()
+    var timeRecord: TimeRecord?
 
     required init?(coder aDecoder: NSCoder) {
         self.timer = nil
+        self.accumulatedTime = 0.0
+        self.accumulatedTimeLastPause = 0.0
         super.init(coder: aDecoder)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        activityTextField.delegate = self
+        startStopButton.setTitle("Start", forState: .Normal)
     }
 
     override func didReceiveMemoryWarning() {
@@ -39,12 +46,26 @@ class TimeRecordViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
+    // MARK: UITextFieldDelegate
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func textFieldDidBeginEditing(textField: UITextField) {
+    }
+    
+    func textFieldDidEndEditing(textField: UITextField) {
+        print("textFieldDidEndEditing\(activityTextField.text)");
+        navigationItem.title = activityTextField.text
+        activityString = activityTextField.text
+    }
+    
+    
     // MARK: - Navigation
     @IBAction func cancel(sender: UIBarButtonItem) {
-        if running {
-            // If the timer is running, ask user to confirm cancel
-            let refreshAlert = UIAlertController(title: "Cancel work?", message: "You are currently on the clock.  Cancel and loose this record?", preferredStyle: UIAlertControllerStyle.Alert)
+        if accumulatedTime >= 60.0 {
+            let refreshAlert = UIAlertController(title: "Cancel work?", message: "Cancel and forget about this work period?", preferredStyle: UIAlertControllerStyle.Alert)
             
             refreshAlert.addAction(UIAlertAction(title: "Confirm cancel", style: .Default, handler: { (action: UIAlertAction!) in
                 self.dismissViewControllerAnimated(true, completion: nil)
@@ -57,34 +78,59 @@ class TimeRecordViewController: UIViewController {
         }
     }
 
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if cancelButton === sender {
-            
+        if doneButton === sender {
+            pause()
+            timeRecord = TimeRecord(activity: activityString!, start: startTime!, duration: Int(accumulatedTime/60.0))
+            print("done")
+            print("accumulatedTime: + \(accumulatedTime)")
+            print("firstStartTime: + \(firstStartTime!)")
         }
     }
 
     @IBAction func startStopPressed(sender: UIButton) {
         if running {
-            running = false
-            timer?.invalidate()
-            startStopButton.setTitle("Start", forState: .Normal)
-            doneButton.enabled = true
+            pause()
         }
         else {
             running = true
             startTime = NSDate()
-            let startTimeFormatter = NSDateFormatter()
-            startTimeFormatter.dateFormat = "h:mm a"
-            startTimeLabel.text = startTimeFormatter.stringFromDate(startTime!)
-            print("started at \(startTime)")
-            timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("timerTick"), userInfo: nil, repeats: true)
-            startStopButton.setTitle("Stop", forState: .Normal)
+            updateTime()
+            print("timer started at \(startTime)")
+            if firstStartTime === nil  {
+                firstStartTime = startTime?.dateByAddingTimeInterval(0.0)
+                let startTimeFormatter = NSDateFormatter()
+                startTimeFormatter.dateFormat = "h:mm a"
+                startTimeLabel.text = startTimeFormatter.stringFromDate(startTime!)
+                print("initial start at \(firstStartTime)")
+            }
+            doneButton.enabled = false
+            timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("updateTime"), userInfo: nil, repeats: true)
+            startStopButton.setTitle("Pause", forState: .Normal)
         }
     }
     
-    func timerTick() {
-        print("got a tick")
+    func pause() {
+        running = false
+        timer?.invalidate()
+        updateTime()
+        accumulatedTimeLastPause = accumulatedTime
+        startStopButton.setTitle("Continue", forState: .Normal)
+        
+        let timeSinceStart = -(startTime?.timeIntervalSinceNow)!
+        print("timeSinceStart: \(timeSinceStart)")
+        print("accumulatedTime: + \(accumulatedTime)")
+    }
+    
+    func updateTime() {
+        accumulatedTime = accumulatedTimeLastPause - (startTime?.timeIntervalSinceNow)!
+        let minutes = Int(floor(accumulatedTime / 60.0))
+        timeWorkedLabel.text = "\(minutes) minutes"
+        if (accumulatedTime > 3.0) {
+            doneButton.enabled = true
+        }
     }
     
 }
