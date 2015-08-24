@@ -69,20 +69,8 @@
                                     <action selector="startStopPressed:" destination="3mo-3V-SmK" eventType="touchUpInside" id="9Lb-fn-yk3"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Time worked:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K7e-vh-SQi">
-                                <rect key="frame" x="20" y="209" width="112" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V0Y-xr-mKR">
                                 <rect key="frame" x="140" y="180" width="440" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y39-Qf-xKU">
-                                <rect key="frame" x="140" y="209" width="440" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
@@ -93,8 +81,29 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1gS-E4-w0K">
+                                <rect key="frame" x="254" y="304" width="91" height="72"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="15" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ikb-fV-mQx">
+                                        <rect key="frame" x="0.0" y="0.0" width="63" height="72"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="60"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="min" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="unk-RD-lk3">
+                                        <rect key="frame" x="63" y="0.0" width="28" height="72"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="1gS-E4-w0K" firstAttribute="centerY" secondItem="3Nf-B1-8pX" secondAttribute="centerY" id="QGe-7q-CLi"/>
+                            <constraint firstItem="1gS-E4-w0K" firstAttribute="centerX" secondItem="3Nf-B1-8pX" secondAttribute="centerX" id="cJv-rm-BnV"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Work!" id="97Z-Vb-GYr">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="IYa-PO-Ubu">
@@ -112,9 +121,9 @@
                         <outlet property="activityTextField" destination="qi8-TQ-pir" id="nXX-h7-gE8"/>
                         <outlet property="cancelButton" destination="IYa-PO-Ubu" id="sHN-KW-ffU"/>
                         <outlet property="doneButton" destination="WWx-WD-fZo" id="vPZ-xs-mt1"/>
+                        <outlet property="minutesLabel" destination="Ikb-fV-mQx" id="che-kj-jpR"/>
                         <outlet property="startStopButton" destination="jpN-8q-aFj" id="Ii1-di-Rwo"/>
                         <outlet property="startTimeLabel" destination="V0Y-xr-mKR" id="oKF-N5-OPY"/>
-                        <outlet property="timeWorkedLabel" destination="y39-Qf-xKU" id="yZm-Iy-V5q"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iqo-zG-5wA" userLabel="First Responder" sceneMemberID="firstResponder"/>
