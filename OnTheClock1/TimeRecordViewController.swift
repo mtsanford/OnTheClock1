@@ -15,7 +15,9 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, UINavigat
     @IBOutlet weak var doneButton: UIBarButtonItem!
     @IBOutlet weak var activityTextField: UITextField!
     @IBOutlet weak var startStopButton: UIButton!
+    @IBOutlet weak var activityLabel: UILabel!
     @IBOutlet weak var startTimeLabel: UILabel!
+    @IBOutlet weak var minutesStackView: UIStackView!
     @IBOutlet weak var minutesLabel: UILabel!
 
     var timer: NSTimer?
@@ -25,9 +27,12 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, UINavigat
     var accumulatedTime: NSTimeInterval
     var activityString: String?
     var running: Bool = false
+    let minimumWorkTime = 60.0
     
     var timeRecord: TimeRecord?
 
+    // TODO: Does this need to be implemented correctly?
+    // could be "freeze dried" if put into background?
     required init?(coder aDecoder: NSCoder) {
         self.timer = nil
         self.accumulatedTime = 0.0
@@ -39,6 +44,10 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, UINavigat
         super.viewDidLoad()
         activityTextField.delegate = self
         startStopButton.setTitle("Start", forState: .Normal)
+        activityLabel.hidden = true
+        startTimeLabel.hidden = true
+        minutesStackView.hidden = true
+        startStopButton.hidden = true
     }
 
     override func didReceiveMemoryWarning() {
@@ -57,15 +66,27 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, UINavigat
     
     func textFieldDidEndEditing(textField: UITextField) {
         print("textFieldDidEndEditing\(activityTextField.text)");
-        navigationItem.title = activityTextField.text
-        activityString = activityTextField.text
+        setActivityText(activityTextField.text)
     }
     
     
+    func setActivityText(activity: String?) {
+        activityString = activity
+        activityLabel.text = activityString
+        if (activityLabel == nil || activityString!.characters.count == 0) {
+            activityLabel.hidden = true
+            startStopButton.hidden = true
+        }
+        else {
+            activityLabel.hidden = false
+            startStopButton.hidden = false
+        }
+    }
+    
     // MARK: - Navigation
     @IBAction func cancel(sender: UIBarButtonItem) {
-        if accumulatedTime >= 60.0 {
-            let refreshAlert = UIAlertController(title: "Cancel work?", message: "Cancel and forget about this work period?", preferredStyle: UIAlertControllerStyle.Alert)
+        if accumulatedTime >= minimumWorkTime {
+            let refreshAlert = UIAlertController(title: "Cancel work?", message: "Cancel and forget about this work session?", preferredStyle: UIAlertControllerStyle.Alert)
             
             refreshAlert.addAction(UIAlertAction(title: "Confirm cancel", style: .Default, handler: { (action: UIAlertAction!) in
                 self.dismissViewControllerAnimated(true, completion: nil)
@@ -75,6 +96,9 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, UINavigat
             }))
             
             presentViewController(refreshAlert, animated: true, completion: nil)
+        }
+        else {
+            self.dismissViewControllerAnimated(true, completion: nil)
         }
     }
 
@@ -86,7 +110,8 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, UINavigat
             
             
             //let minutes = Int(accumulatedTime/60.0)
-            let minutes = Int(ceil(accumulatedTime/60.0)) //!!! FORCE < 60 seconds to 1 min for testing, or we get nil TimeRecord
+            var minutes = Int(accumulatedTime/60.0)
+            if (minutes < 1) { minutes = 1 }  //!!! FORCE < 60 seconds to 1 min for testing, or we get nil TimeRecord
             
             
             timeRecord = TimeRecord(activity: activityString!, start: startTime!, duration: minutes)
@@ -109,12 +134,17 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, UINavigat
                 firstStartTime = startTime?.dateByAddingTimeInterval(0.0)
                 let startTimeFormatter = NSDateFormatter()
                 startTimeFormatter.dateFormat = "h:mm a"
-                startTimeLabel.text = startTimeFormatter.stringFromDate(startTime!)
+                let startTimeText = startTimeFormatter.stringFromDate(startTime!)
+                startTimeLabel.text = "Started at \(startTimeText)"
+                startTimeLabel.hidden = false
+                minutesStackView.hidden = false
                 print("initial start at \(firstStartTime)")
             }
+            activityTextField.hidden = true
             doneButton.enabled = false
             timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("updateTime"), userInfo: nil, repeats: true)
             startStopButton.setTitle("Pause", forState: .Normal)
+            self.view.backgroundColor = UIColor.greenColor()
         }
     }
     
@@ -124,6 +154,8 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, UINavigat
         updateTime()
         accumulatedTimeLastPause = accumulatedTime
         startStopButton.setTitle("Continue", forState: .Normal)
+        activityTextField.hidden = false
+        self.view.backgroundColor = UIColor.lightGrayColor()
         
         let timeSinceStart = -(startTime?.timeIntervalSinceNow)!
         print("timeSinceStart: \(timeSinceStart)")
@@ -134,9 +166,7 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, UINavigat
         accumulatedTime = accumulatedTimeLastPause - (startTime?.timeIntervalSinceNow)!
         let minutes = Int(floor(accumulatedTime / 60.0))
         minutesLabel.text = "\(minutes)"
-        if (accumulatedTime > 3.0) {
-            doneButton.enabled = true
-        }
+        doneButton.enabled = accumulatedTime >= minimumWorkTime
     }
     
 }

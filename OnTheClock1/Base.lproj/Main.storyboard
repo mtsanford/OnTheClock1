@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8173.3" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8142"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -45,7 +46,7 @@
             </objects>
             <point key="canvasLocation" x="456" y="485"/>
         </scene>
-        <!--Work!-->
+        <!--Work session-->
         <scene sceneID="tmK-h5-O1o">
             <objects>
                 <viewController id="3mo-3V-SmK" customClass="TimeRecordViewController" customModule="OnTheClock1" customModuleProvider="target" sceneMemberID="viewController">
@@ -57,41 +58,50 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="activity name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qi8-TQ-pir">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="activity name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qi8-TQ-pir">
                                 <rect key="frame" x="20" y="104" width="560" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jpN-8q-aFj">
-                                <rect key="frame" x="20" y="142" width="70" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jpN-8q-aFj">
+                                <rect key="frame" x="265" y="142" width="70" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <state key="normal" title="Start"/>
                                 <connections>
                                     <action selector="startStopPressed:" destination="3mo-3V-SmK" eventType="touchUpInside" id="9Lb-fn-yk3"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V0Y-xr-mKR">
-                                <rect key="frame" x="140" y="180" width="440" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V0Y-xr-mKR">
+                                <rect key="frame" x="197" y="255" width="207" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="207" id="ivD-nG-4pL"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="ivD-nG-4pL"/>
+                                    </mask>
+                                </variation>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Start time:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="axt-p3-W1g">
-                                <rect key="frame" x="20" y="180" width="112" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mIY-he-JMz">
+                                <rect key="frame" x="197" y="226" width="207" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1gS-E4-w0K">
-                                <rect key="frame" x="254" y="304" width="91" height="72"/>
+                                <rect key="frame" x="267" y="304" width="77" height="96"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="15" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ikb-fV-mQx">
-                                        <rect key="frame" x="0.0" y="0.0" width="63" height="72"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="60"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ikb-fV-mQx">
+                                        <rect key="frame" x="0.0" y="0.0" width="49" height="96"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="80"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="min" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="unk-RD-lk3">
-                                        <rect key="frame" x="63" y="0.0" width="28" height="72"/>
+                                        <rect key="frame" x="49" y="0.0" width="28" height="96"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
@@ -99,13 +109,42 @@
                                 </subviews>
                             </stackView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="1gS-E4-w0K" firstAttribute="centerY" secondItem="3Nf-B1-8pX" secondAttribute="centerY" id="QGe-7q-CLi"/>
-                            <constraint firstItem="1gS-E4-w0K" firstAttribute="centerX" secondItem="3Nf-B1-8pX" secondAttribute="centerX" id="cJv-rm-BnV"/>
+                            <constraint firstItem="V0Y-xr-mKR" firstAttribute="top" secondItem="3Nf-B1-8pX" secondAttribute="top" constant="255" id="0FS-SD-GzF"/>
+                            <constraint firstItem="jpN-8q-aFj" firstAttribute="top" secondItem="qi8-TQ-pir" secondAttribute="bottom" constant="16" id="13J-lh-ych"/>
+                            <constraint firstItem="1gS-E4-w0K" firstAttribute="centerY" secondItem="3Nf-B1-8pX" secondAttribute="centerY" id="7pK-9g-Jzz"/>
+                            <constraint firstItem="1gS-E4-w0K" firstAttribute="top" secondItem="3Nf-B1-8pX" secondAttribute="top" constant="304" id="8AC-wE-9ob"/>
+                            <constraint firstItem="1gS-E4-w0K" firstAttribute="centerX" secondItem="3Nf-B1-8pX" secondAttribute="centerX" id="9XP-dd-9MN"/>
+                            <constraint firstItem="1gS-E4-w0K" firstAttribute="leading" secondItem="3Nf-B1-8pX" secondAttribute="leading" constant="267" id="CVk-A8-IjY"/>
+                            <constraint firstItem="V0Y-xr-mKR" firstAttribute="centerX" secondItem="3Nf-B1-8pX" secondAttribute="centerX" id="D59-1T-EA0"/>
+                            <constraint firstItem="jpN-8q-aFj" firstAttribute="centerX" secondItem="3Nf-B1-8pX" secondAttribute="centerX" id="G5L-Bj-SWn"/>
+                            <constraint firstItem="mIY-he-JMz" firstAttribute="centerX" secondItem="3Nf-B1-8pX" secondAttribute="centerX" id="JtT-14-yKW"/>
+                            <constraint firstItem="V0Y-xr-mKR" firstAttribute="top" secondItem="mIY-he-JMz" secondAttribute="bottom" constant="8" id="Omx-IS-ie1"/>
+                            <constraint firstItem="qi8-TQ-pir" firstAttribute="leading" secondItem="3Nf-B1-8pX" secondAttribute="leadingMargin" id="Vtj-uo-a0V"/>
+                            <constraint firstItem="V0Y-xr-mKR" firstAttribute="centerX" secondItem="jpN-8q-aFj" secondAttribute="centerX" id="WeN-w0-czD"/>
+                            <constraint firstItem="Gq0-ba-1p5" firstAttribute="top" secondItem="1gS-E4-w0K" secondAttribute="bottom" constant="179" id="Y4I-Mf-9as"/>
+                            <constraint firstItem="1gS-E4-w0K" firstAttribute="top" secondItem="V0Y-xr-mKR" secondAttribute="bottom" constant="28" id="ePz-qN-Rh2"/>
+                            <constraint firstItem="1gS-E4-w0K" firstAttribute="top" secondItem="V0Y-xr-mKR" secondAttribute="bottom" constant="28" id="jd1-z7-cBL"/>
+                            <constraint firstItem="qi8-TQ-pir" firstAttribute="top" secondItem="fgp-h2-FwH" secondAttribute="bottom" id="mUf-dr-JZ8"/>
+                            <constraint firstItem="V0Y-xr-mKR" firstAttribute="top" secondItem="jpN-8q-aFj" secondAttribute="bottom" constant="83" id="nvq-N1-ckb"/>
+                            <constraint firstItem="qi8-TQ-pir" firstAttribute="top" secondItem="fgp-h2-FwH" secondAttribute="bottom" constant="40" id="taP-Ue-KHK"/>
+                            <constraint firstItem="qi8-TQ-pir" firstAttribute="trailing" secondItem="3Nf-B1-8pX" secondAttribute="trailingMargin" id="uj0-8n-XAO"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="mUf-dr-JZ8"/>
+                                <exclude reference="0FS-SD-GzF"/>
+                                <exclude reference="WeN-w0-czD"/>
+                                <exclude reference="nvq-N1-ckb"/>
+                                <exclude reference="8AC-wE-9ob"/>
+                                <exclude reference="CVk-A8-IjY"/>
+                                <exclude reference="jd1-z7-cBL"/>
+                                <exclude reference="Y4I-Mf-9as"/>
+                            </mask>
+                        </variation>
                     </view>
-                    <navigationItem key="navigationItem" title="Work!" id="97Z-Vb-GYr">
+                    <navigationItem key="navigationItem" title="Work session" id="97Z-Vb-GYr">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="IYa-PO-Ubu">
                             <connections>
                                 <action selector="cancel:" destination="3mo-3V-SmK" id="DdN-11-Q8u"/>
@@ -118,10 +157,12 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="activityLabel" destination="mIY-he-JMz" id="7sk-Jt-tfy"/>
                         <outlet property="activityTextField" destination="qi8-TQ-pir" id="nXX-h7-gE8"/>
                         <outlet property="cancelButton" destination="IYa-PO-Ubu" id="sHN-KW-ffU"/>
                         <outlet property="doneButton" destination="WWx-WD-fZo" id="vPZ-xs-mt1"/>
                         <outlet property="minutesLabel" destination="Ikb-fV-mQx" id="che-kj-jpR"/>
+                        <outlet property="minutesStackView" destination="1gS-E4-w0K" id="fFt-Xz-eFY"/>
                         <outlet property="startStopButton" destination="jpN-8q-aFj" id="Ii1-di-Rwo"/>
                         <outlet property="startTimeLabel" destination="V0Y-xr-mKR" id="oKF-N5-OPY"/>
                     </connections>
