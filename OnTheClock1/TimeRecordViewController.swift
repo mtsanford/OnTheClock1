@@ -16,7 +16,7 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, UINavigat
     @IBOutlet weak var activityTextField: UITextField!
     @IBOutlet weak var startStopButton: UIButton!
     @IBOutlet weak var startTimeLabel: UILabel!
-    @IBOutlet weak var timeWorkedLabel: UILabel!
+    @IBOutlet weak var minutesLabel: UILabel!
 
     var timer: NSTimer?
     var startTime: NSDate?
@@ -133,7 +133,7 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, UINavigat
     func updateTime() {
         accumulatedTime = accumulatedTimeLastPause - (startTime?.timeIntervalSinceNow)!
         let minutes = Int(floor(accumulatedTime / 60.0))
-        timeWorkedLabel.text = "\(minutes) minutes"
+        minutesLabel.text = "\(minutes)"
         if (accumulatedTime > 3.0) {
             doneButton.enabled = true
         }

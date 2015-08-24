@@ -25,10 +25,14 @@ class ViewController: UIViewController {
     
     @IBAction func unwindToMainView(sender: UIStoryboardSegue) {
         print("unwindToMainView")
-        if let sourceViewController = sender.sourceViewController as? TimeRecordViewController, timeRecord = sourceViewController.timeRecord {
-            print(timeRecord.start);
-            print(timeRecord.duration);
-            print(timeRecord.activity);
+        let sourceViewController = sender.sourceViewController as? TimeRecordViewController
+        if (sourceViewController != nil) {
+            let timeRecord = sourceViewController!.timeRecord
+            if (timeRecord != nil) {
+                print(timeRecord!.start);
+                print(timeRecord!.duration);
+                print(timeRecord!.activity);
+            }
         }
     }
 
