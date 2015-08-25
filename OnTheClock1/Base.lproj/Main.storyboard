@@ -30,7 +30,7 @@
                                         <rect key="frame" x="0.0" y="21" width="112" height="30"/>
                                         <state key="normal" title="Start working!"/>
                                         <connections>
-                                            <segue destination="UaH-AZ-08e" kind="show" id="Zsl-m3-AGl"/>
+                                            <segue destination="UaH-AZ-08e" kind="show" identifier="timeRecordSegue" id="Zsl-m3-AGl"/>
                                         </connections>
                                     </button>
                                 </subviews>

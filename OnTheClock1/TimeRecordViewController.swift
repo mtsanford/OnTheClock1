@@ -43,11 +43,14 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, UINavigat
     override func viewDidLoad() {
         super.viewDidLoad()
         activityTextField.delegate = self
+        activityTextField.text = activityString
         startStopButton.setTitle("Start", forState: .Normal)
         activityLabel.hidden = true
         startTimeLabel.hidden = true
         minutesStackView.hidden = true
         startStopButton.hidden = true
+        
+        setActivityText(activityString)
     }
 
     override func didReceiveMemoryWarning() {
