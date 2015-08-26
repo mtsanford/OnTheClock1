@@ -9,17 +9,23 @@
 import UIKit
 
 @objc protocol MPGTextFieldDelegate{
-    func dataForPopoverInTextField(textfield: MPGTextField_Swift) -> [Dictionary<String, AnyObject>]
+    // Data for autocomplete, using letters in "DisplayText"
+    func dataForPopoverInTextField(textfield: MPGTextField_Swift) -> [Dictionary<String, AnyObject>]?
 
+    // Popup options to show when there is no text shown
+    optional func dataForPopoverInEmptyTextField(textfield: MPGTextField_Swift) -> [Dictionary<String, AnyObject>]?
+    
     optional func textFieldDidEndEditing(textField: MPGTextField_Swift, withSelection data: Dictionary<String,AnyObject>)
     optional func textFieldShouldSelect(textField: MPGTextField_Swift) -> Bool
 }
 
 class MPGTextField_Swift: UITextField, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate {
     
+    // TODO: mDelegate is separate from delegate.  Is there anyway to repurpose the UITextField::delegate?
     var mDelegate : MPGTextFieldDelegate?
     var tableViewController : UITableViewController?
-    var data = [Dictionary<String, AnyObject>]()
+    var data : [Dictionary<String, AnyObject>]?
+    var emptyTextField: Bool = true
     
     //Set this to override the default color of suggestions popover. The default color is [UIColor colorWithWhite:0.8 alpha:0.9]
     @IBInspectable var popoverBackgroundColor : UIColor = UIColor(red: 240.0/255.0, green: 240.0/255.0, blue: 240.0/255.0, alpha: 1.0)
@@ -51,25 +57,31 @@ class MPGTextField_Swift: UITextField, UITextFieldDelegate, UITableViewDelegate,
     
     override func layoutSubviews(){
         super.layoutSubviews()
-        let str : String? = self.text
         
-        if str != nil && str!.characters.count == 0 && (self.isFirstResponder()) {
-            if (mDelegate != nil) {
-                data = mDelegate!.dataForPopoverInTextField(self)
-                self.provideSuggestions()
-            }
-            else{
-                print("<MPGTextField> WARNING: You have not implemented the requred methods of the MPGTextField protocol.")
-            }
-        }
-        else{
-            if let table = self.tableViewController{
-                if table.tableView.superview != nil{
+        let str: String? = self.text
+        
+        if !self.isFirstResponder() || mDelegate == nil {
+            if let table = self.tableViewController {
+                if table.tableView.superview != nil {
                     table.tableView.removeFromSuperview()
                     self.tableViewController = nil
                 }
             }
+            data = nil
         }
+        else if (str != nil && str!.characters.count > 0) {
+            let fullData = mDelegate!.dataForPopoverInTextField(self)
+            data = self.applyFilterWithSearchQuery(fullData, filter: self.text!)
+            
+            emptyTextField = false
+            self.provideSuggestions()
+        }
+        else {
+            data = mDelegate!.dataForPopoverInEmptyTextField?(self)
+            emptyTextField = true
+            self.provideSuggestions()
+        }
+        
     }
     
     override func resignFirstResponder() -> Bool{
@@ -87,10 +99,11 @@ class MPGTextField_Swift: UITextField, UITextFieldDelegate, UITableViewDelegate,
     }
     
     func provideSuggestions(){
-        if let tvc = self.tableViewController {
+        if self.tableViewController != nil {
             tableViewController!.tableView.reloadData()
         }
-        else if self.applyFilterWithSearchQuery(self.text!).count > 0{
+        //else if ( emptyTextField && data != nil && data!.count > 1) || self.applyFilterWithSearchQuery(self.text!).count > 0 {
+        else if data!.count > 0 {
             //Add a tap gesture recogniser to dismiss the suggestions view when the user taps outside the suggestions view
             let tapRecognizer = UITapGestureRecognizer(target: self, action: "tapped:")
             tapRecognizer.numberOfTapsRequired = 1
@@ -141,9 +154,13 @@ class MPGTextField_Swift: UITextField, UITextFieldDelegate, UITableViewDelegate,
         }
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-        let count = self.applyFilterWithSearchQuery(self.text!).count
-        if count == 0{
+    // how many table rows?
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        //let count = self.applyFilterWithSearchQuery(self.text!).count
+        let count = data!.count
+        
+        // TODO Why the fuck are we initiating fade out when being queryed for how many rows?
+        if count == 0 {
             UIView.animateWithDuration(0.3,
                 animations: ({
                     self.tableViewController!.tableView.alpha = 0.0
@@ -156,9 +173,11 @@ class MPGTextField_Swift: UITextField, UITextFieldDelegate, UITableViewDelegate,
                     }
                 })
         }
+        
         return count
     }
     
+    // get the row for an index
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         //var cell = tableView.dequeueReusableCellWithIdentifier("MPGResultsCell")as! UITableViewCell
         var cell = tableView.dequeueReusableCellWithIdentifier("MPGResultsCell")
@@ -168,7 +187,8 @@ class MPGTextField_Swift: UITextField, UITextFieldDelegate, UITableViewDelegate,
         }
 
         cell!.backgroundColor = UIColor.clearColor()
-        let dataForRowAtIndexPath = self.applyFilterWithSearchQuery(self.text!)[indexPath.row]
+        //let dataForRowAtIndexPath = self.applyFilterWithSearchQuery(self.text!)[indexPath.row]
+        let dataForRowAtIndexPath = data![indexPath.row]
         let displayText : AnyObject? = dataForRowAtIndexPath["DisplayText"]
         let displaySubText : AnyObject? = dataForRowAtIndexPath["DisplaySubText"]
         cell!.textLabel!.text = displayText as? String
@@ -177,24 +197,23 @@ class MPGTextField_Swift: UITextField, UITextFieldDelegate, UITableViewDelegate,
         return cell!
     }
     
+    // row selected
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        //self.text = self.applyFilterWithSearchQuery(self.text)[indexPath.row]["DisplayText"]
+        //self.text = self.applyFilterWithSearchQuery(self.text!)[indexPath.row]["DisplayText"] as? String
+        self.text = data![indexPath.row]["DisplayText"] as? String
         self.resignFirstResponder()
     }
     
     
 //   #pragma mark Filter Method
     
-    func applyFilterWithSearchQuery(filter : String) -> [Dictionary<String, AnyObject>]
+    func applyFilterWithSearchQuery(addData: [Dictionary<String, AnyObject>]?, filter : String) -> [Dictionary<String, AnyObject>]
     {
-        //let predicate = NSPredicate(format: "DisplayText BEGINSWITH[cd] \(filter)")
-        //var lower = (filter as NSString).lowercaseString
-        let filteredData = data.filter({
-                if let match : AnyObject  = $0["DisplayText"]{
-                    //println("LCS = \(filter.lowercaseString)")
+        let filteredData = addData!.filter({
+                if let match : AnyObject  = $0["DisplayText"] {
                     return (match as! NSString).lowercaseString.hasPrefix((filter as NSString).lowercaseString)
                 }
-                else{
+                else {
                     return false
                 }
             })
@@ -205,8 +224,11 @@ class MPGTextField_Swift: UITextField, UITextFieldDelegate, UITableViewDelegate,
         if let table = self.tableViewController{
             table.tableView.removeFromSuperview()
         }
+        
+        /* this is hot steaming mess
         if mDelegate != nil && mDelegate!.textFieldShouldSelect != nil && mDelegate!.textFieldShouldSelect!(self) {
-            if self.applyFilterWithSearchQuery(self.text!).count > 0 {
+            //if self.applyFilterWithSearchQuery(self.text!).count > 0 {
+            if data!.count > 0 {
                 let selectedData = self.applyFilterWithSearchQuery(self.text!)[0]
                 let displayText : AnyObject? = selectedData["DisplayText"]
                 self.text = displayText as? String
@@ -216,6 +238,7 @@ class MPGTextField_Swift: UITextField, UITextFieldDelegate, UITableViewDelegate,
                 mDelegate?.textFieldDidEndEditing?(self, withSelection: ["DisplayText":self.text!, "CustomObject":"NEW"])
             }
         }
+        */
 
     }
 

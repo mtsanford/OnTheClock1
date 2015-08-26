@@ -8,12 +8,12 @@
 
 import UIKit
 
-class TimeRecordViewController: UIViewController, UITextFieldDelegate, UINavigationControllerDelegate {
+class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFieldDelegate, UINavigationControllerDelegate {
     
     // MARK: Properties
     @IBOutlet weak var cancelButton: UIBarButtonItem!
     @IBOutlet weak var doneButton: UIBarButtonItem!
-    @IBOutlet weak var activityTextField: UITextField!
+    @IBOutlet weak var activityTextField: MPGTextField_Swift!
     @IBOutlet weak var startStopButton: UIButton!
     @IBOutlet weak var activityLabel: UILabel!
     @IBOutlet weak var startTimeLabel: UILabel!
@@ -43,6 +43,7 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, UINavigat
     override func viewDidLoad() {
         super.viewDidLoad()
         activityTextField.delegate = self
+        activityTextField.mDelegate = self
         activityTextField.text = activityString
         startStopButton.setTitle("Start", forState: .Normal)
         activityLabel.hidden = true
@@ -72,6 +73,19 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, UINavigat
         setActivityText(activityTextField.text)
     }
     
+    func textFieldDidEndEditing(textField: MPGTextField_Swift, withSelection data: Dictionary<String,AnyObject>) {
+        print("MPGTextFieldDelegate::textFieldDidEndEditing\(activityTextField.text)");
+    }
+    
+    
+    func dataForPopoverInTextField(textfield: MPGTextField_Swift) -> [Dictionary<String, AnyObject>]? {
+        return [ [ "DisplayText" : "Apple" ], [ "DisplayText" : "Bark" ] ]
+    }
+    
+    func dataForPopoverInEmptyTextField(textfield: MPGTextField_Swift) -> [Dictionary<String, AnyObject>]? {
+        return [ [ "DisplayText" : "do some work" ], [ "DisplayText" : "pretend to work" ], [ "DisplayText" : "jump up and down" ] ]
+    }
+
     
     func setActivityText(activity: String?) {
         activityString = activity
@@ -85,6 +99,8 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, UINavigat
             startStopButton.hidden = false
         }
     }
+    
+    
     
     // MARK: - Navigation
     @IBAction func cancel(sender: UIBarButtonItem) {
