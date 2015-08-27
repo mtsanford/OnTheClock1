@@ -13,7 +13,7 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
     // MARK: Properties
     @IBOutlet weak var cancelButton: UIBarButtonItem!
     @IBOutlet weak var doneButton: UIBarButtonItem!
-    @IBOutlet weak var activityTextField: MPGTextField_Swift!
+    @IBOutlet weak var activityTextField: MPGTextField!
     @IBOutlet weak var startStopButton: UIButton!
     @IBOutlet weak var activityLabel: UILabel!
     @IBOutlet weak var startTimeLabel: UILabel!
@@ -87,7 +87,7 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
     }
     
     
-    func dataForPopoverInTextField(textfield: MPGTextField_Swift) -> [Dictionary<String, AnyObject>]? {
+    func dataForPopoverInTextField(textfield: MPGTextField) -> [Dictionary<String, AnyObject>]? {
         return [
             [ "DisplayText" : "app development", "DisplaySubText" : "last done 3 days ago"  ], [ "DisplayText" : "appreciate art", "DisplaySubText" : "last done 3 days ago"  ],
             [ "DisplayText" : "aid people", "DisplaySubText" : "last done 3 days ago"  ], [ "DisplayText" : "arrest Clinton art", "DisplaySubText" : "last done 3 days ago"  ],
@@ -97,7 +97,7 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
         ]
     }
     
-    func dataForPopoverInEmptyTextField(textfield: MPGTextField_Swift) -> [Dictionary<String, AnyObject>]? {
+    func dataForPopoverInEmptyTextField(textfield: MPGTextField) -> [Dictionary<String, AnyObject>]? {
         return [ [ "DisplayText" : "jump up and down" ], [ "DisplayText" : "do some work" ], [ "DisplayText" : "pretend to work" ] ]
     }
 

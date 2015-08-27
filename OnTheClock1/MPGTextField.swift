@@ -10,13 +10,13 @@ import UIKit
 
 @objc protocol MPGTextFieldDelegate {
     // Data for autocomplete, using letters in "DisplayText"
-    func dataForPopoverInTextField(textfield: MPGTextField_Swift) -> [Dictionary<String, AnyObject>]?
+    func dataForPopoverInTextField(textfield: MPGTextField) -> [Dictionary<String, AnyObject>]?
 
     // Popup options to show when there is no text shown (e.g. use for "most recent items")
-    optional func dataForPopoverInEmptyTextField(textfield: MPGTextField_Swift) -> [Dictionary<String, AnyObject>]?
+    optional func dataForPopoverInEmptyTextField(textfield: MPGTextField) -> [Dictionary<String, AnyObject>]?
 }
 
-class MPGTextField_Swift: UITextField, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate {
+class MPGTextField: UITextField, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate {
     
     // TODO: mDelegate is separate from delegate.  Is there anyway to repurpose the UITextField::delegate?
     var mDelegate : MPGTextFieldDelegate?
