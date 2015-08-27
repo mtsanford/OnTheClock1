@@ -65,25 +65,40 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
         return true
     }
     
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        let textFieldCount = textField.text == nil ? 0 : textField.text!.characters.count
+        
+        // Sanity check to work around ios bug
+        if (range.length + range.location > textFieldCount )
+        {
+            return false;
+        }
+        
+        let newLength = textFieldCount + string.characters.count - range.length
+        return newLength <= 40
+    }
+    
     func textFieldDidBeginEditing(textField: UITextField) {
     }
     
     func textFieldDidEndEditing(textField: UITextField) {
-        print("textFieldDidEndEditing\(activityTextField.text)");
+        print("textFieldDidEndEditing: \(activityTextField.text)");
         setActivityText(activityTextField.text)
-    }
-    
-    func textFieldDidEndEditing(textField: MPGTextField_Swift, withSelection data: Dictionary<String,AnyObject>) {
-        print("MPGTextFieldDelegate::textFieldDidEndEditing\(activityTextField.text)");
     }
     
     
     func dataForPopoverInTextField(textfield: MPGTextField_Swift) -> [Dictionary<String, AnyObject>]? {
-        return [ [ "DisplayText" : "Apple" ], [ "DisplayText" : "Bark" ] ]
+        return [
+            [ "DisplayText" : "app development", "DisplaySubText" : "last done 3 days ago"  ], [ "DisplayText" : "appreciate art", "DisplaySubText" : "last done 3 days ago"  ],
+            [ "DisplayText" : "aid people", "DisplaySubText" : "last done 3 days ago"  ], [ "DisplayText" : "arrest Clinton art", "DisplaySubText" : "last done 3 days ago"  ],
+            [ "DisplayText" : "age gracefuly", "DisplaySubText" : "last done 3 days ago"  ], [ "DisplayText" : "add numbers", "DisplaySubText" : "last done 3 days ago"  ],
+            [ "DisplayText" : "burn up things", "DisplaySubText" : "last done 3 days ago"  ],
+            [ "DisplayText" : "do some work", "DisplaySubText" : "last done 3 days ago" ], [ "DisplayText" : "pretend to work", "DisplaySubText" : "last done 3 days ago"  ], [ "DisplayText" : "jump up and down", "DisplaySubText" : "last done 3 days ago"  ]
+        ]
     }
     
     func dataForPopoverInEmptyTextField(textfield: MPGTextField_Swift) -> [Dictionary<String, AnyObject>]? {
-        return [ [ "DisplayText" : "do some work" ], [ "DisplayText" : "pretend to work" ], [ "DisplayText" : "jump up and down" ] ]
+        return [ [ "DisplayText" : "jump up and down" ], [ "DisplayText" : "do some work" ], [ "DisplayText" : "pretend to work" ] ]
     }
 
     

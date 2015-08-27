@@ -76,7 +76,7 @@
                                 <constraints>
                                     <constraint firstAttribute="width" constant="207" id="ivD-nG-4pL"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="default">
