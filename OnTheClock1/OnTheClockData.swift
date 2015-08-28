@@ -1,37 +1,37 @@
 //
-//  ViewController.swift
+//  OnTheClockData.swift
 //  OnTheClock1
 //
-//  Created by Work on 8/19/15.
+//  Created by Work on 8/28/15.
 //  Copyright © 2015 Mark Sanford. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
-class ViewController: UIViewController {
-    
-    // MARK: Properties
-    @IBOutlet weak var startButton: UIButton!
 
-    var databasePath = NSString()
+class OnTheClockData {
+    static var sharedInstance = OnTheClockData()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    var databasePath: String = ""
+    var db: FMDatabase?
+    
+    init() {
         
-        OnTheClockData.sharedInstance.open()
+    }
+    
+    func open() {
+        if db != nil { return }
         
-        /*
-        // first crack at sqlite...
         let filemgr = NSFileManager.defaultManager()
         let dirPaths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
         
         let docsDir = dirPaths[0]
         
-        databasePath = (docsDir as NSString).stringByAppendingPathComponent("ontheclock.db")
+        databasePath = (docsDir as NSString).stringByAppendingPathComponent("ontheclock.db") as String
         
-        if !filemgr.fileExistsAtPath(databasePath as String) {
+        if !filemgr.fileExistsAtPath(databasePath) {
             
-            let contactDB = FMDatabase(path: databasePath as String)
+            let contactDB = FMDatabase(path: databasePath)
             
             if contactDB == nil {
                 print("Error: \(contactDB.lastErrorMessage())")
@@ -60,37 +60,14 @@ class ViewController: UIViewController {
                 print("Error: \(contactDB.lastErrorMessage())")
             }
         }
-       */
         
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "timeRecordSegue" {
-            let navController = segue.destinationViewController as? UINavigationController
-            let timeRecordViewController = navController?.topViewController as? TimeRecordViewController
-            timeRecordViewController!.activityString = "do some work"
-        }
-    }
     
-    
-    @IBAction func unwindToMainView(sender: UIStoryboardSegue) {
-        print("unwindToMainView")
-        let sourceViewController = sender.sourceViewController as? TimeRecordViewController
-        if (sourceViewController != nil) {
-            let timeRecord = sourceViewController!.timeRecord
-            if (timeRecord != nil) {
-                print(timeRecord!.start);
-                print(timeRecord!.duration);
-                print(timeRecord!.activity);
-            }
+    func sleep() {
+        if db != nil {
+            db!.close()
+            db = nil
         }
     }
 
 }
-

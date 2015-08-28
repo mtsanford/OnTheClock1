@@ -8,6 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		96092D961B8D347C000A6BD4 /* MPGTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96092D951B8D347C000A6BD4 /* MPGTextField.swift */; };
+		968B76DC1B90D93A00A01189 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 968B76D21B90D93A00A01189 /* FMDatabase.m */; };
+		968B76DD1B90D93A00A01189 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 968B76D41B90D93A00A01189 /* FMDatabaseAdditions.m */; };
+		968B76DE1B90D93A00A01189 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 968B76D61B90D93A00A01189 /* FMDatabasePool.m */; };
+		968B76DF1B90D93A00A01189 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 968B76D81B90D93A00A01189 /* FMDatabaseQueue.m */; };
+		968B76E01B90D93A00A01189 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 968B76DB1B90D93A00A01189 /* FMResultSet.m */; };
+		968B76E21B910D5400A01189 /* OnTheClockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968B76E11B910D5400A01189 /* OnTheClockData.swift */; };
+		968B76E31B910D5400A01189 /* OnTheClockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968B76E11B910D5400A01189 /* OnTheClockData.swift */; };
 		96C2490E1B85660F00AF01BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2490D1B85660F00AF01BE /* AppDelegate.swift */; };
 		96C249101B85660F00AF01BE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2490F1B85660F00AF01BE /* ViewController.swift */; };
 		96C249131B85660F00AF01BE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96C249111B85660F00AF01BE /* Main.storyboard */; };
@@ -17,6 +24,7 @@
 		96C2492E1B862CCF00AF01BE /* TimeRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2492D1B862CCF00AF01BE /* TimeRecord.swift */; };
 		96C2492F1B862CCF00AF01BE /* TimeRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2492D1B862CCF00AF01BE /* TimeRecord.swift */; };
 		96C249311B86A76700AF01BE /* TimeRecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C249301B86A76700AF01BE /* TimeRecordViewController.swift */; };
+		96E9F45A1B90D6B900EACD26 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 96E9F4591B90D6B900EACD26 /* libsqlite3.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,6 +39,20 @@
 
 /* Begin PBXFileReference section */
 		96092D951B8D347C000A6BD4 /* MPGTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPGTextField.swift; sourceTree = "<group>"; };
+		96092DAF1B90D57B000A6BD4 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		968B76D01B90D93900A01189 /* OnTheClock1-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OnTheClock1-Bridging-Header.h"; sourceTree = "<group>"; };
+		968B76D11B90D93A00A01189 /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
+		968B76D21B90D93A00A01189 /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
+		968B76D31B90D93A00A01189 /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
+		968B76D41B90D93A00A01189 /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseAdditions.m; sourceTree = "<group>"; };
+		968B76D51B90D93A00A01189 /* FMDatabasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabasePool.h; sourceTree = "<group>"; };
+		968B76D61B90D93A00A01189 /* FMDatabasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabasePool.m; sourceTree = "<group>"; };
+		968B76D71B90D93A00A01189 /* FMDatabaseQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseQueue.h; sourceTree = "<group>"; };
+		968B76D81B90D93A00A01189 /* FMDatabaseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseQueue.m; sourceTree = "<group>"; };
+		968B76D91B90D93A00A01189 /* FMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDB.h; sourceTree = "<group>"; };
+		968B76DA1B90D93A00A01189 /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
+		968B76DB1B90D93A00A01189 /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
+		968B76E11B910D5400A01189 /* OnTheClockData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnTheClockData.swift; sourceTree = "<group>"; };
 		96C2490A1B85660F00AF01BE /* OnTheClock1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheClock1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		96C2490D1B85660F00AF01BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		96C2490F1B85660F00AF01BE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -43,6 +65,7 @@
 		96C249241B85660F00AF01BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		96C2492D1B862CCF00AF01BE /* TimeRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeRecord.swift; sourceTree = "<group>"; };
 		96C249301B86A76700AF01BE /* TimeRecordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeRecordViewController.swift; sourceTree = "<group>"; };
+		96E9F4591B90D6B900EACD26 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = ../../../../../usr/lib/libsqlite3.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96E9F45A1B90D6B900EACD26 /* libsqlite3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,9 +87,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		968B76BF1B90D8DB00A01189 /* fmdb */ = {
+			isa = PBXGroup;
+			children = (
+				968B76D11B90D93A00A01189 /* FMDatabase.h */,
+				968B76D21B90D93A00A01189 /* FMDatabase.m */,
+				968B76D31B90D93A00A01189 /* FMDatabaseAdditions.h */,
+				968B76D41B90D93A00A01189 /* FMDatabaseAdditions.m */,
+				968B76D51B90D93A00A01189 /* FMDatabasePool.h */,
+				968B76D61B90D93A00A01189 /* FMDatabasePool.m */,
+				968B76D71B90D93A00A01189 /* FMDatabaseQueue.h */,
+				968B76D81B90D93A00A01189 /* FMDatabaseQueue.m */,
+				968B76D91B90D93A00A01189 /* FMDB.h */,
+				968B76DA1B90D93A00A01189 /* FMResultSet.h */,
+				968B76DB1B90D93A00A01189 /* FMResultSet.m */,
+				968B76D01B90D93900A01189 /* OnTheClock1-Bridging-Header.h */,
+			);
+			name = fmdb;
+			path = ../../fmdb/src/fmdb;
+			sourceTree = "<group>";
+		};
 		96C249011B85660F00AF01BE = {
 			isa = PBXGroup;
 			children = (
+				96E9F4591B90D6B900EACD26 /* libsqlite3.dylib */,
+				96092DAF1B90D57B000A6BD4 /* libsqlite3.tbd */,
 				96C2490C1B85660F00AF01BE /* OnTheClock1 */,
 				96C249211B85660F00AF01BE /* OnTheClock1Tests */,
 				96C2490B1B85660F00AF01BE /* Products */,
@@ -84,6 +130,7 @@
 		96C2490C1B85660F00AF01BE /* OnTheClock1 */ = {
 			isa = PBXGroup;
 			children = (
+				968B76BF1B90D8DB00A01189 /* fmdb */,
 				96092D951B8D347C000A6BD4 /* MPGTextField.swift */,
 				96C2490D1B85660F00AF01BE /* AppDelegate.swift */,
 				96C2490F1B85660F00AF01BE /* ViewController.swift */,
@@ -93,6 +140,7 @@
 				96C249161B85660F00AF01BE /* LaunchScreen.storyboard */,
 				96C249191B85660F00AF01BE /* Info.plist */,
 				96C2492D1B862CCF00AF01BE /* TimeRecord.swift */,
+				968B76E11B910D5400A01189 /* OnTheClockData.swift */,
 			);
 			path = OnTheClock1;
 			sourceTree = "<group>";
@@ -150,6 +198,7 @@
 		96C249021B85660F00AF01BE /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Mark Sanford";
 				TargetAttributes = {
@@ -206,11 +255,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				968B76E21B910D5400A01189 /* OnTheClockData.swift in Sources */,
 				96092D961B8D347C000A6BD4 /* MPGTextField.swift in Sources */,
 				96C249101B85660F00AF01BE /* ViewController.swift in Sources */,
 				96C2492E1B862CCF00AF01BE /* TimeRecord.swift in Sources */,
+				968B76DC1B90D93A00A01189 /* FMDatabase.m in Sources */,
+				968B76E01B90D93A00A01189 /* FMResultSet.m in Sources */,
 				96C249311B86A76700AF01BE /* TimeRecordViewController.swift in Sources */,
+				968B76DE1B90D93A00A01189 /* FMDatabasePool.m in Sources */,
+				968B76DD1B90D93A00A01189 /* FMDatabaseAdditions.m in Sources */,
 				96C2490E1B85660F00AF01BE /* AppDelegate.swift in Sources */,
+				968B76DF1B90D93A00A01189 /* FMDatabaseQueue.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,6 +274,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				96C249231B85660F00AF01BE /* OnTheClock1Tests.swift in Sources */,
+				968B76E31B910D5400A01189 /* OnTheClockData.swift in Sources */,
 				96C2492F1B862CCF00AF01BE /* TimeRecord.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -340,10 +396,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = OnTheClock1/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.marksanford.OnTheClock1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "../fmdb/src/fmdb/OnTheClock1-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -351,10 +410,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = OnTheClock1/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.marksanford.OnTheClock1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "../fmdb/src/fmdb/OnTheClock1-Bridging-Header.h";
 			};
 			name = Release;
 		};

@@ -1,0 +1,58 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "CF3F439ABAAE9471D598A7F5C68A01CC9D0B0ABD",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "7043EA6F8160920CCF62115AE01FAD0E9CA8C18F" : 0,
+    "04101981B66E318109934C9516F88D824BB96459" : 0,
+    "E33E0E633D81E98F55056BBF8D41689557691501" : 0,
+    "4FA4509EB9E9EA521CD73736477EE30E6EF537EB" : 0,
+    "9C48235FB5F3C72CE62793C7D4D71709692A860F" : 0,
+    "CF3F439ABAAE9471D598A7F5C68A01CC9D0B0ABD" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "5EF3CE6E-0E92-4D89-8B62-5CDD517F4F70",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "7043EA6F8160920CCF62115AE01FAD0E9CA8C18F" : "Todo-List-iOS-App-using-Swift\/",
+    "04101981B66E318109934C9516F88D824BB96459" : "fmdb\/",
+    "E33E0E633D81E98F55056BBF8D41689557691501" : "FoodTracker2\/",
+    "4FA4509EB9E9EA521CD73736477EE30E6EF537EB" : "MPGTextField\/",
+    "9C48235FB5F3C72CE62793C7D4D71709692A860F" : "Start-Developing-IOS-Apps-Today\/",
+    "CF3F439ABAAE9471D598A7F5C68A01CC9D0B0ABD" : "OnTheClock1\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "OnTheClock1",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "OnTheClock1.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/ccgus\/fmdb.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "04101981B66E318109934C9516F88D824BB96459"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/gaurvw\/MPGTextField.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "4FA4509EB9E9EA521CD73736477EE30E6EF537EB"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/shivanarrthine\/Todo-List-iOS-App-using-Swift.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "7043EA6F8160920CCF62115AE01FAD0E9CA8C18F"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/eelstork\/Start-Developing-IOS-Apps-Today.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "9C48235FB5F3C72CE62793C7D4D71709692A860F"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/mtsanford\/OnTheClock1.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "CF3F439ABAAE9471D598A7F5C68A01CC9D0B0ABD"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/mtsanford\/FoodTracker2.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E33E0E633D81E98F55056BBF8D41689557691501"
+    }
+  ]
+}
