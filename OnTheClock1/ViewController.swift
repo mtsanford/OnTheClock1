@@ -85,6 +85,7 @@ class ViewController: UIViewController {
         if (sourceViewController != nil) {
             let timeRecord = sourceViewController!.timeRecord
             if (timeRecord != nil) {
+                OnTheClockData.sharedInstance.addWorkSession(timeRecord!)
                 print(timeRecord!.start);
                 print(timeRecord!.duration);
                 print(timeRecord!.activity);
