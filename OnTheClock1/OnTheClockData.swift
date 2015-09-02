@@ -8,6 +8,15 @@
 
 import Foundation
 
+struct OnTheClockActivityRecord {
+    var activityName: String
+    var lastUsed: NSDate
+    
+    init(activityName: String, lastUsed: Int64) {
+        self.activityName = activityName
+        self.lastUsed = NSDate(timeIntervalSince1970: Double(lastUsed))
+    }
+}
 
 class OnTheClockData {
     static var sharedInstance = OnTheClockData()
@@ -70,7 +79,7 @@ class OnTheClockData {
             log("Error: \(db.lastErrorMessage())")
         }
         
-        let create_worksessions_index1 = "CREATE INDEX IF NOT EXISTS WORKSESSION_ACTIVITY ON WORKSESSIONS (ACTIVITY);"
+        let create_worksessions_index1 = "CREATE INDEX IF NOT EXISTS WORKSESSION_ACTIVITY ON WORKSESSIONS (ACTIVITYID);"
         if !db.executeStatements(create_worksessions_index1) {
             log("Error: \(db.lastErrorMessage())")
         }
@@ -168,6 +177,31 @@ class OnTheClockData {
 
         db.executeUpdate("END TRANSACTION", withArgumentsInArray: nil)
     
+    }
+    
+    
+    func recentActities(limit: Int?) -> [OnTheClockActivityRecord]? {
+        if !open() { return nil }
+        
+        var recent: [OnTheClockActivityRecord]? = [OnTheClockActivityRecord]()
+
+        var query_activities = "SELECT ACTIVITYNAME, LASTUSED FROM ACTIVITIES ORDER BY LASTUSED DESC"
+        if limit != nil {
+            query_activities += " LIMIT \(limit!)"
+        }
+        
+        let results = db!.executeQuery(query_activities, withArgumentsInArray: nil)
+        
+        if results == nil {
+            log(db.lastErrorMessage())
+            return nil
+        }
+        
+        while results.next() {
+            recent!.append(OnTheClockActivityRecord(activityName: results.stringForColumnIndex(0)!, lastUsed: Int64(results.longForColumnIndex(1))))
+        }
+        
+        return recent
     }
     
     

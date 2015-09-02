@@ -88,17 +88,34 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
     
     
     func dataForPopoverInTextField(textfield: MPGTextField) -> [Dictionary<String, AnyObject>]? {
-        return [
-            [ "DisplayText" : "app development", "DisplaySubText" : "last done 3 days ago"  ], [ "DisplayText" : "appreciate art", "DisplaySubText" : "last done 3 days ago"  ],
-            [ "DisplayText" : "aid people", "DisplaySubText" : "last done 3 days ago"  ], [ "DisplayText" : "arrest Clinton art", "DisplaySubText" : "last done 3 days ago"  ],
-            [ "DisplayText" : "age gracefuly", "DisplaySubText" : "last done 3 days ago"  ], [ "DisplayText" : "add numbers", "DisplaySubText" : "last done 3 days ago"  ],
-            [ "DisplayText" : "burn up things", "DisplaySubText" : "last done 3 days ago"  ],
-            [ "DisplayText" : "do some work", "DisplaySubText" : "last done 3 days ago" ], [ "DisplayText" : "pretend to work", "DisplaySubText" : "last done 3 days ago"  ], [ "DisplayText" : "jump up and down", "DisplaySubText" : "last done 3 days ago"  ]
-        ]
+        OnTheClockData.sharedInstance.open()
+
+        let recentActities: [OnTheClockActivityRecord]? = OnTheClockData.sharedInstance.recentActities(nil)
+        var popupData = [Dictionary<String, AnyObject>]()
+        
+        if recentActities != nil {
+            for activity: OnTheClockActivityRecord in recentActities! {
+                popupData.append([ "DisplayText" : activity.activityName, "DisplaySubText" : "\(activity.lastUsed) seconds ago"  ])
+            }
+        }
+        
+        return popupData
+        
     }
     
     func dataForPopoverInEmptyTextField(textfield: MPGTextField) -> [Dictionary<String, AnyObject>]? {
-        return [ [ "DisplayText" : "jump up and down" ], [ "DisplayText" : "do some work" ], [ "DisplayText" : "pretend to work" ] ]
+        OnTheClockData.sharedInstance.open()
+        
+        let recentActities: [OnTheClockActivityRecord]? = OnTheClockData.sharedInstance.recentActities(5)
+        var popupData = [Dictionary<String, AnyObject>]()
+        
+        if recentActities != nil {
+            for activity: OnTheClockActivityRecord in recentActities! {
+                popupData.append([ "DisplayText" : activity.activityName, "DisplaySubText" : "\(activity.lastUsed) seconds ago"  ])
+            }
+        }
+
+        return popupData
     }
 
     
