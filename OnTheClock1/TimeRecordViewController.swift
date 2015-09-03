@@ -34,6 +34,14 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
     var popupDataAll = [Dictionary<String, AnyObject>]()
     var popupDataRecent = [Dictionary<String, AnyObject>]()
     
+    let agoStringSettings: [[String: AnyObject]] = [
+            [ "floor" : 0, "unit": 1, "single": "second", "plural": "seconds" ],
+            [ "floor" : 60, "unit": 60, "single": "minute", "plural": "minutes" ],
+            [ "floor" : 60*60, "unit": 60*60, "single": "hour", "plural": "hours" ],
+            [ "floor" : 60*60*24, "unit": 60*60*24, "single": "day", "plural": "days" ],
+            [ "floor" : 60*60*24*7, "unit": 60*60*24*7, "single": "week", "plural": "weeks" ],
+        ]
+    
 
     // TODO: Does this need to be implemented correctly?
     // could be "freeze dried" if put into background?
@@ -57,7 +65,7 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
         if recentActivities != nil && recentActivities!.count > 0 {
             activityString = recentActivities![0].activityName
             for (i, activity) in recentActivities!.enumerate() {
-                let popupItem = [ "DisplayText" : activity.activityName, "DisplaySubText" : "\(activity.lastUsed) seconds ago"  ]
+                let popupItem = [ "DisplayText" : activity.activityName, "DisplaySubText" : agoStringFromDate(activity.lastUsed) ]
                 popupDataAll.append(popupItem)
                 if (i < 4) {
                     popupDataRecent.append(popupItem)
@@ -208,6 +216,20 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
         let minutes = Int(floor(accumulatedTime / 60.0))
         minutesLabel.text = "\(minutes)"
         doneButton.enabled = accumulatedTime >= minimumWorkTime
+    }
+    
+    func agoStringFromDate(date: NSDate) -> String {
+        var agoString = ""
+        let secondsAgo = -date.timeIntervalSinceNow
+        for setting in agoStringSettings {
+            if secondsAgo > setting["floor"] as! Double {
+                let unit = setting["unit"] as! Double
+                let units = Int(floor(secondsAgo / unit))
+                let unitName = (units >= 2 ? setting["plural"] : setting["single"]) as! String
+                agoString = "\(units) \(unitName) ago"
+            }
+        }
+        return agoString
     }
     
 }
