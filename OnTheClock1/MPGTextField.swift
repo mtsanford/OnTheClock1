@@ -21,6 +21,7 @@ class MPGTextField: UITextField, UITextFieldDelegate, UITableViewDelegate, UITab
     // TODO: mDelegate is separate from delegate.  Is there anyway to repurpose the UITextField::delegate?
     var mDelegate : MPGTextFieldDelegate?
     var tableViewController : UITableViewController?
+    var tapRecognizer: UITapGestureRecognizer!
     var data : [Dictionary<String, AnyObject>]?
     
     let displayTextKey = "DisplayText"
@@ -47,18 +48,21 @@ class MPGTextField: UITextField, UITextFieldDelegate, UITableViewDelegate, UITab
     
     // TODO handle case where it's reopened while fading, or visa versa!
     func closeTableView() {
-        if let table = self.tableViewController {
-            UIView.animateWithDuration(0.3,
+        if self.tableViewController != nil {
+            UIView.animateWithDuration(
+                0.3,
+                delay: 0.0,
+                options: UIViewAnimationOptions.BeginFromCurrentState,
                 animations: ({
                     self.tableViewController!.tableView.alpha = 0.0
                 }),
                 completion:{
                     (finished : Bool) in
-                    if table.tableView.superview != nil {
+                    if let table = self.tableViewController {
                         table.tableView.removeFromSuperview()
+                        self.tableViewController = nil
                     }
-                    self.tableViewController = nil
-            })
+                })
         }
     }
     
@@ -96,56 +100,69 @@ class MPGTextField: UITextField, UITextFieldDelegate, UITableViewDelegate, UITab
         if data == nil || data!.count == 0 {
             closeTableView()
         }
-        else if self.tableViewController != nil {
-            tableViewController!.tableView.reloadData()
-        }
         else {
-            //Add a tap gesture recogniser to dismiss the suggestions view when the user taps outside the suggestions view
-            let tapRecognizer = UITapGestureRecognizer(target: self, action: "tapped:")
-            tapRecognizer.numberOfTapsRequired = 1
-            tapRecognizer.cancelsTouchesInView = false
-            tapRecognizer.delegate = self
-            self.superview!.addGestureRecognizer(tapRecognizer)
+            if self.tableViewController != nil {
+                tableViewController!.tableView.reloadData()
+            }
+            else {
+                //Add a tap gesture recogniser to dismiss the suggestions view when the user taps outside the suggestions view
+                if tapRecognizer == nil {
+                    tapRecognizer = UITapGestureRecognizer(target: self, action: "tapped:")
+                    tapRecognizer.numberOfTapsRequired = 1
+                    tapRecognizer.cancelsTouchesInView = false
+                    tapRecognizer.delegate = self
+                    self.superview!.addGestureRecognizer(tapRecognizer)
+                }
 
-            self.tableViewController = UITableViewController()
-            self.tableViewController!.tableView.delegate = self
-            self.tableViewController!.tableView.dataSource = self
-            self.tableViewController!.tableView.backgroundColor = self.popoverBackgroundColor
-            self.tableViewController!.tableView.separatorColor = self.seperatorColor
-            if let frameSize = self.popoverSize{
-                self.tableViewController!.tableView.frame = frameSize
-            }
-            else{
-                //PopoverSize frame has not been set. Use default parameters instead.
+                self.tableViewController = UITableViewController()
+                self.tableViewController!.tableView.delegate = self
+                self.tableViewController!.tableView.dataSource = self
+                self.tableViewController!.tableView.backgroundColor = self.popoverBackgroundColor
+                self.tableViewController!.tableView.separatorColor = self.seperatorColor
+                if let frameSize = self.popoverSize{
+                    self.tableViewController!.tableView.frame = frameSize
+                }
+                else{
+                    //PopoverSize frame has not been set. Use default parameters instead.
+                    var frameForPresentation = self.frame
+                    frameForPresentation.origin.y += self.frame.size.height
+                    frameForPresentation.size.height = 200
+                    self.tableViewController!.tableView.frame = frameForPresentation
+                }
+                
                 var frameForPresentation = self.frame
-                frameForPresentation.origin.y += self.frame.size.height
-                frameForPresentation.size.height = 200
-                self.tableViewController!.tableView.frame = frameForPresentation
+                frameForPresentation.origin.y += self.frame.size.height;
+                frameForPresentation.size.height = 200;
+                tableViewController!.tableView.frame = frameForPresentation
+                
+                self.superview!.addSubview(tableViewController!.tableView)
+                self.tableViewController!.tableView.alpha = 0.0
+                
+                
             }
-            
-            var frameForPresentation = self.frame
-            frameForPresentation.origin.y += self.frame.size.height;
-            frameForPresentation.size.height = 200;
-            tableViewController!.tableView.frame = frameForPresentation
-            
-            self.superview!.addSubview(tableViewController!.tableView)
-            self.tableViewController!.tableView.alpha = 0.0
-            UIView.animateWithDuration(0.3,
+
+            UIView.animateWithDuration(
+                0.3,
+                delay: 0.0,
+                options: UIViewAnimationOptions.BeginFromCurrentState,
                 animations: ({
                     self.tableViewController!.tableView.alpha = 1.0
-                    }),
-                completion:{
-                    (finished : Bool) in
-                    
-                })
+                }),
+                completion: nil
+            )
+            
         }
         
     }
     
     func tapped (sender : UIGestureRecognizer!) {
+        // if the tap is outside the table view and the textfield, close the popup table
         if let table = self.tableViewController{
-            if !CGRectContainsPoint(table.tableView.frame, sender.locationInView(self.superview)) && self.isFirstResponder() {
-                self.resignFirstResponder()
+            if !CGRectContainsPoint(table.tableView.frame, sender.locationInView(self.superview))
+                && !CGRectContainsPoint(self.frame, sender.locationInView(self.superview))
+                && self.isFirstResponder() {
+                
+                closeTableView()
             }
         }
     }
