@@ -30,14 +30,10 @@ class ViewController: UIViewController {
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "timeRecordSegue" {
-            var actitityText = ""
             let navController = segue.destinationViewController as? UINavigationController
             let timeRecordViewController = navController?.topViewController as? TimeRecordViewController
-            let mostRecent = OnTheClockData.sharedInstance.recentActities(1)
-            if mostRecent.count > 0 {
-                actitityText = mostRecent[0].activityName
-            }
-            timeRecordViewController!.activityString = actitityText
+            let recentActivities = OnTheClockData.sharedInstance.recentActities(nil)
+            timeRecordViewController!.recentActivities = recentActivities
         }
     }
     

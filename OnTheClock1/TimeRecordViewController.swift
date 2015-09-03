@@ -30,6 +30,10 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
     let minimumWorkTime = 60.0
     
     var timeRecord: TimeRecord?
+    var recentActivities: [OnTheClockActivityRecord]?
+    var popupDataAll = [Dictionary<String, AnyObject>]()
+    var popupDataRecent = [Dictionary<String, AnyObject>]()
+    
 
     // TODO: Does this need to be implemented correctly?
     // could be "freeze dried" if put into background?
@@ -44,14 +48,24 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
         super.viewDidLoad()
         activityTextField.delegate = self
         activityTextField.mDelegate = self
-        activityTextField.text = activityString
         startStopButton.setTitle("Start", forState: .Normal)
         activityLabel.hidden = true
         startTimeLabel.hidden = true
         minutesStackView.hidden = true
         startStopButton.hidden = true
         
+        if recentActivities != nil && recentActivities!.count > 0 {
+            activityString = recentActivities![0].activityName
+            for (i, activity) in recentActivities!.enumerate() {
+                let popupItem = [ "DisplayText" : activity.activityName, "DisplaySubText" : "\(activity.lastUsed) seconds ago"  ]
+                popupDataAll.append(popupItem)
+                if (i < 4) {
+                    popupDataRecent.append(popupItem)
+                }
+            }
+        }
         setActivityText(activityString)
+        activityTextField.text = activityString
     }
 
     override func didReceiveMemoryWarning() {
@@ -69,8 +83,7 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
         let textFieldCount = textField.text == nil ? 0 : textField.text!.characters.count
         
         // Sanity check to work around ios bug
-        if (range.length + range.location > textFieldCount )
-        {
+        if (range.length + range.location > textFieldCount ) {
             return false;
         }
         
@@ -88,30 +101,11 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
     
     
     func dataForPopoverInTextField(textfield: MPGTextField) -> [Dictionary<String, AnyObject>]? {
-        OnTheClockData.sharedInstance.open()
-
-        let recentActities: [OnTheClockActivityRecord] = OnTheClockData.sharedInstance.recentActities(nil)
-        var popupData = [Dictionary<String, AnyObject>]()
-        
-        for activity: OnTheClockActivityRecord in recentActities {
-            popupData.append([ "DisplayText" : activity.activityName, "DisplaySubText" : "\(activity.lastUsed) seconds ago"  ])
-        }
-        
-        return popupData
-        
+        return popupDataAll
     }
     
     func dataForPopoverInEmptyTextField(textfield: MPGTextField) -> [Dictionary<String, AnyObject>]? {
-        OnTheClockData.sharedInstance.open()
-        
-        let recentActities: [OnTheClockActivityRecord] = OnTheClockData.sharedInstance.recentActities(5)
-        var popupData = [Dictionary<String, AnyObject>]()
-        
-        for activity: OnTheClockActivityRecord in recentActities {
-            popupData.append([ "DisplayText" : activity.activityName, "DisplaySubText" : "\(activity.lastUsed) seconds ago"  ])
-        }
-
-        return popupData
+        return popupDataRecent
     }
 
     
