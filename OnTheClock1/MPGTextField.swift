@@ -1,9 +1,9 @@
 //
-//  MPGTextField-Swift.swift
-//  MPGTextField-Swift
+//  MPGTextField.swift
+//  MPGTextField
 //
-//  Created by Gaurav Wadhwani on 08/06/14.
-//  Copyright (c) 2014 Mappgic. All rights reserved.
+//  Created by Mark Sanford on 08/16/15.
+//  Copyright (c) 2014 Mark Sanford. All rights reserved.
 //
 
 import UIKit
@@ -46,7 +46,6 @@ class MPGTextField: UITextField, UITextFieldDelegate, UITableViewDelegate, UITab
     }
     
     
-    // TODO handle case where it's reopened while fading, or visa versa!
     func closeTableView() {
         if self.tableViewController != nil {
             UIView.animateWithDuration(
@@ -70,6 +69,15 @@ class MPGTextField: UITextField, UITextFieldDelegate, UITableViewDelegate, UITab
         super.layoutSubviews()
         
         let str: String? = self.text
+
+        //Add a tap gesture recogniser to dismiss the suggestions view when the user taps outside the suggestions view
+        if tapRecognizer == nil {
+            tapRecognizer = UITapGestureRecognizer(target: self, action: "tapped:")
+            tapRecognizer.numberOfTapsRequired = 1
+            tapRecognizer.cancelsTouchesInView = false
+            tapRecognizer.delegate = self
+            self.superview!.addGestureRecognizer(tapRecognizer)
+        }
         
         if !self.isFirstResponder() || mDelegate == nil {
             closeTableView()
@@ -99,66 +107,51 @@ class MPGTextField: UITextField, UITextFieldDelegate, UITableViewDelegate, UITab
     func provideSuggestions() {
         if data == nil || data!.count == 0 {
             closeTableView()
+            return
+        }
+
+        if self.tableViewController != nil {
+            tableViewController!.tableView.reloadData()
         }
         else {
-            if self.tableViewController != nil {
-                tableViewController!.tableView.reloadData()
-            }
-            else {
-                //Add a tap gesture recogniser to dismiss the suggestions view when the user taps outside the suggestions view
-                if tapRecognizer == nil {
-                    tapRecognizer = UITapGestureRecognizer(target: self, action: "tapped:")
-                    tapRecognizer.numberOfTapsRequired = 1
-                    tapRecognizer.cancelsTouchesInView = false
-                    tapRecognizer.delegate = self
-                    self.superview!.addGestureRecognizer(tapRecognizer)
-                }
-
-                self.tableViewController = UITableViewController()
-                self.tableViewController!.tableView.delegate = self
-                self.tableViewController!.tableView.dataSource = self
-                self.tableViewController!.tableView.backgroundColor = self.popoverBackgroundColor
-                self.tableViewController!.tableView.separatorColor = self.seperatorColor
-                if let frameSize = self.popoverSize{
-                    self.tableViewController!.tableView.frame = frameSize
-                }
-                else{
-                    //PopoverSize frame has not been set. Use default parameters instead.
-                    var frameForPresentation = self.frame
-                    frameForPresentation.origin.y += self.frame.size.height
-                    frameForPresentation.size.height = 200
-                    self.tableViewController!.tableView.frame = frameForPresentation
-                }
-                
-                var frameForPresentation = self.frame
-                frameForPresentation.origin.y += self.frame.size.height;
-                frameForPresentation.size.height = 200;
-                tableViewController!.tableView.frame = frameForPresentation
-                
-                self.superview!.addSubview(tableViewController!.tableView)
-                self.tableViewController!.tableView.alpha = 0.0
-                
-                
-            }
-
-            UIView.animateWithDuration(
-                0.3,
-                delay: 0.0,
-                options: UIViewAnimationOptions.BeginFromCurrentState,
-                animations: ({
-                    self.tableViewController!.tableView.alpha = 1.0
-                }),
-                completion: nil
-            )
+            self.tableViewController = UITableViewController()
+            self.tableViewController!.tableView.delegate = self
+            self.tableViewController!.tableView.dataSource = self
+            self.tableViewController!.tableView.backgroundColor = self.popoverBackgroundColor
+            self.tableViewController!.tableView.separatorColor = self.seperatorColor
             
+            self.superview!.addSubview(tableViewController!.tableView)
+            self.tableViewController!.tableView.alpha = 0.0
         }
+
+        
+        if let frameSize = self.popoverSize {
+            self.tableViewController!.tableView.frame = frameSize
+        }
+        else {
+            //PopoverSize frame has not been set. Use default parameters instead.
+            var frameForPresentation = self.frame
+            frameForPresentation.origin.y += self.frame.size.height
+            frameForPresentation.size.height = CGFloat( min(4, data!.count) * 50 )
+            self.tableViewController!.tableView.frame = frameForPresentation
+        }
+        
+        UIView.animateWithDuration(
+            0.3,
+            delay: 0.0,
+            options: UIViewAnimationOptions.BeginFromCurrentState,
+            animations: ({
+                self.tableViewController!.tableView.alpha = 1.0
+            }),
+            completion: nil
+        )
         
     }
     
     func tapped (sender : UIGestureRecognizer!) {
         // if the tap is outside the table view and the textfield, close the popup table
-        if let table = self.tableViewController{
-            if !CGRectContainsPoint(table.tableView.frame, sender.locationInView(self.superview))
+        if let table = self.tableViewController {
+            if     !CGRectContainsPoint(table.tableView.frame, sender.locationInView(self.superview))
                 && !CGRectContainsPoint(self.frame, sender.locationInView(self.superview))
                 && self.isFirstResponder() {
                 

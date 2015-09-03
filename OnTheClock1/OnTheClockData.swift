@@ -144,7 +144,7 @@ class OnTheClockData {
         
         if results!.next() {
             activityID = Int64(results!.longForColumnIndex(0))
-            let update_acivity    = "UPDATE ACTIVITIES SET SYNCED = 0, LASTUSED = \(start)"
+            let update_acivity    = "UPDATE ACTIVITIES SET SYNCED = 0, LASTUSED = \(start) WHERE ACTIVITYID = \(activityID);"
             
             result = db.executeUpdate(update_acivity, withArgumentsInArray: nil)
             if (result == nil || result! == false) {
@@ -155,7 +155,7 @@ class OnTheClockData {
         }
         else {
             let insert_acivity    = "INSERT INTO ACTIVITIES (ACTIVITYNAME, LASTUSED, SYNCED) VALUES"
-                + " ('\(record.activity)', \(start), 0)"
+                + " ('\(record.activity)', \(start), 0);"
             
             result = db.executeUpdate(insert_acivity, withArgumentsInArray: nil)
             if (result == nil || result! == false) {
