@@ -90,13 +90,11 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
     func dataForPopoverInTextField(textfield: MPGTextField) -> [Dictionary<String, AnyObject>]? {
         OnTheClockData.sharedInstance.open()
 
-        let recentActities: [OnTheClockActivityRecord]? = OnTheClockData.sharedInstance.recentActities(nil)
+        let recentActities: [OnTheClockActivityRecord] = OnTheClockData.sharedInstance.recentActities(nil)
         var popupData = [Dictionary<String, AnyObject>]()
         
-        if recentActities != nil {
-            for activity: OnTheClockActivityRecord in recentActities! {
-                popupData.append([ "DisplayText" : activity.activityName, "DisplaySubText" : "\(activity.lastUsed) seconds ago"  ])
-            }
+        for activity: OnTheClockActivityRecord in recentActities {
+            popupData.append([ "DisplayText" : activity.activityName, "DisplaySubText" : "\(activity.lastUsed) seconds ago"  ])
         }
         
         return popupData
@@ -106,13 +104,11 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
     func dataForPopoverInEmptyTextField(textfield: MPGTextField) -> [Dictionary<String, AnyObject>]? {
         OnTheClockData.sharedInstance.open()
         
-        let recentActities: [OnTheClockActivityRecord]? = OnTheClockData.sharedInstance.recentActities(5)
+        let recentActities: [OnTheClockActivityRecord] = OnTheClockData.sharedInstance.recentActities(5)
         var popupData = [Dictionary<String, AnyObject>]()
         
-        if recentActities != nil {
-            for activity: OnTheClockActivityRecord in recentActities! {
-                popupData.append([ "DisplayText" : activity.activityName, "DisplaySubText" : "\(activity.lastUsed) seconds ago"  ])
-            }
+        for activity: OnTheClockActivityRecord in recentActities {
+            popupData.append([ "DisplayText" : activity.activityName, "DisplaySubText" : "\(activity.lastUsed) seconds ago"  ])
         }
 
         return popupData

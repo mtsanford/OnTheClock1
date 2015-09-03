@@ -112,6 +112,7 @@ class OnTheClockData {
     }
     
     
+    // Add a new work session, and update ACTITIVITIES table
     func addWorkSession(record: TimeRecord) {
         
         if !open() { return }
@@ -180,10 +181,10 @@ class OnTheClockData {
     }
     
     
-    func recentActities(limit: Int?) -> [OnTheClockActivityRecord]? {
-        if !open() { return nil }
+    func recentActities(limit: Int?) -> [OnTheClockActivityRecord] {
+        var recent: [OnTheClockActivityRecord] = [OnTheClockActivityRecord]()
         
-        var recent: [OnTheClockActivityRecord]? = [OnTheClockActivityRecord]()
+        if !open() { return recent }
 
         var query_activities = "SELECT ACTIVITYNAME, LASTUSED FROM ACTIVITIES ORDER BY LASTUSED DESC"
         if limit != nil {
@@ -194,11 +195,11 @@ class OnTheClockData {
         
         if results == nil {
             log(db.lastErrorMessage())
-            return nil
+            return recent
         }
         
         while results.next() {
-            recent!.append(OnTheClockActivityRecord(activityName: results.stringForColumnIndex(0)!, lastUsed: Int64(results.longForColumnIndex(1))))
+            recent.append(OnTheClockActivityRecord(activityName: results.stringForColumnIndex(0)!, lastUsed: Int64(results.longForColumnIndex(1))))
         }
         
         return recent
