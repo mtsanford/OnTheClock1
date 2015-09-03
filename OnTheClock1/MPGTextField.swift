@@ -132,7 +132,10 @@ class MPGTextField: UITextField, UITextFieldDelegate, UITableViewDelegate, UITab
             //PopoverSize frame has not been set. Use default parameters instead.
             var frameForPresentation = self.frame
             frameForPresentation.origin.y += self.frame.size.height
-            frameForPresentation.size.height = CGFloat( min(4, data!.count) * 50 )
+            
+            let contentHeight = self.tableViewController!.tableView.contentSize.height
+            
+            frameForPresentation.size.height = CGFloat(min(200, contentHeight))
             self.tableViewController!.tableView.frame = frameForPresentation
         }
         

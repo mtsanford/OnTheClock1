@@ -113,7 +113,7 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
     }
     
     func dataForPopoverInEmptyTextField(textfield: MPGTextField) -> [Dictionary<String, AnyObject>]? {
-        return popupDataRecent
+        return popupDataAll
     }
 
     
