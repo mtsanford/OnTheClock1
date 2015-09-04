@@ -40,7 +40,6 @@
 /* Begin PBXFileReference section */
 		96092D951B8D347C000A6BD4 /* MPGTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPGTextField.swift; sourceTree = "<group>"; };
 		96092DAF1B90D57B000A6BD4 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
-		968B76D01B90D93900A01189 /* OnTheClock1-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OnTheClock1-Bridging-Header.h"; sourceTree = "<group>"; };
 		968B76D11B90D93A00A01189 /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
 		968B76D21B90D93A00A01189 /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
 		968B76D31B90D93A00A01189 /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
@@ -66,6 +65,7 @@
 		96C2492D1B862CCF00AF01BE /* TimeRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeRecord.swift; sourceTree = "<group>"; };
 		96C249301B86A76700AF01BE /* TimeRecordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeRecordViewController.swift; sourceTree = "<group>"; };
 		96E9F4591B90D6B900EACD26 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = ../../../../../usr/lib/libsqlite3.dylib; sourceTree = "<group>"; };
+		96FC38241B99FCBD005B2D36 /* OnTheClock1-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OnTheClock1-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,7 +101,6 @@
 				968B76D91B90D93A00A01189 /* FMDB.h */,
 				968B76DA1B90D93A00A01189 /* FMResultSet.h */,
 				968B76DB1B90D93A00A01189 /* FMResultSet.m */,
-				968B76D01B90D93900A01189 /* OnTheClock1-Bridging-Header.h */,
 			);
 			name = fmdb;
 			path = ../../fmdb/src/fmdb;
@@ -130,6 +129,7 @@
 		96C2490C1B85660F00AF01BE /* OnTheClock1 */ = {
 			isa = PBXGroup;
 			children = (
+				96FC38241B99FCBD005B2D36 /* OnTheClock1-Bridging-Header.h */,
 				968B76BF1B90D8DB00A01189 /* fmdb */,
 				96092D951B8D347C000A6BD4 /* MPGTextField.swift */,
 				96C2490D1B85660F00AF01BE /* AppDelegate.swift */,
@@ -401,7 +401,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.marksanford.OnTheClock1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "../fmdb/src/fmdb/OnTheClock1-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "OnTheClock1/OnTheClock1-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -415,7 +415,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.marksanford.OnTheClock1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "../fmdb/src/fmdb/OnTheClock1-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "OnTheClock1/OnTheClock1-Bridging-Header.h";
 			};
 			name = Release;
 		};
