@@ -42,3 +42,8 @@ DerivedData
 
 Carthage/Build
 
+# ignore Parse libraries
+Bolts.framework
+Parse.framework
+ParseUI.framework
+

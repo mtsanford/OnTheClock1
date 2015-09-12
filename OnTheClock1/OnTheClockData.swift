@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Parse
 
 struct OnTheClockActivityRecord {
     var activityName: String
@@ -107,7 +108,36 @@ class OnTheClockData {
         }
     }
     
+    // write unsynched work sessions to Parse
     func sync() {
+        if !open() { return }
+
+        var results:FMResultSet!
+        
+        let query_worksession_unsynced = "SELECT START, ACTIVITYID, MINUTES FROM WORKSESSIONS WHERE SYNCED = 0"
+        results = db!.executeQuery(query_worksession_unsynced, withArgumentsInArray: nil)
+        
+        if results == nil {
+            log(db.lastErrorMessage())
+            return
+        }
+        
+        // TODO: Query parse first to make sure these work sessions are not already there
+        
+        // TODO: Fetch data that we don't have from Parse
+        
+        // TODO: Save activities too...
+
+        while results.next() {
+            let newSession = PFObject(className: "WorkSession")
+            newSession["start"] = results.longForColumnIndex(0)
+            newSession["activityid"] = results.longForColumnIndex(1)
+            newSession["minutes"] = results.longForColumnIndex(2)
+            newSession.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
+                print("New session has been saved.")
+            }
+        }
+
         
     }
     

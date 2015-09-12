@@ -120,7 +120,7 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
     func setActivityText(activity: String?) {
         activityString = activity
         activityLabel.text = activityString
-        if (activityLabel == nil || activityString!.characters.count == 0) {
+        if (activityString == nil || activityString!.characters.count == 0) {
             activityLabel.hidden = true
             startStopButton.hidden = true
         }
