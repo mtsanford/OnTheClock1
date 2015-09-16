@@ -42,14 +42,7 @@ class ViewController: UIViewController {
         print("unwindToMainView")
         let sourceViewController = sender.sourceViewController as? TimeRecordViewController
         if (sourceViewController != nil) {
-            let timeRecord = sourceViewController!.timeRecord
-            if (timeRecord != nil) {
-                OnTheClockData.sharedInstance.addWorkSession(timeRecord!)
-                OnTheClockData.sharedInstance.sync()
-                print(timeRecord!.start);
-                print(timeRecord!.duration);
-                print(timeRecord!.activity);
-            }
+            // resyinc and update UI
         }
     }
 

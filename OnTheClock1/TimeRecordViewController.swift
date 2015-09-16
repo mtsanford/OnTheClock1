@@ -27,9 +27,13 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
     var accumulatedTime: NSTimeInterval
     var activityString: String?
     var running: Bool = false
-    let minimumWorkTime = 60.0
+    var finishing: Bool = false
+    let minimumWorkTime = 2.0
     
     var timeRecord: TimeRecord?
+    
+    var workSession: WorkSession?
+    
     var recentActivities: [OnTheClockActivityRecord]?
     var popupDataAll = [Dictionary<String, AnyObject>]()
     var popupDataRecent = [Dictionary<String, AnyObject>]()
@@ -42,7 +46,28 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
             [ "floor" : 60*60*24*7, "unit": 60*60*24*7, "single": "week", "plural": "weeks" ],
         ]
     
-
+    @IBAction func donePressed(sender: UIBarButtonItem) {
+        print("donePressed")
+        if finishing { return }
+        finishing = true
+        pause()
+        
+        workSession = WorkSession()
+        Activity.getFromActivityName(fromActivityName: activityString!) {
+            (activity: Activity, error: NSError?) -> Void in
+            self.workSession?.activity = activity
+            self.workSession!.activity.last = NSDate()
+            self.workSession!.start = self.startTime!
+            self.workSession!.duration = self.accumulatedTime
+            self.workSession!.pinInBackgroundWithBlock() {
+                (BOOL succeeded, NSError error) -> Void in
+                self.workSession!.saveEventually()
+                self.performSegueWithIdentifier("unwindToMainView", sender: self)
+            }
+        }
+        
+    }
+    
     // TODO: Does this need to be implemented correctly?
     // could be "freeze dried" if put into background?
     required init?(coder aDecoder: NSCoder) {
@@ -151,10 +176,11 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
         }
     }
 
-    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if doneButton === sender {
+            
+            print("prepareForSegue")
             pause()
             
             
@@ -162,11 +188,22 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
             var minutes = Int(accumulatedTime/60.0)
             if (minutes < 1) { minutes = 1 }  //!!! FORCE < 60 seconds to 1 min for testing, or we get nil TimeRecord
             
+            workSession = WorkSession()
+            Activity.getFromActivityName(fromActivityName: activityString!) {
+                (activity: Activity?, error: NSError?) -> Void in
+                self.workSession!.activity.last = NSDate()
+                self.workSession!.start = self.startTime!
+                self.workSession!.duration = self.accumulatedTime
+                self.workSession!.pinInBackgroundWithBlock() {
+                    (BOOL succeeded, NSError error) -> Void in
+                    self.workSession!.saveEventually()
+                }
+            }
             
-            timeRecord = TimeRecord(activity: activityString!, start: startTime!, duration: minutes)
-            print("done")
-            print("accumulatedTime: + \(accumulatedTime)")
-            print("firstStartTime: + \(firstStartTime!)")
+//            timeRecord = TimeRecord(activity: activityString!, start: startTime!, duration: minutes)
+//            print("done")
+//            print("accumulatedTime: + \(accumulatedTime)")
+//            print("firstStartTime: + \(firstStartTime!)")
         }
     }
 
