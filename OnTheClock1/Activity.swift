@@ -33,6 +33,7 @@ class Activity: PFObject, PFSubclassing {
     // get an existing activity, or create a new one
     class func getFromActivityName(fromActivityName activityName: String, cb: (Activity, NSError?) -> Void ) {
         let query: PFQuery! = Activity.query()
+        query.fromLocalDatastore()
         query.whereKey("name", equalTo: activityName)
         query.getFirstObjectInBackgroundWithBlock() {
             (result: PFObject?, error: NSError?) -> Void in

@@ -32,14 +32,14 @@
 		968B76E21B910D5400A01189 /* OnTheClockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968B76E11B910D5400A01189 /* OnTheClockData.swift */; };
 		968B76E31B910D5400A01189 /* OnTheClockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968B76E11B910D5400A01189 /* OnTheClockData.swift */; };
 		96C2490E1B85660F00AF01BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2490D1B85660F00AF01BE /* AppDelegate.swift */; };
-		96C249101B85660F00AF01BE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2490F1B85660F00AF01BE /* ViewController.swift */; };
+		96C249101B85660F00AF01BE /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2490F1B85660F00AF01BE /* MainViewController.swift */; };
 		96C249131B85660F00AF01BE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96C249111B85660F00AF01BE /* Main.storyboard */; };
 		96C249151B85660F00AF01BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96C249141B85660F00AF01BE /* Assets.xcassets */; };
 		96C249181B85660F00AF01BE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96C249161B85660F00AF01BE /* LaunchScreen.storyboard */; };
 		96C249231B85660F00AF01BE /* OnTheClock1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C249221B85660F00AF01BE /* OnTheClock1Tests.swift */; };
 		96C2492E1B862CCF00AF01BE /* TimeRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2492D1B862CCF00AF01BE /* TimeRecord.swift */; };
 		96C2492F1B862CCF00AF01BE /* TimeRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2492D1B862CCF00AF01BE /* TimeRecord.swift */; };
-		96C249311B86A76700AF01BE /* TimeRecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C249301B86A76700AF01BE /* TimeRecordViewController.swift */; };
+		96C249311B86A76700AF01BE /* WorkSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C249301B86A76700AF01BE /* WorkSessionViewController.swift */; };
 		96E9F45A1B90D6B900EACD26 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 96E9F4591B90D6B900EACD26 /* libsqlite3.dylib */; };
 /* End PBXBuildFile section */
 
@@ -84,7 +84,7 @@
 		968B76E11B910D5400A01189 /* OnTheClockData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnTheClockData.swift; sourceTree = "<group>"; };
 		96C2490A1B85660F00AF01BE /* OnTheClock1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheClock1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		96C2490D1B85660F00AF01BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		96C2490F1B85660F00AF01BE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		96C2490F1B85660F00AF01BE /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		96C249121B85660F00AF01BE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		96C249141B85660F00AF01BE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		96C249171B85660F00AF01BE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -93,7 +93,7 @@
 		96C249221B85660F00AF01BE /* OnTheClock1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnTheClock1Tests.swift; sourceTree = "<group>"; };
 		96C249241B85660F00AF01BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		96C2492D1B862CCF00AF01BE /* TimeRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeRecord.swift; sourceTree = "<group>"; };
-		96C249301B86A76700AF01BE /* TimeRecordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeRecordViewController.swift; sourceTree = "<group>"; };
+		96C249301B86A76700AF01BE /* WorkSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkSessionViewController.swift; sourceTree = "<group>"; };
 		96E9F4591B90D6B900EACD26 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = ../../../../../usr/lib/libsqlite3.dylib; sourceTree = "<group>"; };
 		96FC38241B99FCBD005B2D36 /* OnTheClock1-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OnTheClock1-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -187,9 +187,9 @@
 				968B76BF1B90D8DB00A01189 /* fmdb */,
 				96092D951B8D347C000A6BD4 /* MPGTextField.swift */,
 				96C2490D1B85660F00AF01BE /* AppDelegate.swift */,
-				96C2490F1B85660F00AF01BE /* ViewController.swift */,
+				96C2490F1B85660F00AF01BE /* MainViewController.swift */,
 				96C249111B85660F00AF01BE /* Main.storyboard */,
-				96C249301B86A76700AF01BE /* TimeRecordViewController.swift */,
+				96C249301B86A76700AF01BE /* WorkSessionViewController.swift */,
 				96C249141B85660F00AF01BE /* Assets.xcassets */,
 				96C249161B85660F00AF01BE /* LaunchScreen.storyboard */,
 				96C249191B85660F00AF01BE /* Info.plist */,
@@ -313,11 +313,11 @@
 			files = (
 				968B76E21B910D5400A01189 /* OnTheClockData.swift in Sources */,
 				96092D961B8D347C000A6BD4 /* MPGTextField.swift in Sources */,
-				96C249101B85660F00AF01BE /* ViewController.swift in Sources */,
+				96C249101B85660F00AF01BE /* MainViewController.swift in Sources */,
 				96C2492E1B862CCF00AF01BE /* TimeRecord.swift in Sources */,
 				968B76DC1B90D93A00A01189 /* FMDatabase.m in Sources */,
 				968B76E01B90D93A00A01189 /* FMResultSet.m in Sources */,
-				96C249311B86A76700AF01BE /* TimeRecordViewController.swift in Sources */,
+				96C249311B86A76700AF01BE /* WorkSessionViewController.swift in Sources */,
 				968B76DE1B90D93A00A01189 /* FMDatabasePool.m in Sources */,
 				968B76DD1B90D93A00A01189 /* FMDatabaseAdditions.m in Sources */,
 				96C2490E1B85660F00AF01BE /* AppDelegate.swift in Sources */,

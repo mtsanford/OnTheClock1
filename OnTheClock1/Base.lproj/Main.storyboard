@@ -5,10 +5,10 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Main View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="OnTheClock1" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="MainViewController" customModule="OnTheClock1" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -30,11 +30,18 @@
                                         <rect key="frame" x="0.0" y="21" width="112" height="30"/>
                                         <state key="normal" title="Start working!"/>
                                         <connections>
-                                            <segue destination="UaH-AZ-08e" kind="show" identifier="timeRecordSegue" id="Zsl-m3-AGl"/>
+                                            <segue destination="UaH-AZ-08e" kind="show" identifier="workSessionSegue" id="Zsl-m3-AGl"/>
                                         </connections>
                                     </button>
                                 </subviews>
                             </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qfc-Fz-0VI">
+                                <rect key="frame" x="20" y="93" width="72" height="30"/>
+                                <state key="normal" title="Nuke local"/>
+                                <connections>
+                                    <action selector="nukeLocal:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Uwe-od-BCr"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -49,7 +56,7 @@
         <!--Work session-->
         <scene sceneID="tmK-h5-O1o">
             <objects>
-                <viewController id="3mo-3V-SmK" customClass="TimeRecordViewController" customModule="OnTheClock1" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="3mo-3V-SmK" customClass="WorkSessionViewController" customModule="OnTheClock1" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="fgp-h2-FwH"/>
                         <viewControllerLayoutGuide type="bottom" id="Gq0-ba-1p5"/>

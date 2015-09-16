@@ -1,5 +1,5 @@
 //
-//  TimeRecordViewController.swift
+//  WorkSessionViewController.swift
 //  OnTheClock1
 //
 //  Created by Work on 8/20/15.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFieldDelegate, UINavigationControllerDelegate {
+class WorkSessionViewController: UIViewController, UITextFieldDelegate, MPGTextFieldDelegate, UINavigationControllerDelegate {
     
     // MARK: Properties
     @IBOutlet weak var cancelButton: UIBarButtonItem!
@@ -30,11 +30,10 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
     var finishing: Bool = false
     let minimumWorkTime = 2.0
     
-    var timeRecord: TimeRecord?
-    
     var workSession: WorkSession?
     
-    var recentActivities: [OnTheClockActivityRecord]?
+    //var recentActivities: [OnTheClockActivityRecord]?
+    var recentActivities: [Activity]?
     var popupDataAll = [Dictionary<String, AnyObject>]()
     var popupDataRecent = [Dictionary<String, AnyObject>]()
     
@@ -45,28 +44,6 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
             [ "floor" : 60*60*24, "unit": 60*60*24, "single": "day", "plural": "days" ],
             [ "floor" : 60*60*24*7, "unit": 60*60*24*7, "single": "week", "plural": "weeks" ],
         ]
-    
-    @IBAction func donePressed(sender: UIBarButtonItem) {
-        print("donePressed")
-        if finishing { return }
-        finishing = true
-        pause()
-        
-        workSession = WorkSession()
-        Activity.getFromActivityName(fromActivityName: activityString!) {
-            (activity: Activity, error: NSError?) -> Void in
-            self.workSession?.activity = activity
-            self.workSession!.activity.last = NSDate()
-            self.workSession!.start = self.startTime!
-            self.workSession!.duration = self.accumulatedTime
-            self.workSession!.pinInBackgroundWithBlock() {
-                (BOOL succeeded, NSError error) -> Void in
-                self.workSession!.saveEventually()
-                self.performSegueWithIdentifier("unwindToMainView", sender: self)
-            }
-        }
-        
-    }
     
     // TODO: Does this need to be implemented correctly?
     // could be "freeze dried" if put into background?
@@ -87,20 +64,30 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
         minutesStackView.hidden = true
         startStopButton.hidden = true
         
+        createPopupItems()
         if recentActivities != nil && recentActivities!.count > 0 {
-            activityString = recentActivities![0].activityName
+            activityString = recentActivities![0].name
+            setActivityText(activityString)
+        }
+        activityTextField.text = activityString
+    }
+
+    
+    func createPopupItems() {
+        popupDataAll.removeAll()
+        popupDataRecent.removeAll()
+        if recentActivities != nil && recentActivities!.count > 0 {
+            activityString = recentActivities![0].name
             for (i, activity) in recentActivities!.enumerate() {
-                let popupItem = [ "DisplayText" : activity.activityName, "DisplaySubText" : agoStringFromDate(activity.lastUsed) ]
+                let popupItem = [ "DisplayText" : activity.name, "DisplaySubText" : agoStringFromDate(activity.last) ]
                 popupDataAll.append(popupItem)
                 if (i < 4) {
                     popupDataRecent.append(popupItem)
                 }
             }
         }
-        setActivityText(activityString)
-        activityTextField.text = activityString
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -134,10 +121,12 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
     
     
     func dataForPopoverInTextField(textfield: MPGTextField) -> [Dictionary<String, AnyObject>]? {
+        createPopupItems()
         return popupDataAll
     }
     
     func dataForPopoverInEmptyTextField(textfield: MPGTextField) -> [Dictionary<String, AnyObject>]? {
+        createPopupItems()
         return popupDataAll
     }
 
@@ -178,35 +167,31 @@ class TimeRecordViewController: UIViewController, UITextFieldDelegate, MPGTextFi
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if doneButton === sender {
-            
-            print("prepareForSegue")
-            pause()
-            
-            
-            //let minutes = Int(accumulatedTime/60.0)
-            var minutes = Int(accumulatedTime/60.0)
-            if (minutes < 1) { minutes = 1 }  //!!! FORCE < 60 seconds to 1 min for testing, or we get nil TimeRecord
-            
-            workSession = WorkSession()
-            Activity.getFromActivityName(fromActivityName: activityString!) {
-                (activity: Activity?, error: NSError?) -> Void in
-                self.workSession!.activity.last = NSDate()
-                self.workSession!.start = self.startTime!
-                self.workSession!.duration = self.accumulatedTime
-                self.workSession!.pinInBackgroundWithBlock() {
-                    (BOOL succeeded, NSError error) -> Void in
-                    self.workSession!.saveEventually()
-                }
-            }
-            
-//            timeRecord = TimeRecord(activity: activityString!, start: startTime!, duration: minutes)
-//            print("done")
-//            print("accumulatedTime: + \(accumulatedTime)")
-//            print("firstStartTime: + \(firstStartTime!)")
-        }
+        print("prepareForSegue ")
     }
 
+    @IBAction func donePressed(sender: UIBarButtonItem) {
+        print("donePressed")
+        if finishing { return }
+        finishing = true
+        pause()
+        
+        workSession = WorkSession()
+        Activity.getFromActivityName(fromActivityName: activityString!) {
+            (activity: Activity, error: NSError?) -> Void in
+            self.workSession?.activity = activity
+            self.workSession!.activity.last = NSDate()
+            self.workSession!.start = self.startTime!
+            self.workSession!.duration = self.accumulatedTime
+            self.workSession!.pinInBackgroundWithBlock() {
+                (BOOL succeeded, NSError error) -> Void in
+                self.workSession!.saveEventually()
+                self.performSegueWithIdentifier("unwindToMainView", sender: self)
+            }
+        }
+        
+    }
+    
     @IBAction func startStopPressed(sender: UIButton) {
         if running {
             pause()
