@@ -3,4 +3,5 @@
 //
 
 #import "../../fmdb/src/fmdb/FMDB.h"
+#import <Parse/Parse.h>
 #import <Parse/PFObject+Subclass.h>

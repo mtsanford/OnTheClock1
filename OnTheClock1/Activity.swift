@@ -9,12 +9,10 @@
 import Foundation
 import Parse
 
-
 class Activity: PFObject, PFSubclassing {
     
     @NSManaged var name: String
     @NSManaged var last: NSDate
-    
     
     override class func initialize() {
         struct Static {
@@ -28,7 +26,6 @@ class Activity: PFObject, PFSubclassing {
     static func parseClassName() -> String {
         return "Activity"
     }
-    
     
     // get an existing activity, or create a new one
     class func getFromActivityName(fromActivityName activityName: String, cb: (Activity, NSError?) -> Void ) {
@@ -51,5 +48,6 @@ class Activity: PFObject, PFSubclassing {
             cb(activity, nil)
         }
     }
+    
     
 }

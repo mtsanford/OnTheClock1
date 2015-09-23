@@ -9,7 +9,6 @@
 import Foundation
 import Parse
 
-
 class WorkSession: PFObject, PFSubclassing {
 
     @NSManaged var activity: Activity
