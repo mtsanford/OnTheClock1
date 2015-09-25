@@ -21,6 +21,8 @@ class MainViewController: UIViewController {
         
         OnTheClockData.sharedInstance.open()
         
+        createTestButtons()
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -28,10 +30,6 @@ class MainViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    @IBAction func nukeLocal(sender: AnyObject) {
-        PFObject.unpinAllObjectsInBackground()
-    }
-    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "workSessionSegue" {
@@ -63,5 +61,46 @@ class MainViewController: UIViewController {
         }
     }
 
+    // Development experiment functions
+
+    let actions = [
+        [ "action": "unpinAll", "text": "Unpin all"],
+        [ "action": "syncActions", "text": "Sync actions"],
+    ]
+    
+    func createTestButtons() {
+
+        let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as NSString
+        NSLog("Document Path: %@", documentsPath)
+        
+        for (i, action) in actions.enumerate() {
+            let button   = UIButton(type: UIButtonType.System)
+            button.frame = CGRectMake(20, 80.0 + CGFloat(i)*30.0, 220, 30)
+            button.backgroundColor = UIColor.greenColor()
+            button.setTitle(action["text"], forState: UIControlState.Normal)
+            let selector = Selector(action["action"]! + ":")
+            button.addTarget(self, action: selector, forControlEvents: UIControlEvents.TouchUpInside)
+            self.view.addSubview(button)
+        }
+        
+        
+    }
+    
+    func unpinAll(sender: AnyObject) {
+        print("unpinAll");
+    }
+    
+    func syncActions(sender: AnyObject) {
+        print("syncActions");
+        DataSync.sharedInstance.syncActivities().continueWithBlock {
+            (task: BFTask!) -> AnyObject! in
+            print("task done")
+            print(task)
+            return task
+        }
+    }
+    
+    
+    
 }
 

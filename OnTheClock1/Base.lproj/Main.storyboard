@@ -35,13 +35,6 @@
                                     </button>
                                 </subviews>
                             </stackView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qfc-Fz-0VI">
-                                <rect key="frame" x="20" y="93" width="72" height="30"/>
-                                <state key="normal" title="Nuke local"/>
-                                <connections>
-                                    <action selector="nukeLocal:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Uwe-od-BCr"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
