@@ -11,7 +11,7 @@ import Parse
 
 class WorkSession: PFObject, PFSubclassing {
 
-    @NSManaged var activity: Activity
+    @NSManaged var activity: Activity!
     @NSManaged var start: NSDate
     @NSManaged var duration: NSNumber
     

@@ -27,7 +27,6 @@
 		968B76DF1B90D93A00A01189 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 968B76D81B90D93A00A01189 /* FMDatabaseQueue.m */; };
 		968B76E01B90D93A00A01189 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 968B76DB1B90D93A00A01189 /* FMResultSet.m */; };
 		968B76E21B910D5400A01189 /* OnTheClockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968B76E11B910D5400A01189 /* OnTheClockData.swift */; };
-		968B76E31B910D5400A01189 /* OnTheClockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968B76E11B910D5400A01189 /* OnTheClockData.swift */; };
 		96C2490E1B85660F00AF01BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2490D1B85660F00AF01BE /* AppDelegate.swift */; };
 		96C249101B85660F00AF01BE /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2490F1B85660F00AF01BE /* MainViewController.swift */; };
 		96C249131B85660F00AF01BE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96C249111B85660F00AF01BE /* Main.storyboard */; };
@@ -343,7 +342,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				96C249231B85660F00AF01BE /* OnTheClock1Tests.swift in Sources */,
-				968B76E31B910D5400A01189 /* OnTheClockData.swift in Sources */,
 				96C2492F1B862CCF00AF01BE /* TimeRecord.swift in Sources */,
 				961591801BA71C6F007A573A /* WorkSession.swift in Sources */,
 			);
