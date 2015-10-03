@@ -33,36 +33,35 @@ class DataSync {
         activityQuery.fromLocalDatastore()
         activityQuery.getFirstObjectInBackground().continueWithBlock {
             (task: BFTask!) -> AnyObject! in
-            if (task.error == nil) {
+            if (task.error != nil) {
+                print("new activity")
                 ourActivity = Activity()
                 ourActivity.name = activityName
-                print("new activity")
-                return ourActivity.pinInBackground()
             } else {
                 // no error indicates a match was found
                 print("existing activity found")
                 ourActivity = task.result as! Activity
-                return task
             }
+            return nil
+        }.continueWithSuccessBlock {
+            (task: BFTask!) -> BFTask in
+            print("pinning workSession...")
+            ourWorkSession.activity = ourActivity
+            ourWorkSession.start = start
+            ourWorkSession.duration = duration
+            ourActivity.last = start  // TODO add duration
+            ourWorkSession.saveEventually()
+            return ourWorkSession.pinInBackground()
         }.continueWithBlock {
             (task: BFTask!) -> AnyObject! in
             if (task.error == nil) {
-                ourWorkSession.activity = ourActivity
-                ourActivity.last = start  // TODO add duration
-                ourWorkSession.saveEventually()
-                return ourWorkSession.pinInBackground()
+                ourTask.setResult(ourWorkSession)
             }
             else {
-                return task
+                ourTask.setError(task.error)
             }
-        }.continueWithBlock {
-            (task: BFTask!) -> AnyObject! in
-            if (task.error == nil) {
-                return ourWorkSession
-            }
-            else {
-                return nil
-            }
+            print("newWorkSession finished")
+            return nil
         }
         return ourTask.task
     }

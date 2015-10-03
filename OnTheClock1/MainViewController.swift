@@ -8,8 +8,9 @@
 
 import UIKit
 import Parse
+import ParseUI
 
-class MainViewController: UIViewController {
+class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate {
     
     // MARK: Properties
     @IBOutlet weak var startButton: UIButton!
@@ -21,10 +22,31 @@ class MainViewController: UIViewController {
         
         OnTheClockData.sharedInstance.open()
         
+        if (PFUser.currentUser() == nil) {
+            let loginController = PFLogInViewController()
+            loginController.delegate = self
+            self.presentViewController(loginController, animated: true, completion: nil)
+        }
+        
         createTestButtons()
         
     }
 
+    override func viewDidAppear(animated: Bool) {
+        if (PFUser.currentUser() == nil) {
+            let loginController = PFLogInViewController()
+            loginController.delegate = self
+            
+            let signUpController = PFSignUpViewController()
+            signUpController.delegate = self
+            loginController.signUpController = signUpController
+            
+            self.presentViewController(loginController, animated: true, completion: nil)
+        }
+        
+        createTestButtons()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -88,6 +110,16 @@ class MainViewController: UIViewController {
     
     func unpinAll(sender: AnyObject) {
         print("unpinAll");
+        PFObject.unpinAllObjectsInBackground().continueWithBlock {
+            (task: BFTask!) -> AnyObject! in
+            if (task.error != nil) {
+                print(task.error)
+            }
+            else {
+                print("unpinned all success")
+            }
+            return nil
+        }
     }
     
     func syncActions(sender: AnyObject) {
@@ -100,7 +132,37 @@ class MainViewController: UIViewController {
         }
     }
     
+    // MARK: PFLogInViewControllerDelegate
     
+    func logInViewController(logInController: PFLogInViewController, didLogInUser user: PFUser) {
+        print("login with user")
+        self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+    }
     
+    func logInViewControllerDidCancelLogIn(logInController: PFLogInViewController) {
+        print("login cancel")
+        self.navigationController?.popViewControllerAnimated(true)
+    }
+    
+    func logInViewController(logInController: PFLogInViewController, didFailToLogInWithError error: NSError?) {
+        print("login fail")
+        //self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    // MARK: PFSignUpViewControllerDelegate
+    
+    func signUpViewController(signUpController: PFSignUpViewController, didSignUpUser user: PFUser) {
+        print("signup success")
+        self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func signUpViewController(signUpController: PFSignUpViewController, didFailToSignUpWithError error: NSError?) {
+        print("signup error")
+    }
+    
+    func signUpViewControllerDidCancelSignUp(signUpController: PFSignUpViewController) {
+        print("signup cancel")
+        self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+    }
 }
 

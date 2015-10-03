@@ -176,6 +176,14 @@ class WorkSessionViewController: UIViewController, UITextFieldDelegate, MPGTextF
         finishing = true
         pause()
         
+        DataSync.sharedInstance.newWorkSession(activityString!, start: self.startTime!, duration: self.accumulatedTime).continueWithBlock {
+            (task: BFTask!) -> AnyObject! in
+            self.performSegueWithIdentifier("unwindToMainView", sender: self)
+            return nil
+        }
+        
+        return;
+        
         workSession = WorkSession()
         Activity.getFromActivityName(fromActivityName: activityString!) {
             (activity: Activity, error: NSError?) -> Void in
