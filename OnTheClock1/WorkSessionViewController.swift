@@ -187,10 +187,11 @@ class WorkSessionViewController: UIViewController, UITextFieldDelegate, MPGTextF
         workSession = WorkSession()
         Activity.getFromActivityName(fromActivityName: activityString!) {
             (activity: Activity, error: NSError?) -> Void in
-            self.workSession?.activity = activity
+            self.workSession!.activity = activity
             self.workSession!.activity.last = NSDate()
             self.workSession!.start = self.startTime!
             self.workSession!.duration = self.accumulatedTime
+            self.workSession!.user = PFUser.currentUser()
             self.workSession!.pinInBackgroundWithBlock() {
                 (BOOL succeeded, NSError error) -> Void in
                 self.workSession!.saveEventually()

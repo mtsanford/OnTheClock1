@@ -49,6 +49,7 @@ class DataSync {
             ourWorkSession.activity = ourActivity
             ourWorkSession.start = start
             ourWorkSession.duration = duration
+            ourWorkSession.user = PFUser.currentUser()
             ourActivity.last = start  // TODO add duration
             ourWorkSession.saveEventually()
             return ourWorkSession.pinInBackground()

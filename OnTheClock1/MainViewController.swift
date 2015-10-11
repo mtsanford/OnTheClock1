@@ -17,23 +17,21 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
 
     var databasePath = NSString()
     
+    // present login view if user has not logged in, but allow them to use without
+    // loggint in
+    var checkedLogin = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         OnTheClockData.sharedInstance.open()
-        
-        if (PFUser.currentUser() == nil) {
-            let loginController = PFLogInViewController()
-            loginController.delegate = self
-            self.presentViewController(loginController, animated: true, completion: nil)
-        }
         
         createTestButtons()
         
     }
 
     override func viewDidAppear(animated: Bool) {
-        if (PFUser.currentUser() == nil) {
+        if (PFUser.currentUser() == nil && self.checkedLogin == false) {
             let loginController = PFLogInViewController()
             loginController.delegate = self
             
@@ -135,16 +133,19 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
     // MARK: PFLogInViewControllerDelegate
     
     func logInViewController(logInController: PFLogInViewController, didLogInUser user: PFUser) {
+        self.checkedLogin = true
         print("login with user")
         self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func logInViewControllerDidCancelLogIn(logInController: PFLogInViewController) {
+        self.checkedLogin = true
         print("login cancel")
         self.navigationController?.popViewControllerAnimated(true)
     }
     
     func logInViewController(logInController: PFLogInViewController, didFailToLogInWithError error: NSError?) {
+        self.checkedLogin = true
         print("login fail")
         //self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
     }
