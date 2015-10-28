@@ -30,6 +30,7 @@ class DataSync {
         
         let activityQuery: PFQuery! = Activity.query()
         activityQuery.whereKey("name", equalTo: activityName)
+        activityQuery.whereKey("user", equalTo: PFUser.currentUser()!)
         activityQuery.fromLocalDatastore()
         activityQuery.getFirstObjectInBackground().continueWithBlock {
             (task: BFTask!) -> AnyObject! in
@@ -37,6 +38,7 @@ class DataSync {
                 print("new activity")
                 ourActivity = Activity()
                 ourActivity.name = activityName
+                ourActivity.user = PFUser.currentUser()
             } else {
                 // no error indicates a match was found
                 print("existing activity found")
@@ -45,14 +47,19 @@ class DataSync {
             return nil
         }.continueWithSuccessBlock {
             (task: BFTask!) -> BFTask in
-            print("pinning workSession...")
             ourWorkSession.activity = ourActivity
             ourWorkSession.start = start
             ourWorkSession.duration = duration
             ourWorkSession.user = PFUser.currentUser()
-            ourActivity.last = start  // TODO add duration
             ourWorkSession.saveEventually()
+            print("pinning workSession...")
             return ourWorkSession.pinInBackground()
+        }.continueWithSuccessBlock {
+            (task: BFTask!) -> BFTask in
+            print("pinning activity...")
+            ourActivity.last = start  // TODO add duration
+            ourActivity.saveEventually()
+            return ourActivity.pinInBackground()
         }.continueWithBlock {
             (task: BFTask!) -> AnyObject! in
             if (task.error == nil) {

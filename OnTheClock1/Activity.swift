@@ -13,6 +13,7 @@ class Activity: PFObject, PFSubclassing {
     
     @NSManaged var name: String
     @NSManaged var last: NSDate
+    @NSManaged var user: PFUser!
     
     override class func initialize() {
         struct Static {

@@ -86,6 +86,8 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
     let actions = [
         [ "action": "unpinAll", "text": "Unpin all"],
         [ "action": "syncActions", "text": "Sync actions"],
+        [ "action": "saveNew", "text": "Save new with pointer"],
+        [ "action": "newWorkSession", "text": "call newWorkSession"],
     ]
     
     func createTestButtons() {
@@ -129,6 +131,79 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
             return task
         }
     }
+    
+    func saveNew(sender: AnyObject) {
+        print("saveNew");
+        
+        let newActivity = Activity()
+        newActivity.name = "saveNew"
+        newActivity.last = NSDate()
+        newActivity.user = PFUser.currentUser()
+        
+        let newWorkSession = WorkSession();
+        newWorkSession.start = NSDate()
+        newWorkSession.duration = 50
+        newWorkSession.activity = newActivity
+        newWorkSession.user = PFUser.currentUser()
+        
+        newWorkSession.pinInBackground().continueWithBlock {
+            (task: BFTask!) -> AnyObject! in
+            print("saveNew pinned done")
+            return newWorkSession.saveInBackground()
+            }.continueWithBlock {
+                (task: BFTask!) -> AnyObject! in
+                print("saveNew done")
+                print(task)
+                print(newWorkSession)
+                return task
+        }
+    }
+    
+    func newWorkSession(sender: AnyObject) {
+        print("newWorkSession");
+        
+        let newActivity = Activity()
+        newActivity.name = "saveNew"
+        newActivity.last = NSDate()
+        newActivity.user = PFUser.currentUser()
+        
+        let newWorkSession = WorkSession();
+        newWorkSession.start = NSDate()
+        newWorkSession.duration = 50
+        newWorkSession.activity = newActivity
+        newWorkSession.user = PFUser.currentUser()
+        
+        var parameters = Dictionary<NSObject, AnyObject>()
+        parameters["activityName"] = "saveNew"
+        parameters["objectId"] = newWorkSession.objectId
+        parameters["start"] = newWorkSession.start.description
+        parameters["duration"] = newWorkSession.duration
+        
+        print(parameters)
+        print("newWorkSession:")
+        print(newWorkSession)
+
+        newWorkSession.pinInBackground().continueWithBlock {
+            (task: BFTask!) -> AnyObject! in
+            return PFCloud.callFunctionInBackground("newWorkSession", withParameters: parameters)
+        }.continueWithBlock {
+            (task: BFTask!) -> AnyObject! in
+            if (task.error != nil) {
+                print("error")
+                print(task.error)
+            }
+            else {
+                print("success")
+                if (task.result != nil) {
+                    print(task.result)
+                }
+            }
+            print("newWorkSession done")
+            return task
+        }
+        
+    }
+    
     
     // MARK: PFLogInViewControllerDelegate
     
