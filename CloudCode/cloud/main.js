@@ -1,109 +1,94 @@
 
-// Use Parse.Cloud.define to define as many cloud functions as you want.
-// For example:
-Parse.Cloud.define("hello", function(request, response) {
-  response.success("Hello world! Let's see if I can deploy new code with account key!");
-});
-
 var WorkSession = Parse.Object.extend("WorkSession");
 var Activity = Parse.Object.extend("Activity");
 
-// Save a new Work Session.   In this approach, clients *NEVER* save WorkSession or Activity
-// objects to Parse.  They just call this function, and then fetch to make sure their data is 
-// up to date.
-//
-// request.params : {
-//   objectId : objectId of the work session
-//   start (Date) :
-//   duration (Float)	
-//   activityName (String)	
-// }
-//     
+/*
+ * newWorkSession
+ * 
+ * Save a new WorkSession.   In this approach, clients *NEVER* save WorkSession or Activity
+ * objects to Parse, only saving local objects with provisional = true if the network is not available.  
+ * They just call this function, and this function will create WorkSession
+ * and/or Activity objects in Parse cloud as required.
+ *
+ * Required parameters:
+ *   start (Date)
+ *   duration (Number)	
+ *   activityName (String)
+ *
+ */
 Parse.Cloud.define("newWorkSession", function(request, response) {
-	var workSession, activity, startDate,
+	var workSession, activity,
 	    user = request.user,
+	    start = request.params.start,
 	    duration = request.params.duration,
-	    activityName = request.params.activityName
-		objectId = request.params.objectId;
+	    activityName = request.params.activityName;
 	
-    console.log("newWorkSession request:\n" + JSON.stringify(request) + "\n");  
-
+	//console.log("request:\n" + JSON.stringify(request));
+	
     if (!user) {
        response.error("Must be signed in to call newWorkSession.")
        return;
-     }
+    }
+	if (!start || get_type(start) != "[object Date]") {
+		response.error("Parameter 'start' (type Date) missing");
+		return;
+	}
+	if (!duration || typeof duration != "number") {
+		response.error("Parameter 'duration' (type number) missing");
+		return;
+	}
+	if (!activityName || typeof activityName != "string") {
+		response.error("Parameter 'activityName' (type string) missing");
+		return;
+	}
 
-	// TODO: Need parse start string into Date() object
-	startDate = new Date();
-	 	
+    // If there is already a WorkSession with the same start time, then don't create another one.
 	var wsQuery = new Parse.Query(WorkSession);
-	wsQuery.equalTo("objectId", objectId);
+	wsQuery.equalTo("start", start);
 	wsQuery.equalTo("user", user);
 	wsQuery.first().then(function(result) {
-		// If the the WorkSession already exists, assume that the client just didn't
-		// get the acknowledgement for some reason.  We're done.
 		if (result) {
-			workSession = result;
-			response.success();
+			response.success("already exists");
 			return;
 		}
 		
-		// otherwise, were going to the create the cloud version of the object, setting
-		// the Activity pointer ourselves.
-		workSession = WorkSession.createWithoutData(objectId);
+		workSession = new WorkSession();
 		workSession.set("user", user);
-		workSession.set("start", startDate);
+		workSession.set("start", start);
 		workSession.set("duration", duration);		
+		workSession.set("provisional", false);
 		
+		// If there is already an Activity with name = activityName, then re-use that one
+		// Otherwise create a new one
 		var aQuery = new Parse.Query(Activity);
 		aQuery.equalTo("name", activityName);
 		aQuery.equalTo("user", user);
-		return aQuery.first();
-	}).then(function(result) {
-		// If there is already an Activity with name = request.activityName, then use that one
-		if (result) {
-			activity = result;
-			activity.increment("totalTime", duration);
-		}
-		// Otherwise create a new one
-		else {
-			activity = new Activity();
-			activity.set("name", activityName);
-			activity.set("totalTime", duration);
-			activity.set("last", startDate);
-			activity.set("user", user);
-		}
-		// TODO: Confirm that activity will also be saved, since workSession points to it 
-	    workSession.set("activity", activity);
-		return workSession.save();
-	}).then(function(result) {
-		response.success();
+		return aQuery.first().then(function(result) {
+			if (result) {
+				activity = result;
+				activity.increment("totalTime", duration);
+			}
+			else {
+				activity = new Activity();
+				activity.set("name", activityName);
+				activity.set("totalTime", duration);
+				activity.set("user", user);
+				activity.set("provisional", false);
+			}
+			activity.set("last", start);
+		    workSession.set("activity", activity);
+			return workSession.save();
+		}).then(function(result) {
+			response.success("saved!");
+		});
 	}, function(error) {
 		response.error(error);
-	})
+	});
 });
-
-Parse.Cloud.beforeSave("WorkSession", function(request, response) {
-  request.object.set("duration", 666);
-  var activity = request.object.get("activity");
-  console.log("request:\n" + JSON.stringify(request) + "\n");  
-  //console.log("activity:\n" + JSON.stringify(activity) + "\n");
-  //console.log("activity.objectId:\n" + activity.objectId + "\n");
-  //console.log("activity type:\n" + get_type(activity) + "\n");
-  response.success();
-});
-
 
 /*
-Parse.Cloud.afterSave("WorkSession", function(request) {
-  var activity = request.object.get("activity");
-  console.log("aftersave...\n");
-  console.log("activity:\n" + JSON.stringify(activity) + "\n");
-  console.log("activity.objectId:\n" + activity.objectId + "\n");
-  console.log("activity type:\n" + get_type(activity) + "\n");
-});
-*/
-
+ * Utility functions
+ */
 
 function get_type(thing){
     if(thing===null)return "[object Null]"; // special case

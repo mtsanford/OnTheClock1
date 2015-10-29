@@ -175,25 +175,39 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
         
         var parameters = Dictionary<NSObject, AnyObject>()
         parameters["activityName"] = "saveNew"
-        parameters["objectId"] = newWorkSession.objectId
-        parameters["start"] = newWorkSession.start.description
+        parameters["start"] = newWorkSession.start
         parameters["duration"] = newWorkSession.duration
         
         print(parameters)
-        print("newWorkSession:")
-        print(newWorkSession)
 
         newWorkSession.pinInBackground().continueWithBlock {
             (task: BFTask!) -> AnyObject! in
+            print("newWorkSession:")
+            print(newWorkSession)
             return PFCloud.callFunctionInBackground("newWorkSession", withParameters: parameters)
         }.continueWithBlock {
             (task: BFTask!) -> AnyObject! in
             if (task.error != nil) {
-                print("error")
+                print("1 error")
                 print(task.error)
             }
             else {
-                print("success")
+                print("1 success")
+                if (task.result != nil) {
+                    print(task.result)
+                }
+            }
+            
+            // try to do again with same start time
+            return PFCloud.callFunctionInBackground("newWorkSession", withParameters: parameters)
+        }.continueWithBlock {
+            (task: BFTask!) -> AnyObject! in
+            if (task.error != nil) {
+                print("2 error")
+                print(task.error)
+            }
+            else {
+                print("2 success")
                 if (task.result != nil) {
                     print(task.result)
                 }
