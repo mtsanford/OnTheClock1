@@ -15,12 +15,14 @@ class WorkSession: PFObject, PFSubclassing {
     @NSManaged var start: NSDate
     @NSManaged var duration: NSNumber
     @NSManaged var user: PFUser!
+    @NSManaged var provisional: Bool
     
     override class func initialize() {
         struct Static {
             static var onceToken : dispatch_once_t = 0;
         }
         dispatch_once(&Static.onceToken) {
+            print("registered WorkSession")
             self.registerSubclass()
         }
     }

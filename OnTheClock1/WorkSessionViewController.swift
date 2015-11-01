@@ -176,29 +176,12 @@ class WorkSessionViewController: UIViewController, UITextFieldDelegate, MPGTextF
         finishing = true
         pause()
         
-        DataSync.sharedInstance.newWorkSession(activityString!, start: self.startTime!, duration: self.accumulatedTime).continueWithBlock {
+        DataSync.sharedInstance.newWorkSession(activityString!, start: self.firstStartTime!, duration: self.accumulatedTime).continueWithBlock {
             (task: BFTask!) -> AnyObject! in
             self.performSegueWithIdentifier("unwindToMainView", sender: self)
             return nil
         }
-        
         return;
-        
-        workSession = WorkSession()
-        Activity.getFromActivityName(fromActivityName: activityString!) {
-            (activity: Activity, error: NSError?) -> Void in
-            self.workSession!.activity = activity
-            self.workSession!.activity.last = NSDate()
-            self.workSession!.start = self.startTime!
-            self.workSession!.duration = self.accumulatedTime
-            self.workSession!.user = PFUser.currentUser()
-            self.workSession!.pinInBackgroundWithBlock() {
-                (BOOL succeeded, NSError error) -> Void in
-                self.workSession!.saveEventually()
-                self.performSegueWithIdentifier("unwindToMainView", sender: self)
-            }
-        }
-        
     }
     
     @IBAction func startStopPressed(sender: UIButton) {

@@ -22,12 +22,8 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
     var checkedLogin = false
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        OnTheClockData.sharedInstance.open()
-        
+        super.viewDidLoad()        
         createTestButtons()
-        
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -58,6 +54,7 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
             let workSessionViewController = navController?.topViewController as? WorkSessionViewController
             if let query = Activity.query() {
                 query.fromLocalDatastore()
+                query.whereKey("user", equalTo: PFUser.currentUser()!)
                 query.orderByDescending("last")
                 do {
                     var recentActivities: [Activity]
@@ -84,10 +81,10 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
     // Development experiment functions
 
     let actions = [
+        [ "action": "saveNew", "text": "new local WS"],
+        [ "action": "syncToParse", "text": "datasync.syncToParse"],
+        [ "action": "saveToParse", "text": "ds.saveProvisionalWorkSessionsToParse"],
         [ "action": "unpinAll", "text": "Unpin all"],
-        [ "action": "syncActions", "text": "Sync actions"],
-        [ "action": "saveNew", "text": "Save new with pointer"],
-        [ "action": "newWorkSession", "text": "call newWorkSession"],
     ]
     
     func createTestButtons() {
@@ -97,7 +94,7 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
         
         for (i, action) in actions.enumerate() {
             let button   = UIButton(type: UIButtonType.System)
-            button.frame = CGRectMake(20, 80.0 + CGFloat(i)*30.0, 220, 30)
+            button.frame = CGRectMake(20, 80.0 + CGFloat(i)*30.0, 300, 30)
             button.backgroundColor = UIColor.greenColor()
             button.setTitle(action["text"], forState: UIControlState.Normal)
             let selector = Selector(action["action"]! + ":")
@@ -122,12 +119,12 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
         }
     }
     
-    func syncActions(sender: AnyObject) {
-        print("syncActions");
-        DataSync.sharedInstance.syncActivities().continueWithBlock {
+    func syncToParse(sender: AnyObject) {
+        DataSync.sharedInstance.syncToParse().continueWithBlock {
             (task: BFTask!) -> AnyObject! in
-            print("task done")
-            print(task)
+            print("syncToParse done")
+            if (task.error != nil) { print(task.error) }
+            else if (task.result != nil) { print(task.result) }
             return task
         }
     }
@@ -135,89 +132,29 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
     func saveNew(sender: AnyObject) {
         print("saveNew");
         
-        let newActivity = Activity()
-        newActivity.name = "saveNew"
-        newActivity.last = NSDate()
-        newActivity.user = PFUser.currentUser()
-        
-        let newWorkSession = WorkSession();
-        newWorkSession.start = NSDate()
-        newWorkSession.duration = 50
-        newWorkSession.activity = newActivity
-        newWorkSession.user = PFUser.currentUser()
-        
-        newWorkSession.pinInBackground().continueWithBlock {
+        let now = NSDate()
+        DataSync.sharedInstance.newWorkSession("activity2", start: now, duration: 50).continueWithSuccessBlock {
             (task: BFTask!) -> AnyObject! in
-            print("saveNew pinned done")
-            return newWorkSession.saveInBackground()
-            }.continueWithBlock {
-                (task: BFTask!) -> AnyObject! in
-                print("saveNew done")
-                print(task)
-                print(newWorkSession)
-                return task
-        }
-    }
-    
-    func newWorkSession(sender: AnyObject) {
-        print("newWorkSession");
-        
-        let newActivity = Activity()
-        newActivity.name = "saveNew"
-        newActivity.last = NSDate()
-        newActivity.user = PFUser.currentUser()
-        
-        let newWorkSession = WorkSession();
-        newWorkSession.start = NSDate()
-        newWorkSession.duration = 50
-        newWorkSession.activity = newActivity
-        newWorkSession.user = PFUser.currentUser()
-        
-        var parameters = Dictionary<NSObject, AnyObject>()
-        parameters["activityName"] = "saveNew"
-        parameters["start"] = newWorkSession.start
-        parameters["duration"] = newWorkSession.duration
-        
-        print(parameters)
-
-        newWorkSession.pinInBackground().continueWithBlock {
-            (task: BFTask!) -> AnyObject! in
-            print("newWorkSession:")
-            print(newWorkSession)
-            return PFCloud.callFunctionInBackground("newWorkSession", withParameters: parameters)
-        }.continueWithBlock {
-            (task: BFTask!) -> AnyObject! in
-            if (task.error != nil) {
-                print("1 error")
-                print(task.error)
-            }
-            else {
-                print("1 success")
-                if (task.result != nil) {
-                    print(task.result)
-                }
-            }
-            
-            // try to do again with same start time
-            return PFCloud.callFunctionInBackground("newWorkSession", withParameters: parameters)
-        }.continueWithBlock {
-            (task: BFTask!) -> AnyObject! in
-            if (task.error != nil) {
-                print("2 error")
-                print(task.error)
-            }
-            else {
-                print("2 success")
-                if (task.result != nil) {
-                    print(task.result)
-                }
-            }
-            print("newWorkSession done")
+            print("saved new workSession to local store");
             return task
         }
         
     }
     
+
+    func saveToParse(sender: AnyObject) {
+        print("saveToParse");
+        DataSync.sharedInstance.saveProvisionalWorkSessions().continueWithSuccessBlock {
+            (task: BFTask!) -> AnyObject! in
+            if (task.error != nil) {
+                print(task.error)
+            }
+            else {
+                print("saved provisional work sessions to parse");
+            }
+            return nil
+        }
+    }
     
     // MARK: PFLogInViewControllerDelegate
     
