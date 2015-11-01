@@ -42,6 +42,8 @@ Parse.Cloud.define("newWorkSession", function(request, response) {
 		return;
 	}
 
+    activityName = activityName.trim();
+
     // If there is already a WorkSession with the same start time, then don't create another one.
 	var wsQuery = new Parse.Query(WorkSession);
 	wsQuery.equalTo("start", start);
