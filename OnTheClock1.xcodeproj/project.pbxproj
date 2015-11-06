@@ -8,9 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		96092D961B8D347C000A6BD4 /* MPGTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96092D951B8D347C000A6BD4 /* MPGTextField.swift */; };
-		961591691BA48D30007A573A /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 961591661BA48D30007A573A /* ParseUI.framework */; settings = {ASSET_TAGS = (); }; };
-		9615916A1BA48D30007A573A /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 961591671BA48D30007A573A /* Bolts.framework */; settings = {ASSET_TAGS = (); }; };
-		9615916B1BA48D30007A573A /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 961591681BA48D30007A573A /* Parse.framework */; settings = {ASSET_TAGS = (); }; };
 		9615916D1BA48E3D007A573A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9615916C1BA48E3D007A573A /* AudioToolbox.framework */; };
 		9615916F1BA48E49007A573A /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9615916E1BA48E49007A573A /* CFNetwork.framework */; };
 		961591711BA48E55007A573A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 961591701BA48E55007A573A /* CoreGraphics.framework */; };
@@ -20,22 +17,26 @@
 		961591791BA48E83007A573A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 961591781BA48E83007A573A /* StoreKit.framework */; };
 		9615917B1BA48E8B007A573A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9615917A1BA48E8B007A573A /* SystemConfiguration.framework */; };
 		9615917D1BA48EA4007A573A /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9615917C1BA48EA4007A573A /* libz.tbd */; };
+		9615917F1BA71C6F007A573A /* WorkSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9615917E1BA71C6F007A573A /* WorkSession.swift */; };
+		961591801BA71C6F007A573A /* WorkSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9615917E1BA71C6F007A573A /* WorkSession.swift */; };
+		96202E791BED15AB001EB6C6 /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96202E781BED15AB001EB6C6 /* DebugViewController.swift */; };
+		966B134D1BAC9CA600951E19 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966B134C1BAC9CA600951E19 /* Activity.swift */; };
+		966B134F1BACE45B00951E19 /* DataSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966B134E1BACE45B00951E19 /* DataSync.swift */; };
 		968B76DC1B90D93A00A01189 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 968B76D21B90D93A00A01189 /* FMDatabase.m */; };
 		968B76DD1B90D93A00A01189 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 968B76D41B90D93A00A01189 /* FMDatabaseAdditions.m */; };
 		968B76DE1B90D93A00A01189 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 968B76D61B90D93A00A01189 /* FMDatabasePool.m */; };
 		968B76DF1B90D93A00A01189 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 968B76D81B90D93A00A01189 /* FMDatabaseQueue.m */; };
 		968B76E01B90D93A00A01189 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 968B76DB1B90D93A00A01189 /* FMResultSet.m */; };
-		968B76E21B910D5400A01189 /* OnTheClockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968B76E11B910D5400A01189 /* OnTheClockData.swift */; };
-		968B76E31B910D5400A01189 /* OnTheClockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968B76E11B910D5400A01189 /* OnTheClockData.swift */; };
 		96C2490E1B85660F00AF01BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2490D1B85660F00AF01BE /* AppDelegate.swift */; };
-		96C249101B85660F00AF01BE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2490F1B85660F00AF01BE /* ViewController.swift */; };
+		96C249101B85660F00AF01BE /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2490F1B85660F00AF01BE /* MainViewController.swift */; };
 		96C249131B85660F00AF01BE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96C249111B85660F00AF01BE /* Main.storyboard */; };
 		96C249151B85660F00AF01BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96C249141B85660F00AF01BE /* Assets.xcassets */; };
 		96C249181B85660F00AF01BE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96C249161B85660F00AF01BE /* LaunchScreen.storyboard */; };
 		96C249231B85660F00AF01BE /* OnTheClock1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C249221B85660F00AF01BE /* OnTheClock1Tests.swift */; };
-		96C2492E1B862CCF00AF01BE /* TimeRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2492D1B862CCF00AF01BE /* TimeRecord.swift */; };
-		96C2492F1B862CCF00AF01BE /* TimeRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2492D1B862CCF00AF01BE /* TimeRecord.swift */; };
-		96C249311B86A76700AF01BE /* TimeRecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C249301B86A76700AF01BE /* TimeRecordViewController.swift */; };
+		96C249311B86A76700AF01BE /* WorkSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C249301B86A76700AF01BE /* WorkSessionViewController.swift */; };
+		96D8FE121BAC9638004BFBB3 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96D8FE0F1BAC9638004BFBB3 /* Bolts.framework */; };
+		96D8FE131BAC9638004BFBB3 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96D8FE101BAC9638004BFBB3 /* Parse.framework */; };
+		96D8FE141BAC9638004BFBB3 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96D8FE111BAC9638004BFBB3 /* ParseUI.framework */; };
 		96E9F45A1B90D6B900EACD26 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 96E9F4591B90D6B900EACD26 /* libsqlite3.dylib */; };
 /* End PBXBuildFile section */
 
@@ -52,9 +53,6 @@
 /* Begin PBXFileReference section */
 		96092D951B8D347C000A6BD4 /* MPGTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPGTextField.swift; sourceTree = "<group>"; };
 		96092DAF1B90D57B000A6BD4 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
-		961591661BA48D30007A573A /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseUI.framework; sourceTree = "<group>"; };
-		961591671BA48D30007A573A /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
-		961591681BA48D30007A573A /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		9615916C1BA48E3D007A573A /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		9615916E1BA48E49007A573A /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		961591701BA48E55007A573A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -64,6 +62,10 @@
 		961591781BA48E83007A573A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		9615917A1BA48E8B007A573A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		9615917C1BA48EA4007A573A /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		9615917E1BA71C6F007A573A /* WorkSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkSession.swift; sourceTree = "<group>"; };
+		96202E781BED15AB001EB6C6 /* DebugViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugViewController.swift; sourceTree = "<group>"; };
+		966B134C1BAC9CA600951E19 /* Activity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
+		966B134E1BACE45B00951E19 /* DataSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSync.swift; sourceTree = "<group>"; };
 		968B76D11B90D93A00A01189 /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
 		968B76D21B90D93A00A01189 /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
 		968B76D31B90D93A00A01189 /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
@@ -75,10 +77,9 @@
 		968B76D91B90D93A00A01189 /* FMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDB.h; sourceTree = "<group>"; };
 		968B76DA1B90D93A00A01189 /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
 		968B76DB1B90D93A00A01189 /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
-		968B76E11B910D5400A01189 /* OnTheClockData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnTheClockData.swift; sourceTree = "<group>"; };
 		96C2490A1B85660F00AF01BE /* OnTheClock1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheClock1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		96C2490D1B85660F00AF01BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		96C2490F1B85660F00AF01BE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		96C2490F1B85660F00AF01BE /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		96C249121B85660F00AF01BE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		96C249141B85660F00AF01BE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		96C249171B85660F00AF01BE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -86,9 +87,11 @@
 		96C2491E1B85660F00AF01BE /* OnTheClock1Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnTheClock1Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		96C249221B85660F00AF01BE /* OnTheClock1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnTheClock1Tests.swift; sourceTree = "<group>"; };
 		96C249241B85660F00AF01BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		96C2492D1B862CCF00AF01BE /* TimeRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeRecord.swift; sourceTree = "<group>"; };
-		96C249301B86A76700AF01BE /* TimeRecordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeRecordViewController.swift; sourceTree = "<group>"; };
-		96E9F4591B90D6B900EACD26 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = ../../../../../usr/lib/libsqlite3.dylib; sourceTree = "<group>"; };
+		96C249301B86A76700AF01BE /* WorkSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkSessionViewController.swift; sourceTree = "<group>"; };
+		96D8FE0F1BAC9638004BFBB3 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = Frameworks/Bolts.framework; sourceTree = "<group>"; };
+		96D8FE101BAC9638004BFBB3 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = Frameworks/Parse.framework; sourceTree = "<group>"; };
+		96D8FE111BAC9638004BFBB3 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseUI.framework; path = Frameworks/ParseUI.framework; sourceTree = "<group>"; };
+		96E9F4591B90D6B900EACD26 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = /usr/lib/libsqlite3.dylib; sourceTree = "<absolute>"; };
 		96FC38241B99FCBD005B2D36 /* OnTheClock1-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OnTheClock1-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -105,11 +108,11 @@
 				961591731BA48E60007A573A /* CoreLocation.framework in Frameworks */,
 				961591711BA48E55007A573A /* CoreGraphics.framework in Frameworks */,
 				9615916F1BA48E49007A573A /* CFNetwork.framework in Frameworks */,
+				96D8FE121BAC9638004BFBB3 /* Bolts.framework in Frameworks */,
 				9615916D1BA48E3D007A573A /* AudioToolbox.framework in Frameworks */,
-				9615916A1BA48D30007A573A /* Bolts.framework in Frameworks */,
-				961591691BA48D30007A573A /* ParseUI.framework in Frameworks */,
-				9615916B1BA48D30007A573A /* Parse.framework in Frameworks */,
+				96D8FE131BAC9638004BFBB3 /* Parse.framework in Frameworks */,
 				96E9F45A1B90D6B900EACD26 /* libsqlite3.dylib in Frameworks */,
+				96D8FE141BAC9638004BFBB3 /* ParseUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,6 +126,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		960AE5FD1BAC6FF1001DD11D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				96D8FE0F1BAC9638004BFBB3 /* Bolts.framework */,
+				96D8FE101BAC9638004BFBB3 /* Parse.framework */,
+				96D8FE111BAC9638004BFBB3 /* ParseUI.framework */,
+				9615917C1BA48EA4007A573A /* libz.tbd */,
+				96E9F4591B90D6B900EACD26 /* libsqlite3.dylib */,
+				96092DAF1B90D57B000A6BD4 /* libsqlite3.tbd */,
+				9615917A1BA48E8B007A573A /* SystemConfiguration.framework */,
+				961591781BA48E83007A573A /* StoreKit.framework */,
+				961591761BA48E7A007A573A /* Security.framework */,
+				961591741BA48E71007A573A /* QuartzCore.framework */,
+				961591721BA48E60007A573A /* CoreLocation.framework */,
+				961591701BA48E55007A573A /* CoreGraphics.framework */,
+				9615916E1BA48E49007A573A /* CFNetwork.framework */,
+				9615916C1BA48E3D007A573A /* AudioToolbox.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		968B76BF1B90D8DB00A01189 /* fmdb */ = {
 			isa = PBXGroup;
 			children = (
@@ -145,20 +169,7 @@
 		96C249011B85660F00AF01BE = {
 			isa = PBXGroup;
 			children = (
-				9615917C1BA48EA4007A573A /* libz.tbd */,
-				9615917A1BA48E8B007A573A /* SystemConfiguration.framework */,
-				961591781BA48E83007A573A /* StoreKit.framework */,
-				961591761BA48E7A007A573A /* Security.framework */,
-				961591741BA48E71007A573A /* QuartzCore.framework */,
-				961591721BA48E60007A573A /* CoreLocation.framework */,
-				961591701BA48E55007A573A /* CoreGraphics.framework */,
-				9615916E1BA48E49007A573A /* CFNetwork.framework */,
-				9615916C1BA48E3D007A573A /* AudioToolbox.framework */,
-				96E9F4591B90D6B900EACD26 /* libsqlite3.dylib */,
-				96092DAF1B90D57B000A6BD4 /* libsqlite3.tbd */,
-				961591661BA48D30007A573A /* ParseUI.framework */,
-				961591671BA48D30007A573A /* Bolts.framework */,
-				961591681BA48D30007A573A /* Parse.framework */,
+				960AE5FD1BAC6FF1001DD11D /* Frameworks */,
 				96C2490C1B85660F00AF01BE /* OnTheClock1 */,
 				96C249211B85660F00AF01BE /* OnTheClock1Tests */,
 				96C2490B1B85660F00AF01BE /* Products */,
@@ -181,14 +192,16 @@
 				968B76BF1B90D8DB00A01189 /* fmdb */,
 				96092D951B8D347C000A6BD4 /* MPGTextField.swift */,
 				96C2490D1B85660F00AF01BE /* AppDelegate.swift */,
-				96C2490F1B85660F00AF01BE /* ViewController.swift */,
+				96C2490F1B85660F00AF01BE /* MainViewController.swift */,
 				96C249111B85660F00AF01BE /* Main.storyboard */,
-				96C249301B86A76700AF01BE /* TimeRecordViewController.swift */,
+				96202E781BED15AB001EB6C6 /* DebugViewController.swift */,
+				96C249301B86A76700AF01BE /* WorkSessionViewController.swift */,
 				96C249141B85660F00AF01BE /* Assets.xcassets */,
 				96C249161B85660F00AF01BE /* LaunchScreen.storyboard */,
 				96C249191B85660F00AF01BE /* Info.plist */,
-				96C2492D1B862CCF00AF01BE /* TimeRecord.swift */,
-				968B76E11B910D5400A01189 /* OnTheClockData.swift */,
+				966B134C1BAC9CA600951E19 /* Activity.swift */,
+				9615917E1BA71C6F007A573A /* WorkSession.swift */,
+				966B134E1BACE45B00951E19 /* DataSync.swift */,
 			);
 			path = OnTheClock1;
 			sourceTree = "<group>";
@@ -252,6 +265,7 @@
 				TargetAttributes = {
 					96C249091B85660F00AF01BE = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = 2CQFH84Z46;
 					};
 					96C2491D1B85660F00AF01BE = {
 						CreatedOnToolsVersion = 7.0;
@@ -303,17 +317,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				968B76E21B910D5400A01189 /* OnTheClockData.swift in Sources */,
 				96092D961B8D347C000A6BD4 /* MPGTextField.swift in Sources */,
-				96C249101B85660F00AF01BE /* ViewController.swift in Sources */,
-				96C2492E1B862CCF00AF01BE /* TimeRecord.swift in Sources */,
+				966B134D1BAC9CA600951E19 /* Activity.swift in Sources */,
+				96C249101B85660F00AF01BE /* MainViewController.swift in Sources */,
 				968B76DC1B90D93A00A01189 /* FMDatabase.m in Sources */,
+				966B134F1BACE45B00951E19 /* DataSync.swift in Sources */,
 				968B76E01B90D93A00A01189 /* FMResultSet.m in Sources */,
-				96C249311B86A76700AF01BE /* TimeRecordViewController.swift in Sources */,
+				96C249311B86A76700AF01BE /* WorkSessionViewController.swift in Sources */,
+				96202E791BED15AB001EB6C6 /* DebugViewController.swift in Sources */,
 				968B76DE1B90D93A00A01189 /* FMDatabasePool.m in Sources */,
 				968B76DD1B90D93A00A01189 /* FMDatabaseAdditions.m in Sources */,
 				96C2490E1B85660F00AF01BE /* AppDelegate.swift in Sources */,
 				968B76DF1B90D93A00A01189 /* FMDatabaseQueue.m in Sources */,
+				9615917F1BA71C6F007A573A /* WorkSession.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -322,8 +338,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				96C249231B85660F00AF01BE /* OnTheClock1Tests.swift in Sources */,
-				968B76E31B910D5400A01189 /* OnTheClockData.swift in Sources */,
-				96C2492F1B862CCF00AF01BE /* TimeRecord.swift in Sources */,
+				961591801BA71C6F007A573A /* WorkSession.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -443,16 +458,22 @@
 		96C249281B85660F00AF01BE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/**",
 				);
 				INFOPLIST_FILE = OnTheClock1/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.marksanford.OnTheClock1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "OnTheClock1/OnTheClock1-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -461,16 +482,22 @@
 		96C249291B85660F00AF01BE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/**",
 				);
 				INFOPLIST_FILE = OnTheClock1/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.marksanford.OnTheClock1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "OnTheClock1/OnTheClock1-Bridging-Header.h";
 			};
 			name = Release;

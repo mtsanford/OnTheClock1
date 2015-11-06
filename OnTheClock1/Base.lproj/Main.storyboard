@@ -5,74 +5,124 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Main View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="OnTheClock1" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="MainViewController" customModule="OnTheClock1" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="3qN-nc-Cz3">
-                                <rect key="frame" x="20" y="20" width="112" height="51"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="On the Clock 1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wWa-Xz-UnB">
-                                        <rect key="frame" x="0.0" y="0.0" width="112" height="21"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZqQ-wp-rM1">
-                                        <rect key="frame" x="0.0" y="21" width="112" height="30"/>
-                                        <state key="normal" title="Start working!"/>
-                                        <connections>
-                                            <segue destination="UaH-AZ-08e" kind="show" identifier="timeRecordSegue" id="Zsl-m3-AGl"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                            </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="baF-nV-i54">
+                                <rect key="frame" x="21" y="40" width="37" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="History" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="csg-sp-mrC">
+                                <rect key="frame" x="249" y="40" width="55" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xBK-Dg-Z6f">
+                                <rect key="frame" x="143" y="131" width="34" height="30"/>
+                                <state key="normal" title="Start"/>
+                                <connections>
+                                    <segue destination="UaH-AZ-08e" kind="show" identifier="workSessionSegue" id="9wh-Gl-hWx"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter activity name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="B8H-i0-0wL" userLabel="EnterActivity" customClass="MPGTextField" customModule="OnTheClock1" customModuleProvider="target">
+                                <rect key="frame" x="16" y="81" width="288" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RoZ-AD-vYu">
+                                <rect key="frame" x="16" y="518" width="46" height="30"/>
+                                <state key="normal" title="Debug"/>
+                                <connections>
+                                    <segue destination="huf-OK-a0L" kind="show" identifier="debugSegue" id="aDm-Qk-Zw2"/>
+                                </connections>
+                            </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="0.73938066519705381" blue="0.92773643930026473" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="RoZ-AD-vYu" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="3FN-Sh-wAg"/>
+                            <constraint firstItem="baF-nV-i54" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="20" id="6un-cI-R0G"/>
+                            <constraint firstItem="B8H-i0-0wL" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="AKF-Ia-5cm"/>
+                            <constraint firstItem="B8H-i0-0wL" firstAttribute="top" secondItem="baF-nV-i54" secondAttribute="bottom" constant="20" id="L0p-Mt-gO5"/>
+                            <constraint firstItem="baF-nV-i54" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="5" id="SIK-d1-nRZ"/>
+                            <constraint firstItem="xBK-Dg-Z6f" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="edb-WZ-xHQ"/>
+                            <constraint firstItem="B8H-i0-0wL" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="jaZ-xA-DmA"/>
+                            <constraint firstItem="csg-sp-mrC" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="jd0-0y-dz6"/>
+                            <constraint firstItem="xBK-Dg-Z6f" firstAttribute="top" secondItem="B8H-i0-0wL" secondAttribute="bottom" constant="20" id="kIW-Yb-hzz"/>
+                            <constraint firstItem="csg-sp-mrC" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="20" id="l0y-IA-LU5"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="RoZ-AD-vYu" secondAttribute="bottom" constant="20" id="poN-b1-bY6"/>
+                        </constraints>
                     </view>
-                    <connections>
-                        <outlet property="startButton" destination="ZqQ-wp-rM1" id="yhL-Gf-Be0"/>
-                    </connections>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="456" y="485"/>
+            <point key="canvasLocation" x="438" y="-129"/>
+        </scene>
+        <!--Debug-->
+        <scene sceneID="nZB-5X-PxI">
+            <objects>
+                <viewController id="MrV-s9-Pbu" customClass="DebugViewController" customModule="OnTheClock1" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="pFY-QD-PXx"/>
+                        <viewControllerLayoutGuide type="bottom" id="1Er-E3-et0"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="EbX-ev-Esx">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Debug" id="I5Q-p2-XNv">
+                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="Gi1-GX-JJn">
+                            <connections>
+                                <segue destination="LAk-Hg-j90" kind="unwind" identifier="debugDone" unwindAction="unwindToMainView:" id="3TC-gK-TSe"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="458-bM-ZGe" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="LAk-Hg-j90" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="1314" y="-341"/>
         </scene>
         <!--Work session-->
         <scene sceneID="tmK-h5-O1o">
             <objects>
-                <viewController id="3mo-3V-SmK" customClass="TimeRecordViewController" customModule="OnTheClock1" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="3mo-3V-SmK" customClass="WorkSessionViewController" customModule="OnTheClock1" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="fgp-h2-FwH"/>
                         <viewControllerLayoutGuide type="bottom" id="Gq0-ba-1p5"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="3Nf-B1-8pX">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="activity name" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="qi8-TQ-pir" customClass="MPGTextField" customModule="OnTheClock1" customModuleProvider="target">
-                                <rect key="frame" x="20" y="104" width="560" height="30"/>
+                                <rect key="frame" x="16" y="104" width="288" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jpN-8q-aFj">
-                                <rect key="frame" x="265" y="142" width="70" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jpN-8q-aFj">
+                                <rect key="frame" x="135" y="150" width="51" height="41"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <state key="normal" title="Start"/>
                                 <connections>
                                     <action selector="startStopPressed:" destination="3mo-3V-SmK" eventType="touchUpInside" id="9Lb-fn-yk3"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V0Y-xr-mKR">
-                                <rect key="frame" x="197" y="255" width="207" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V0Y-xr-mKR">
+                                <rect key="frame" x="160" y="208" width="0.0" height="0.0"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="207" id="ivD-nG-4pL"/>
                                 </constraints>
@@ -85,14 +135,14 @@
                                     </mask>
                                 </variation>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mIY-he-JMz">
-                                <rect key="frame" x="197" y="226" width="207" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mIY-he-JMz">
+                                <rect key="frame" x="160" y="200" width="0.0" height="0.0"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1gS-E4-w0K">
-                                <rect key="frame" x="267" y="304" width="77" height="96"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1gS-E4-w0K">
+                                <rect key="frame" x="122" y="236" width="77" height="96"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ikb-fV-mQx">
                                         <rect key="frame" x="0.0" y="0.0" width="49" height="96"/>
@@ -152,7 +202,7 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" enabled="NO" systemItem="done" id="WWx-WD-fZo">
                             <connections>
-                                <segue destination="X0y-ew-2cI" kind="unwind" unwindAction="unwindToMainView:" id="rKP-lv-KKm"/>
+                                <action selector="donePressed:" destination="3mo-3V-SmK" id="MbU-PU-QtH"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -165,17 +215,18 @@
                         <outlet property="minutesStackView" destination="1gS-E4-w0K" id="fFt-Xz-eFY"/>
                         <outlet property="startStopButton" destination="jpN-8q-aFj" id="Ii1-di-Rwo"/>
                         <outlet property="startTimeLabel" destination="V0Y-xr-mKR" id="oKF-N5-OPY"/>
+                        <segue destination="X0y-ew-2cI" kind="unwind" identifier="unwindToMainView" unwindAction="unwindToMainView:" id="OKT-Pf-ZAY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iqo-zG-5wA" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="X0y-ew-2cI" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1713" y="439"/>
+            <point key="canvasLocation" x="1314" y="396"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--WorkSession Nav Controller-->
         <scene sceneID="Re6-sA-DFy">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="UaH-AZ-08e" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="UaH-AZ-08e" userLabel="WorkSession Nav Controller" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="aWP-O8-vIA">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -188,7 +239,25 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kXq-mW-HxU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1067" y="942"/>
+            <point key="canvasLocation" x="872" y="396"/>
+        </scene>
+        <!--Debug Nav Controller-->
+        <scene sceneID="Tja-Uy-PSN">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="huf-OK-a0L" userLabel="Debug Nav Controller" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ej9-lB-Iu3">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="MrV-s9-Pbu" kind="relationship" relationship="rootViewController" id="e2e-Wb-J12"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jpt-NF-Qq7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="872" y="-341"/>
         </scene>
     </scenes>
 </document>
