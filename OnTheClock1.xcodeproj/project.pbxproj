@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		96092D961B8D347C000A6BD4 /* MPGTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96092D951B8D347C000A6BD4 /* MPGTextField.swift */; };
+		9611DF9A1BED4BF500E54102 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9611DF991BED4BF500E54102 /* Utils.swift */; };
 		9615916D1BA48E3D007A573A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9615916C1BA48E3D007A573A /* AudioToolbox.framework */; };
 		9615916F1BA48E49007A573A /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9615916E1BA48E49007A573A /* CFNetwork.framework */; };
 		961591711BA48E55007A573A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 961591701BA48E55007A573A /* CoreGraphics.framework */; };
@@ -22,11 +23,6 @@
 		96202E791BED15AB001EB6C6 /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96202E781BED15AB001EB6C6 /* DebugViewController.swift */; };
 		966B134D1BAC9CA600951E19 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966B134C1BAC9CA600951E19 /* Activity.swift */; };
 		966B134F1BACE45B00951E19 /* DataSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966B134E1BACE45B00951E19 /* DataSync.swift */; };
-		968B76DC1B90D93A00A01189 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 968B76D21B90D93A00A01189 /* FMDatabase.m */; };
-		968B76DD1B90D93A00A01189 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 968B76D41B90D93A00A01189 /* FMDatabaseAdditions.m */; };
-		968B76DE1B90D93A00A01189 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 968B76D61B90D93A00A01189 /* FMDatabasePool.m */; };
-		968B76DF1B90D93A00A01189 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 968B76D81B90D93A00A01189 /* FMDatabaseQueue.m */; };
-		968B76E01B90D93A00A01189 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 968B76DB1B90D93A00A01189 /* FMResultSet.m */; };
 		96C2490E1B85660F00AF01BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2490D1B85660F00AF01BE /* AppDelegate.swift */; };
 		96C249101B85660F00AF01BE /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2490F1B85660F00AF01BE /* MainViewController.swift */; };
 		96C249131B85660F00AF01BE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96C249111B85660F00AF01BE /* Main.storyboard */; };
@@ -53,6 +49,7 @@
 /* Begin PBXFileReference section */
 		96092D951B8D347C000A6BD4 /* MPGTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPGTextField.swift; sourceTree = "<group>"; };
 		96092DAF1B90D57B000A6BD4 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		9611DF991BED4BF500E54102 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		9615916C1BA48E3D007A573A /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		9615916E1BA48E49007A573A /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		961591701BA48E55007A573A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -66,17 +63,6 @@
 		96202E781BED15AB001EB6C6 /* DebugViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugViewController.swift; sourceTree = "<group>"; };
 		966B134C1BAC9CA600951E19 /* Activity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
 		966B134E1BACE45B00951E19 /* DataSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSync.swift; sourceTree = "<group>"; };
-		968B76D11B90D93A00A01189 /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
-		968B76D21B90D93A00A01189 /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
-		968B76D31B90D93A00A01189 /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
-		968B76D41B90D93A00A01189 /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseAdditions.m; sourceTree = "<group>"; };
-		968B76D51B90D93A00A01189 /* FMDatabasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabasePool.h; sourceTree = "<group>"; };
-		968B76D61B90D93A00A01189 /* FMDatabasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabasePool.m; sourceTree = "<group>"; };
-		968B76D71B90D93A00A01189 /* FMDatabaseQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseQueue.h; sourceTree = "<group>"; };
-		968B76D81B90D93A00A01189 /* FMDatabaseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseQueue.m; sourceTree = "<group>"; };
-		968B76D91B90D93A00A01189 /* FMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDB.h; sourceTree = "<group>"; };
-		968B76DA1B90D93A00A01189 /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
-		968B76DB1B90D93A00A01189 /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
 		96C2490A1B85660F00AF01BE /* OnTheClock1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheClock1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		96C2490D1B85660F00AF01BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		96C2490F1B85660F00AF01BE /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -147,25 +133,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		968B76BF1B90D8DB00A01189 /* fmdb */ = {
-			isa = PBXGroup;
-			children = (
-				968B76D11B90D93A00A01189 /* FMDatabase.h */,
-				968B76D21B90D93A00A01189 /* FMDatabase.m */,
-				968B76D31B90D93A00A01189 /* FMDatabaseAdditions.h */,
-				968B76D41B90D93A00A01189 /* FMDatabaseAdditions.m */,
-				968B76D51B90D93A00A01189 /* FMDatabasePool.h */,
-				968B76D61B90D93A00A01189 /* FMDatabasePool.m */,
-				968B76D71B90D93A00A01189 /* FMDatabaseQueue.h */,
-				968B76D81B90D93A00A01189 /* FMDatabaseQueue.m */,
-				968B76D91B90D93A00A01189 /* FMDB.h */,
-				968B76DA1B90D93A00A01189 /* FMResultSet.h */,
-				968B76DB1B90D93A00A01189 /* FMResultSet.m */,
-			);
-			name = fmdb;
-			path = ../../fmdb/src/fmdb;
-			sourceTree = "<group>";
-		};
 		96C249011B85660F00AF01BE = {
 			isa = PBXGroup;
 			children = (
@@ -189,7 +156,6 @@
 			isa = PBXGroup;
 			children = (
 				96FC38241B99FCBD005B2D36 /* OnTheClock1-Bridging-Header.h */,
-				968B76BF1B90D8DB00A01189 /* fmdb */,
 				96092D951B8D347C000A6BD4 /* MPGTextField.swift */,
 				96C2490D1B85660F00AF01BE /* AppDelegate.swift */,
 				96C2490F1B85660F00AF01BE /* MainViewController.swift */,
@@ -202,6 +168,7 @@
 				966B134C1BAC9CA600951E19 /* Activity.swift */,
 				9615917E1BA71C6F007A573A /* WorkSession.swift */,
 				966B134E1BACE45B00951E19 /* DataSync.swift */,
+				9611DF991BED4BF500E54102 /* Utils.swift */,
 			);
 			path = OnTheClock1;
 			sourceTree = "<group>";
@@ -320,15 +287,11 @@
 				96092D961B8D347C000A6BD4 /* MPGTextField.swift in Sources */,
 				966B134D1BAC9CA600951E19 /* Activity.swift in Sources */,
 				96C249101B85660F00AF01BE /* MainViewController.swift in Sources */,
-				968B76DC1B90D93A00A01189 /* FMDatabase.m in Sources */,
+				9611DF9A1BED4BF500E54102 /* Utils.swift in Sources */,
 				966B134F1BACE45B00951E19 /* DataSync.swift in Sources */,
-				968B76E01B90D93A00A01189 /* FMResultSet.m in Sources */,
 				96C249311B86A76700AF01BE /* WorkSessionViewController.swift in Sources */,
 				96202E791BED15AB001EB6C6 /* DebugViewController.swift in Sources */,
-				968B76DE1B90D93A00A01189 /* FMDatabasePool.m in Sources */,
-				968B76DD1B90D93A00A01189 /* FMDatabaseAdditions.m in Sources */,
 				96C2490E1B85660F00AF01BE /* AppDelegate.swift in Sources */,
-				968B76DF1B90D93A00A01189 /* FMDatabaseQueue.m in Sources */,
 				9615917F1BA71C6F007A573A /* WorkSession.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -8,13 +8,11 @@
 
 import UIKit
 
-class WorkSessionViewController: UIViewController, UITextFieldDelegate, MPGTextFieldDelegate, UINavigationControllerDelegate {
+class WorkSessionViewController: UIViewController, UINavigationControllerDelegate {
     
     // MARK: Properties
     @IBOutlet weak var cancelButton: UIBarButtonItem!
     @IBOutlet weak var doneButton: UIBarButtonItem!
-    @IBOutlet weak var activityTextField: MPGTextField!
-    @IBOutlet weak var startStopButton: UIButton!
     @IBOutlet weak var activityLabel: UILabel!
     @IBOutlet weak var startTimeLabel: UILabel!
     @IBOutlet weak var minutesStackView: UIStackView!
@@ -56,20 +54,15 @@ class WorkSessionViewController: UIViewController, UITextFieldDelegate, MPGTextF
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        activityTextField.delegate = self
-        activityTextField.mDelegate = self
-        startStopButton.setTitle("Start", forState: .Normal)
         activityLabel.hidden = true
         startTimeLabel.hidden = true
         minutesStackView.hidden = true
-        startStopButton.hidden = true
         
         createPopupItems()
         if recentActivities != nil && recentActivities!.count > 0 {
             activityString = recentActivities![0].name
             setActivityText(activityString)
         }
-        activityTextField.text = activityString
     }
 
     
@@ -99,48 +92,15 @@ class WorkSessionViewController: UIViewController, UITextFieldDelegate, MPGTextF
         return true
     }
     
-    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-        let textFieldCount = textField.text == nil ? 0 : textField.text!.characters.count
-        
-        // Sanity check to work around ios bug
-        if (range.length + range.location > textFieldCount ) {
-            return false;
-        }
-        
-        let newLength = textFieldCount + string.characters.count - range.length
-        return newLength <= 40
-    }
-    
-    func textFieldDidBeginEditing(textField: UITextField) {
-    }
-    
-    func textFieldDidEndEditing(textField: UITextField) {
-        print("textFieldDidEndEditing: \(activityTextField.text)");
-        setActivityText(activityTextField.text)
-    }
-    
-    
-    func dataForPopoverInTextField(textfield: MPGTextField) -> [Dictionary<String, AnyObject>]? {
-        createPopupItems()
-        return popupDataAll
-    }
-    
-    func dataForPopoverInEmptyTextField(textfield: MPGTextField) -> [Dictionary<String, AnyObject>]? {
-        createPopupItems()
-        return popupDataAll
-    }
-
     
     func setActivityText(activity: String?) {
         activityString = activity
         activityLabel.text = activityString
         if (activityString == nil || activityString!.characters.count == 0) {
             activityLabel.hidden = true
-            startStopButton.hidden = true
         }
         else {
             activityLabel.hidden = false
-            startStopButton.hidden = false
         }
     }
     
@@ -203,10 +163,10 @@ class WorkSessionViewController: UIViewController, UITextFieldDelegate, MPGTextF
                 minutesStackView.hidden = false
                 print("initial start at \(firstStartTime)")
             }
-            activityTextField.hidden = true
+            //activityTextField.hidden = true
             doneButton.enabled = false
             timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("updateTime"), userInfo: nil, repeats: true)
-            startStopButton.setTitle("Pause", forState: .Normal)
+            //startStopButton.setTitle("Pause", forState: .Normal)
             self.view.backgroundColor = UIColor.greenColor()
         }
     }
@@ -216,8 +176,8 @@ class WorkSessionViewController: UIViewController, UITextFieldDelegate, MPGTextF
         timer?.invalidate()
         updateTime()
         accumulatedTimeLastPause = accumulatedTime
-        startStopButton.setTitle("Continue", forState: .Normal)
-        activityTextField.hidden = false
+        //startStopButton.setTitle("Continue", forState: .Normal)
+        //activityTextField.hidden = false
         self.view.backgroundColor = UIColor.lightGrayColor()
         
         let timeSinceStart = -(startTime?.timeIntervalSinceNow)!

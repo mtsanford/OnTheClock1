@@ -10,34 +10,64 @@ import UIKit
 import Parse
 import ParseUI
 
-class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate {
+class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate, UITextFieldDelegate, MPGTextFieldDelegate {
     
     // MARK: Properties
+    @IBOutlet weak var activityTextField: MPGTextField!
     @IBOutlet weak var startButton: UIButton!
+    @IBOutlet weak var userButton: UIButton!
 
-    var databasePath = NSString()
     
-    // present login view if user has not logged in, but allow them to use without
-    // loggint in
-    var checkedLogin = false
+    var activityString: String?
+    var recentActivities: [Activity]?
+    var popupDataAll = [Dictionary<String, AnyObject>]()
+    var popupDataRecent = [Dictionary<String, AnyObject>]()
     
     override func viewDidLoad() {
-        super.viewDidLoad()        
-    }
-
-    override func viewDidAppear(animated: Bool) {
-        if (PFUser.currentUser() == nil && self.checkedLogin == false) {
-            let loginController = PFLogInViewController()
-            loginController.delegate = self
-            
-            let signUpController = PFSignUpViewController()
-            signUpController.delegate = self
-            loginController.signUpController = signUpController
-            
-            self.presentViewController(loginController, animated: true, completion: nil)
-        }
+        super.viewDidLoad()
+        activityTextField.delegate = self
+        activityTextField.mDelegate = self
         
+        createPopupItems()
+        if recentActivities != nil && recentActivities!.count > 0 {
+            activityString = recentActivities![0].name
+        }
+        activityTextField.text = activityString
     }
+    
+    override func viewDidAppear(animated: Bool) {
+        setUserButtonImage()
+    }
+    
+    func createPopupItems() {
+        popupDataAll.removeAll()
+        popupDataRecent.removeAll()
+        if let query = Activity.query() {
+            query.fromLocalDatastore()
+            query.whereKey("user", equalTo: PFUser.currentUser()!)
+            query.orderByDescending("last")
+            do {
+                var recentActivities: [Activity]
+                try recentActivities = (query.findObjects() as! [Activity])
+                self.recentActivities = recentActivities
+            }
+            catch {
+                // if something went wrong, just ignore it.   View will have no recent activities
+                // to show in popop
+            }
+        }
+        if recentActivities != nil && recentActivities!.count > 0 {
+            activityString = recentActivities![0].name
+            for (i, activity) in recentActivities!.enumerate() {
+                let popupItem = [ "DisplayText" : activity.name, "DisplaySubText" : Utils.agoStringFromDate(activity.last) ]
+                popupDataAll.append(popupItem)
+                if (i < 4) {
+                    popupDataRecent.append(popupItem)
+                }
+            }
+        }
+    }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -70,7 +100,6 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
         }
     }
     
-    
     @IBAction func unwindToMainView(sender: UIStoryboardSegue) {
         print("unwindToMainView")
         let sourceViewController = sender.sourceViewController as? WorkSessionViewController
@@ -79,31 +108,108 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
         }
     }
 
+    // MARK: UITextFieldDelegate
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        let textFieldCount = textField.text == nil ? 0 : textField.text!.characters.count
+        
+        // Sanity check to work around ios bug
+        if (range.length + range.location > textFieldCount ) {
+            return false;
+        }
+        
+        let newLength = textFieldCount + string.characters.count - range.length
+        return newLength <= 40
+    }
+    
+    func textFieldDidBeginEditing(textField: UITextField) {
+    }
+    
+    func textFieldDidEndEditing(textField: UITextField) {
+        print("textFieldDidEndEditing: \(activityTextField.text)");
+        //setActivityText(activityTextField.text)
+    }
+    
+    
+    func dataForPopoverInTextField(textfield: MPGTextField) -> [Dictionary<String, AnyObject>]? {
+        createPopupItems()
+        return popupDataAll
+    }
+    
+    func dataForPopoverInEmptyTextField(textfield: MPGTextField) -> [Dictionary<String, AnyObject>]? {
+        createPopupItems()
+        return popupDataAll
+    }
+    
+    func setUserButtonImage() {
+        var userImage: UIImage!
+        if (PFAnonymousUtils.isLinkedWithUser(PFUser.currentUser())) {
+            userImage = UIImage(named: "user.png")
+        }
+        else {
+            userImage = UIImage(named: "signout.png")
+        }
+        userButton.setImage(userImage, forState: .Normal)
+    }
+
+    
+    @IBAction func userPressed(sender: AnyObject) {
+        if (PFAnonymousUtils.isLinkedWithUser(PFUser.currentUser())) {
+            let loginController = PFLogInViewController()
+            loginController.delegate = self
+            
+            loginController.signUpController?.delegate = self
+            loginController.signUpController?.emailAsUsername = true
+            
+            self.presentViewController(loginController, animated: true, completion: nil)
+        }
+        else {
+            let message = "Sign out " + (PFUser.currentUser()?.username)! + "?"
+            
+            let alert = UIAlertController(title: "Sign out", message: message, preferredStyle: UIAlertControllerStyle.Alert)
+            
+            // add the actions (buttons)
+            alert.addAction(UIAlertAction(title: "Sign out", style: UIAlertActionStyle.Default, handler: {
+                alert in
+                PFUser.logOut()
+                print("sign out pressed. user is now:")
+                print(PFUser.currentUser())
+                self.setUserButtonImage()
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+            
+            // show the alert
+            self.presentViewController(alert, animated: true, completion: nil)
+        }
+    }
+    
     // MARK: PFLogInViewControllerDelegate
     
     func logInViewController(logInController: PFLogInViewController, didLogInUser user: PFUser) {
-        self.checkedLogin = true
         print("login with user")
-        self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+        self.dismissViewControllerAnimated(true, completion: nil)
+        setUserButtonImage()
     }
     
     func logInViewControllerDidCancelLogIn(logInController: PFLogInViewController) {
-        self.checkedLogin = true
         print("login cancel")
-        self.navigationController?.popViewControllerAnimated(true)
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func logInViewController(logInController: PFLogInViewController, didFailToLogInWithError error: NSError?) {
-        self.checkedLogin = true
         print("login fail")
-        //self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
     }
     
     // MARK: PFSignUpViewControllerDelegate
     
     func signUpViewController(signUpController: PFSignUpViewController, didSignUpUser user: PFUser) {
         print("signup success")
-        self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+        setUserButtonImage()
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func signUpViewController(signUpController: PFSignUpViewController, didFailToSignUpWithError error: NSError?) {
@@ -112,7 +218,7 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
     
     func signUpViewControllerDidCancelSignUp(signUpController: PFSignUpViewController) {
         print("signup cancel")
-        self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
 }
 

@@ -22,11 +22,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         Parse.setApplicationId("Mj76sGeuIdpclaGit0TEgWzqwMhHPJyjBFXRF7ml",
             clientKey: "fiEFGju6XxgDqg6TeeEyUlJXM9ghKGLltWRxIY1a")
-
+        
         WorkSession.initialize()
         Activity.initialize()
         
         PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)
+        
+        PFUser.enableAutomaticUser()
         
         return true
     }
