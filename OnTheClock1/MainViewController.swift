@@ -10,7 +10,7 @@ import UIKit
 import Parse
 import ParseUI
 
-class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate, UITextFieldDelegate, MPGTextFieldDelegate {
+class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate, UITextFieldDelegate, MPGTextFieldDelegate, WorkSessionControllerDelegate {
     
     // MARK: Properties
     @IBOutlet weak var activityTextField: MPGTextField!
@@ -80,20 +80,8 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
             print("prepareForSegue workSessionSegue")
             let navController = segue.destinationViewController as? UINavigationController
             let workSessionViewController = navController?.topViewController as? WorkSessionViewController
-            if let query = Activity.query() {
-                query.fromLocalDatastore()
-                query.whereKey("user", equalTo: PFUser.currentUser()!)
-                query.orderByDescending("last")
-                do {
-                    var recentActivities: [Activity]
-                    try recentActivities = (query.findObjects() as! [Activity])
-                    workSessionViewController!.recentActivities = recentActivities
-                }
-                catch {
-                    // if something went wrong, just ignore it.   View will have no recent activities
-                    // to show in popop
-                }
-            }
+            workSessionViewController?.delegate = self
+            workSessionViewController?.activityString = activityTextField.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
         }
         if segue.identifier == "debugSegue" {
             print("prepareForSegue debugSegue")
@@ -108,6 +96,15 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
         }
     }
 
+    // MARK: WorkSessionControllerDelegate
+    func workSessionFinished(activityName: String, startTime: NSDate, duration: NSNumber) {
+        print("workSessionFinished");
+        print(activityName)
+        print(startTime)
+        print(duration)
+    }
+    
+    
     // MARK: UITextFieldDelegate
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
@@ -159,13 +156,14 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
     
     @IBAction func userPressed(sender: AnyObject) {
         if (PFAnonymousUtils.isLinkedWithUser(PFUser.currentUser())) {
-            let loginController = PFLogInViewController()
+            let loginController = MyLoginViewController()
+            loginController.emailAsUsername = true
             loginController.delegate = self
             
-            loginController.signUpController?.delegate = self
             loginController.signUpController?.emailAsUsername = true
+            loginController.signUpController?.delegate = self
             
-            self.presentViewController(loginController, animated: true, completion: nil)
+            self.presentViewController(loginController, animated: false, completion: nil)
         }
         else {
             let message = "Sign out " + (PFUser.currentUser()?.username)! + "?"
@@ -180,6 +178,7 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
                 print(PFUser.currentUser())
                 self.setUserButtonImage()
             }))
+            
             alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
             
             // show the alert

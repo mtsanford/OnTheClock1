@@ -30,6 +30,9 @@
 		96C249181B85660F00AF01BE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96C249161B85660F00AF01BE /* LaunchScreen.storyboard */; };
 		96C249231B85660F00AF01BE /* OnTheClock1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C249221B85660F00AF01BE /* OnTheClock1Tests.swift */; };
 		96C249311B86A76700AF01BE /* WorkSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C249301B86A76700AF01BE /* WorkSessionViewController.swift */; };
+		96D751B51BEFD65C00778DDE /* MyLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D751B41BEFD65C00778DDE /* MyLoginViewController.swift */; };
+		96D751B71BEFD94200778DDE /* MySignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D751B61BEFD94200778DDE /* MySignUpViewController.swift */; };
+		96D751B91BF0062E00778DDE /* StopWorkSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D751B81BF0062E00778DDE /* StopWorkSessionViewController.swift */; };
 		96D8FE121BAC9638004BFBB3 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96D8FE0F1BAC9638004BFBB3 /* Bolts.framework */; };
 		96D8FE131BAC9638004BFBB3 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96D8FE101BAC9638004BFBB3 /* Parse.framework */; };
 		96D8FE141BAC9638004BFBB3 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96D8FE111BAC9638004BFBB3 /* ParseUI.framework */; };
@@ -74,6 +77,9 @@
 		96C249221B85660F00AF01BE /* OnTheClock1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnTheClock1Tests.swift; sourceTree = "<group>"; };
 		96C249241B85660F00AF01BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		96C249301B86A76700AF01BE /* WorkSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkSessionViewController.swift; sourceTree = "<group>"; };
+		96D751B41BEFD65C00778DDE /* MyLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyLoginViewController.swift; sourceTree = "<group>"; };
+		96D751B61BEFD94200778DDE /* MySignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MySignUpViewController.swift; sourceTree = "<group>"; };
+		96D751B81BF0062E00778DDE /* StopWorkSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StopWorkSessionViewController.swift; sourceTree = "<group>"; };
 		96D8FE0F1BAC9638004BFBB3 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = Frameworks/Bolts.framework; sourceTree = "<group>"; };
 		96D8FE101BAC9638004BFBB3 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = Frameworks/Parse.framework; sourceTree = "<group>"; };
 		96D8FE111BAC9638004BFBB3 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseUI.framework; path = Frameworks/ParseUI.framework; sourceTree = "<group>"; };
@@ -160,6 +166,7 @@
 				96C2490D1B85660F00AF01BE /* AppDelegate.swift */,
 				96C2490F1B85660F00AF01BE /* MainViewController.swift */,
 				96C249111B85660F00AF01BE /* Main.storyboard */,
+				96D751B81BF0062E00778DDE /* StopWorkSessionViewController.swift */,
 				96202E781BED15AB001EB6C6 /* DebugViewController.swift */,
 				96C249301B86A76700AF01BE /* WorkSessionViewController.swift */,
 				96C249141B85660F00AF01BE /* Assets.xcassets */,
@@ -169,6 +176,8 @@
 				9615917E1BA71C6F007A573A /* WorkSession.swift */,
 				966B134E1BACE45B00951E19 /* DataSync.swift */,
 				9611DF991BED4BF500E54102 /* Utils.swift */,
+				96D751B41BEFD65C00778DDE /* MyLoginViewController.swift */,
+				96D751B61BEFD94200778DDE /* MySignUpViewController.swift */,
 			);
 			path = OnTheClock1;
 			sourceTree = "<group>";
@@ -288,10 +297,13 @@
 				966B134D1BAC9CA600951E19 /* Activity.swift in Sources */,
 				96C249101B85660F00AF01BE /* MainViewController.swift in Sources */,
 				9611DF9A1BED4BF500E54102 /* Utils.swift in Sources */,
+				96D751B71BEFD94200778DDE /* MySignUpViewController.swift in Sources */,
+				96D751B51BEFD65C00778DDE /* MyLoginViewController.swift in Sources */,
 				966B134F1BACE45B00951E19 /* DataSync.swift in Sources */,
 				96C249311B86A76700AF01BE /* WorkSessionViewController.swift in Sources */,
 				96202E791BED15AB001EB6C6 /* DebugViewController.swift in Sources */,
 				96C2490E1B85660F00AF01BE /* AppDelegate.swift in Sources */,
+				96D751B91BF0062E00778DDE /* StopWorkSessionViewController.swift in Sources */,
 				9615917F1BA71C6F007A573A /* WorkSession.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

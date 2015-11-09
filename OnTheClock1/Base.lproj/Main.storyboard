@@ -21,7 +21,7 @@
                                 <rect key="frame" x="143" y="128" width="34" height="30"/>
                                 <state key="normal" title="Start"/>
                                 <connections>
-                                    <segue destination="UaH-AZ-08e" kind="show" identifier="workSessionSegue" id="9wh-Gl-hWx"/>
+                                    <segue destination="UaH-AZ-08e" kind="show" identifier="workSessionSegue" animates="NO" id="9wh-Gl-hWx"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RoZ-AD-vYu">
@@ -154,7 +154,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="stop"/>
                                 <connections>
-                                    <segue destination="ewP-ve-38d" kind="show" id="6rf-19-FQO"/>
+                                    <segue destination="ewP-ve-38d" kind="show" identifier="stopWorkSession" animates="NO" id="6rf-19-FQO"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -211,10 +211,10 @@
             </objects>
             <point key="canvasLocation" x="1314" y="396"/>
         </scene>
-        <!--View Controller-->
+        <!--Stop Work Session View Controller-->
         <scene sceneID="bZh-mb-IIF">
             <objects>
-                <viewController id="ewP-ve-38d" sceneMemberID="viewController">
+                <viewController id="ewP-ve-38d" customClass="StopWorkSessionViewController" customModule="OnTheClock1" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="HPv-JP-W9f"/>
                         <viewControllerLayoutGuide type="bottom" id="pGo-KL-HOf"/>
@@ -227,7 +227,7 @@
                                 <rect key="frame" x="145" y="375" width="30" height="30"/>
                                 <state key="normal" title="OK"/>
                                 <connections>
-                                    <segue destination="FB9-u8-Epc" kind="unwind" unwindAction="unwindToMainView:" id="uUY-oS-ber"/>
+                                    <segue destination="FB9-u8-Epc" kind="unwind" identifier="workSessionFinished" unwindAction="unwindToMainView:" id="uUY-oS-ber"/>
                                 </connections>
                             </button>
                         </subviews>

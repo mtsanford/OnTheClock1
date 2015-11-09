@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol WorkSessionControllerDelegate {
+    func workSessionFinished(activityName: String, startTime: NSDate, duration: NSNumber)
+}
+
 class WorkSessionViewController: UIViewController, UINavigationControllerDelegate {
     
     // MARK: Properties
@@ -18,30 +22,21 @@ class WorkSessionViewController: UIViewController, UINavigationControllerDelegat
     @IBOutlet weak var minutesStackView: UIStackView!
     @IBOutlet weak var minutesLabel: UILabel!
 
+    var activityString: String?
+
     var timer: NSTimer?
     var startTime: NSDate?
     var firstStartTime: NSDate?
     var accumulatedTimeLastPause: NSTimeInterval
     var accumulatedTime: NSTimeInterval
-    var activityString: String?
     var running: Bool = false
     var finishing: Bool = false
     let minimumWorkTime = 2.0
     
     var workSession: WorkSession?
     
-    //var recentActivities: [OnTheClockActivityRecord]?
-    var recentActivities: [Activity]?
-    var popupDataAll = [Dictionary<String, AnyObject>]()
-    var popupDataRecent = [Dictionary<String, AnyObject>]()
+    var delegate: WorkSessionControllerDelegate?
     
-    let agoStringSettings: [[String: AnyObject]] = [
-            [ "floor" : 0, "unit": 1, "single": "second", "plural": "seconds" ],
-            [ "floor" : 60, "unit": 60, "single": "minute", "plural": "minutes" ],
-            [ "floor" : 60*60, "unit": 60*60, "single": "hour", "plural": "hours" ],
-            [ "floor" : 60*60*24, "unit": 60*60*24, "single": "day", "plural": "days" ],
-            [ "floor" : 60*60*24*7, "unit": 60*60*24*7, "single": "week", "plural": "weeks" ],
-        ]
     
     // TODO: Does this need to be implemented correctly?
     // could be "freeze dried" if put into background?
@@ -54,32 +49,17 @@ class WorkSessionViewController: UIViewController, UINavigationControllerDelegat
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        activityLabel.hidden = true
+        print("WorkSessionViewController viewDidLoad")
         startTimeLabel.hidden = true
         minutesStackView.hidden = true
         
-        createPopupItems()
-        if recentActivities != nil && recentActivities!.count > 0 {
-            activityString = recentActivities![0].name
-            setActivityText(activityString)
-        }
+        activityLabel.text = activityString
+        
+        self.navigationController?.delegate = self
+
+        continueSession()
     }
 
-    
-    func createPopupItems() {
-        popupDataAll.removeAll()
-        popupDataRecent.removeAll()
-        if recentActivities != nil && recentActivities!.count > 0 {
-            activityString = recentActivities![0].name
-            for (i, activity) in recentActivities!.enumerate() {
-                let popupItem = [ "DisplayText" : activity.name, "DisplaySubText" : agoStringFromDate(activity.last) ]
-                popupDataAll.append(popupItem)
-                if (i < 4) {
-                    popupDataRecent.append(popupItem)
-                }
-            }
-        }
-    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -91,20 +71,6 @@ class WorkSessionViewController: UIViewController, UINavigationControllerDelegat
         textField.resignFirstResponder()
         return true
     }
-    
-    
-    func setActivityText(activity: String?) {
-        activityString = activity
-        activityLabel.text = activityString
-        if (activityString == nil || activityString!.characters.count == 0) {
-            activityLabel.hidden = true
-        }
-        else {
-            activityLabel.hidden = false
-        }
-    }
-    
-    
     
     // MARK: - Navigation
     @IBAction func cancel(sender: UIBarButtonItem) {
@@ -127,7 +93,16 @@ class WorkSessionViewController: UIViewController, UINavigationControllerDelegat
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        print("prepareForSegue ")
+        print("WorkSessionViewController prepareForSegue")
+        if segue.identifier == "stopWorkSession" {
+            //stopWorkSessionViewController!.workSessionViewController = self
+            pause()
+            let stopWorkSessionViewController = segue.destinationViewController as? StopWorkSessionViewController
+            stopWorkSessionViewController!.delegate = self.delegate
+            stopWorkSessionViewController?.activityName = self.activityString
+            stopWorkSessionViewController?.startTime = firstStartTime
+            stopWorkSessionViewController?.duration = accumulatedTime
+        }
     }
 
     @IBAction func donePressed(sender: UIBarButtonItem) {
@@ -144,11 +119,9 @@ class WorkSessionViewController: UIViewController, UINavigationControllerDelegat
         return;
     }
     
-    @IBAction func startStopPressed(sender: UIButton) {
-        if running {
-            pause()
-        }
-        else {
+    func continueSession() {
+        print("continueSession")
+        if (running == false) {
             running = true
             startTime = NSDate()
             updateTime()
@@ -163,26 +136,24 @@ class WorkSessionViewController: UIViewController, UINavigationControllerDelegat
                 minutesStackView.hidden = false
                 print("initial start at \(firstStartTime)")
             }
-            //activityTextField.hidden = true
             doneButton.enabled = false
             timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("updateTime"), userInfo: nil, repeats: true)
-            //startStopButton.setTitle("Pause", forState: .Normal)
-            self.view.backgroundColor = UIColor.greenColor()
         }
     }
     
     func pause() {
-        running = false
-        timer?.invalidate()
-        updateTime()
-        accumulatedTimeLastPause = accumulatedTime
-        //startStopButton.setTitle("Continue", forState: .Normal)
-        //activityTextField.hidden = false
-        self.view.backgroundColor = UIColor.lightGrayColor()
-        
-        let timeSinceStart = -(startTime?.timeIntervalSinceNow)!
-        print("timeSinceStart: \(timeSinceStart)")
-        print("accumulatedTime: + \(accumulatedTime)")
+        print("pause")
+        if (running == true) {
+            running = false
+            timer?.invalidate()
+            updateTime()
+            accumulatedTimeLastPause = accumulatedTime
+            self.view.backgroundColor = UIColor.lightGrayColor()
+            
+            let timeSinceStart = -(startTime?.timeIntervalSinceNow)!
+            print("timeSinceStart: \(timeSinceStart)")
+            print("accumulatedTime: + \(accumulatedTime)")
+        }
     }
     
     func updateTime() {
@@ -192,18 +163,13 @@ class WorkSessionViewController: UIViewController, UINavigationControllerDelegat
         doneButton.enabled = accumulatedTime >= minimumWorkTime
     }
     
-    func agoStringFromDate(date: NSDate) -> String {
-        var agoString = ""
-        let secondsAgo = -date.timeIntervalSinceNow
-        for setting in agoStringSettings {
-            if secondsAgo > setting["floor"] as! Double {
-                let unit = setting["unit"] as! Double
-                let units = Int(floor(secondsAgo / unit))
-                let unitName = (units >= 2 ? setting["plural"] : setting["single"]) as! String
-                agoString = "\(units) \(unitName) ago"
-            }
+    func navigationController(navigationController: UINavigationController, willShowViewController viewController: UIViewController, animated: Bool) {
+        if (viewController == self) {
+            continueSession()
         }
-        return agoString
+        else {
+            pause()
+        }
     }
-    
+
 }
