@@ -150,9 +150,9 @@
                                 </subviews>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uxT-Qq-r3w">
-                                <rect key="frame" x="140" y="372" width="40" height="36"/>
+                                <rect key="frame" x="139" y="372" width="42" height="36"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <state key="normal" title="stop"/>
+                                <state key="normal" title="Stop"/>
                                 <connections>
                                     <segue destination="ewP-ve-38d" kind="show" identifier="stopWorkSession" animates="NO" id="6rf-19-FQO"/>
                                 </connections>
@@ -190,7 +190,7 @@
                                 <action selector="cancel:" destination="3mo-3V-SmK" id="DdN-11-Q8u"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" enabled="NO" systemItem="done" id="WWx-WD-fZo">
+                        <barButtonItem key="rightBarButtonItem" enabled="NO" title="Stop" id="WWx-WD-fZo">
                             <connections>
                                 <action selector="donePressed:" destination="3mo-3V-SmK" id="MbU-PU-QtH"/>
                             </connections>
@@ -224,8 +224,8 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3cR-3L-weG">
-                                <rect key="frame" x="145" y="375" width="30" height="30"/>
-                                <state key="normal" title="OK"/>
+                                <rect key="frame" x="145" y="375" width="38" height="30"/>
+                                <state key="normal" title="Done"/>
                                 <connections>
                                     <segue destination="FB9-u8-Epc" kind="unwind" identifier="workSessionFinished" unwindAction="unwindToMainView:" id="uUY-oS-ber"/>
                                 </connections>

@@ -8,6 +8,8 @@
 
 import UIKit
 
+// This view is tighly coupled to WorkSessionViewController
+
 class StopWorkSessionViewController: UIViewController {
 
     

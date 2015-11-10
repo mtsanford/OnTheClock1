@@ -20,54 +20,50 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
     
     var activityString: String?
     var recentActivities: [Activity]?
-    var popupDataAll = [Dictionary<String, AnyObject>]()
-    var popupDataRecent = [Dictionary<String, AnyObject>]()
+    var popupData = [Dictionary<String, AnyObject>]()
+    var anonUser: PFUser?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         activityTextField.delegate = self
         activityTextField.mDelegate = self
         
-        createPopupItems()
-        if recentActivities != nil && recentActivities!.count > 0 {
-            activityString = recentActivities![0].name
-        }
-        activityTextField.text = activityString
+        updateRecentItems(true)
     }
     
     override func viewDidAppear(animated: Bool) {
         setUserButtonImage()
     }
     
-    func createPopupItems() {
-        popupDataAll.removeAll()
-        popupDataRecent.removeAll()
-        if let query = Activity.query() {
-            query.fromLocalDatastore()
-            query.whereKey("user", equalTo: PFUser.currentUser()!)
-            query.orderByDescending("last")
-            do {
-                var recentActivities: [Activity]
-                try recentActivities = (query.findObjects() as! [Activity])
-                self.recentActivities = recentActivities
-            }
-            catch {
-                // if something went wrong, just ignore it.   View will have no recent activities
-                // to show in popop
-            }
-        }
-        if recentActivities != nil && recentActivities!.count > 0 {
-            activityString = recentActivities![0].name
-            for (i, activity) in recentActivities!.enumerate() {
+    func updateRecentItems(setActivityText: Bool) {
+        DataSync.sharedInstance.getRecentActivities().continueWithExecutor(BFExecutor.mainThreadExecutor(), withBlock: {
+            (task: BFTask!) -> BFTask! in
+            self.recentActivities = task.result as? [Activity]
+            self.updatePopupData()
+            if (setActivityText) { self.setDefaultActivityText() }
+            return nil
+        })
+    }
+    
+    func updatePopupData() {
+        popupData.removeAll()
+        if self.recentActivities != nil && self.recentActivities!.count > 0 {
+            for (_, activity) in self.recentActivities!.enumerate() {
                 let popupItem = [ "DisplayText" : activity.name, "DisplaySubText" : Utils.agoStringFromDate(activity.last) ]
-                popupDataAll.append(popupItem)
-                if (i < 4) {
-                    popupDataRecent.append(popupItem)
-                }
+                self.popupData.append(popupItem)
             }
         }
     }
     
+    func setDefaultActivityText() {
+        if self.activityTextField.text?.characters.count == 0 {
+            var activityString: String = ""
+            if self.recentActivities != nil && self.recentActivities!.count > 0 {
+                activityString = self.recentActivities![0].name
+            }
+            self.activityTextField.text = activityString
+        }
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -77,31 +73,33 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "workSessionSegue" {
-            print("prepareForSegue workSessionSegue")
             let navController = segue.destinationViewController as? UINavigationController
             let workSessionViewController = navController?.topViewController as? WorkSessionViewController
             workSessionViewController?.delegate = self
             workSessionViewController?.activityString = activityTextField.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
         }
-        if segue.identifier == "debugSegue" {
-            print("prepareForSegue debugSegue")
-        }
     }
     
     @IBAction func unwindToMainView(sender: UIStoryboardSegue) {
         print("unwindToMainView")
-        let sourceViewController = sender.sourceViewController as? WorkSessionViewController
-        if (sourceViewController != nil) {
-            // resyinc and update UI
-        }
     }
 
     // MARK: WorkSessionControllerDelegate
     func workSessionFinished(activityName: String, startTime: NSDate, duration: NSNumber) {
-        print("workSessionFinished");
-        print(activityName)
-        print(startTime)
-        print(duration)
+        DataSync.sharedInstance.newWorkSession(activityName, start: startTime, duration: duration).continueWithSuccessBlock {
+            (task: BFTask!) -> AnyObject! in
+            // Only sync to parse if the user is logged in
+            if (!PFAnonymousUtils.isLinkedWithUser(PFUser.currentUser())) {
+                return DataSync.sharedInstance.syncToParse()
+            }
+            else {
+                return nil
+            }
+        }.continueWithBlock {
+            (task: BFTask!) -> AnyObject! in
+            self.updateRecentItems(true)
+            return nil
+        }
     }
     
     
@@ -127,19 +125,17 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
     }
     
     func textFieldDidEndEditing(textField: UITextField) {
-        print("textFieldDidEndEditing: \(activityTextField.text)");
-        //setActivityText(activityTextField.text)
     }
     
     
     func dataForPopoverInTextField(textfield: MPGTextField) -> [Dictionary<String, AnyObject>]? {
-        createPopupItems()
-        return popupDataAll
+        updatePopupData()
+        return popupData
     }
     
     func dataForPopoverInEmptyTextField(textfield: MPGTextField) -> [Dictionary<String, AnyObject>]? {
-        createPopupItems()
-        return popupDataAll
+        updatePopupData()
+        return popupData
     }
     
     func setUserButtonImage() {
@@ -163,6 +159,10 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
             loginController.signUpController?.emailAsUsername = true
             loginController.signUpController?.delegate = self
             
+            // remember who the anonymous user, so that if there is a login, we can convert
+            // unsaved data for that user to belong to the new logged in user
+            self.anonUser = PFUser.currentUser()
+            
             self.presentViewController(loginController, animated: false, completion: nil)
         }
         else {
@@ -174,9 +174,9 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
             alert.addAction(UIAlertAction(title: "Sign out", style: UIAlertActionStyle.Default, handler: {
                 alert in
                 PFUser.logOut()
-                print("sign out pressed. user is now:")
-                print(PFUser.currentUser())
                 self.setUserButtonImage()
+                self.activityTextField.text = ""
+                self.updateRecentItems(true)
             }))
             
             alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
@@ -192,6 +192,15 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
         print("login with user")
         self.dismissViewControllerAnimated(true, completion: nil)
         setUserButtonImage()
+        
+        DataSync.sharedInstance.convertAnonymousData(self.anonUser!).continueWithSuccessBlock {
+            (task: BFTask!) -> AnyObject! in
+            return DataSync.sharedInstance.syncToParse()
+        }.continueWithSuccessBlock {
+            (task: BFTask!) -> AnyObject! in
+            self.updateRecentItems(true)
+            return nil
+        }
     }
     
     func logInViewControllerDidCancelLogIn(logInController: PFLogInViewController) {
@@ -209,6 +218,11 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
         print("signup success")
         setUserButtonImage()
         self.dismissViewControllerAnimated(true, completion: nil)
+        DataSync.sharedInstance.syncToParse().continueWithSuccessBlock {
+            (task: BFTask!) -> AnyObject! in
+            self.updateRecentItems(true)
+            return nil
+        }
     }
     
     func signUpViewController(signUpController: PFSignUpViewController, didFailToSignUpWithError error: NSError?) {

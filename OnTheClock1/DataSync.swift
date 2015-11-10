@@ -50,10 +50,15 @@ class DataSync {
             ourActivity.last = start  // TODO add duration
             ourActivity.incrementKey("totalTime", byAmount: duration)
             ourWorkSession.activity = ourActivity
+            
+            // Activity *MUST* be saved before the WorkSession, or it will lead to corrupt data
+            // https://github.com/ParsePlatform/Parse-SDK-iOS-OSX/issues/535
+            return ourActivity.pinInBackground()
+        }.continueWithSuccessBlock {
+            (task: BFTask!) -> AnyObject! in
             return ourWorkSession.pinInBackground()
         }.continueWithBlock {
             (task: BFTask!) -> AnyObject! in
-            print("newWorkSession finished")
             if (task.error == nil) {
                 ourTask.setResult(ourWorkSession)
             }
@@ -93,7 +98,7 @@ class DataSync {
             return self.fetchRecentActities()
         }.continueWithSuccessBlock {
             (task: BFTask!) -> AnyObject! in
-            return PFObject.pinAllInBackground(task.result as! [PFObject])
+            return PFObject.pinAllInBackground(task.result as? [PFObject])
         }.continueWithBlock {
             (task: BFTask!) -> AnyObject! in
             if task.error != nil {
@@ -126,7 +131,6 @@ class DataSync {
                     parameters["activityName"] = ws.activity.name
                     parameters["start"] = ws.start
                     parameters["duration"] = ws.duration
-                    print("calling newWorkSession cloud function")
                     return PFCloud.callFunctionInBackground("newWorkSession", withParameters: parameters)
                 }
             }
@@ -232,6 +236,67 @@ class DataSync {
         return ourTask.task
     }
 
+    // Convert any unsaved data anonymous to the current user
+    func convertAnonymousData(anonUser: PFUser) -> BFTask {
+        let ourTask = BFTaskCompletionSource()
+        let wsQuery: PFQuery! = WorkSession.query()
+        wsQuery.fromLocalDatastore()
+        wsQuery.whereKey("provisional", equalTo: true)
+        wsQuery.whereKey("user", equalTo: anonUser)
+        wsQuery.findObjectsInBackground().continueWithSuccessBlock {
+            (task: BFTask!) -> AnyObject! in
+            let workSessions: [WorkSession]! = task.result as? [WorkSession]
+            for (_, element) in workSessions.enumerate() {
+                element.user = PFUser.currentUser()
+            }
+            return PFObject.pinAllInBackground(workSessions)
+        }.continueWithSuccessBlock {
+            (task: BFTask!) -> AnyObject! in
+            let aQuery: PFQuery! = Activity.query()
+            aQuery.fromLocalDatastore()
+            aQuery.whereKey("provisional", equalTo: true)
+            aQuery.whereKey("user", equalTo: anonUser)
+            return aQuery.findObjectsInBackground()
+        }.continueWithSuccessBlock {
+            (task: BFTask!) -> AnyObject! in
+            let activities: [Activity]! = task.result as? [Activity]
+            for (_, element) in activities.enumerate() {
+                element.user = PFUser.currentUser()
+            }
+            return PFObject.pinAllInBackground(activities)
+        }.continueWithBlock {
+            (task: BFTask!) -> AnyObject! in
+            if task.error != nil {
+                print(task.error)
+                ourTask.setError(task.error)
+            } else {
+                ourTask.setResult(task.result)
+            }
+            return nil
+        }
+        return ourTask.task
+    }
+    
+    
+    // Fetch recent activities from LOCAL DATASTORE
+    func getRecentActivities() -> BFTask {
+        let ourTask = BFTaskCompletionSource()
+        let query: PFQuery! = Activity.query()
+        query.fromLocalDatastore()
+        query.whereKey("user", equalTo: PFUser.currentUser()!)
+        query.orderByDescending("last")
+        query?.findObjectsInBackground().continueWithBlock {
+            (task: BFTask!) -> AnyObject! in
+            if task.error != nil {
+                print(task.error)
+                ourTask.setError(task.error)
+            } else {
+                ourTask.setResult(task.result)
+            }
+            return nil
+        }
+        return ourTask.task
+    }
 
     
 }

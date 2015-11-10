@@ -19,7 +19,6 @@
 		9615917B1BA48E8B007A573A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9615917A1BA48E8B007A573A /* SystemConfiguration.framework */; };
 		9615917D1BA48EA4007A573A /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9615917C1BA48EA4007A573A /* libz.tbd */; };
 		9615917F1BA71C6F007A573A /* WorkSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9615917E1BA71C6F007A573A /* WorkSession.swift */; };
-		961591801BA71C6F007A573A /* WorkSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9615917E1BA71C6F007A573A /* WorkSession.swift */; };
 		96202E791BED15AB001EB6C6 /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96202E781BED15AB001EB6C6 /* DebugViewController.swift */; };
 		966B134D1BAC9CA600951E19 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966B134C1BAC9CA600951E19 /* Activity.swift */; };
 		966B134F1BACE45B00951E19 /* DataSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966B134E1BACE45B00951E19 /* DataSync.swift */; };
@@ -313,7 +312,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				96C249231B85660F00AF01BE /* OnTheClock1Tests.swift in Sources */,
-				961591801BA71C6F007A573A /* WorkSession.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

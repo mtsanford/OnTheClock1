@@ -34,12 +34,18 @@ class DebugViewController: UIViewController {
         [ "action": "syncToParse", "text": "datasync.syncToParse"],
         [ "action": "saveToParse", "text": "ds.saveProvisionalWorkSessionsToParse"],
         [ "action": "unpinAll", "text": "Unpin all"],
+        [ "action": "letsCorruptTheDatastore", "text": "letsCorruptTheDatastore"],
+        [ "action": "pinPostFirst", "text": "pinPostFirst"],
+        [ "action": "flatSave", "text": "flatSave"],
+        [ "action": "makePost", "text": "makePost"],
     ]
     
     func createTestButtons() {
         
         let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as NSString
         NSLog("Document Path: %@", documentsPath)
+        
+        NSLog("Parse Framework API Version = %ld", PARSE_API_VERSION);
         
         for (i, action) in actions.enumerate() {
             let button   = UIButton(type: UIButtonType.System)
@@ -104,8 +110,123 @@ class DebugViewController: UIViewController {
             return nil
         }
     }
+
     
 
+    func flatSave(sender: AnyObject) {
+        
+        // create a post with a comment and pin it
+        let post1 = PFObject(className:"Post")
+        post1["text"] = "I am post #1"
+        
+        post1.pinInBackground().continueWithSuccessBlock {
+            (task: BFTask!) -> AnyObject! in
+            
+            // Make another post with comment and pin it
+            let post2 = PFObject(className:"Post")
+            post2["text"] = "I am post #2"
+            return post2.pinInBackground()
+            }.continueWithSuccessBlock {
+                (task: BFTask!) -> AnyObject! in
+                
+                // Now try to query local Post objects
+                let query = PFQuery(className:"Post")
+                query.fromLocalDatastore()
+                return query.findObjectsInBackground()
+            }.continueWithBlock {
+                (task: BFTask!) -> AnyObject! in
+                if (task.error != nil) { print(task.error) }
+                else if (task.result != nil) { print(task.result) }
+                return nil 
+        } 
+    }
+
+    
+    func letsCorruptTheDatastore(sender: AnyObject) {
+        
+        // create a post with a comment and pin it
+        let post1 = PFObject(className:"Post")
+        post1["text"] = "I am post #1"
+        let comment1 = PFObject(className:"Comment")
+        comment1["post"] = post1
+        
+        comment1.pinInBackground().continueWithSuccessBlock {
+            (task: BFTask!) -> AnyObject! in
+            
+            // Make another post with comment and pin it
+            let post2 = PFObject(className:"Post")
+            post2["text"] = "I am post #2"
+            let comment2 = PFObject(className:"Comment")
+            comment2["post"] = post2
+            return comment2.pinInBackground()
+            }.continueWithSuccessBlock {
+                (task: BFTask!) -> AnyObject! in
+                
+                // Now try to query local Post objects
+                let query = PFQuery(className:"Post")
+                query.fromLocalDatastore()
+                return query.findObjectsInBackground()
+            }.continueWithBlock {
+                (task: BFTask!) -> AnyObject! in
+                if (task.error != nil) { print(task.error) }
+                else if (task.result != nil) { print(task.result) }
+                return nil
+        }
+    }
+    
+    func pinPostFirst(sender: AnyObject) {
+        
+        // create a post with a comment and pin it
+        let post1 = PFObject(className:"Post")
+        post1["text"] = "I am post #1"
+        let comment1 = PFObject(className:"Comment")
+        comment1["post"] = post1
+        
+        let post2 = PFObject(className:"Post")
+        post2["text"] = "I am post #2"
+        let comment2 = PFObject(className:"Comment")
+        comment2["post"] = post2
+
+        post1.pinInBackground().continueWithSuccessBlock {
+            (task: BFTask!) -> AnyObject! in
+            return comment1.pinInBackground()
+        }.continueWithSuccessBlock {
+            (task: BFTask!) -> AnyObject! in
+            return post2.pinInBackground()
+        }.continueWithSuccessBlock {
+            (task: BFTask!) -> AnyObject! in
+            return comment2.pinInBackground()
+        }.continueWithSuccessBlock {
+                (task: BFTask!) -> AnyObject! in
+                
+                // Now try to query local Post objects
+                let query = PFQuery(className:"Post")
+                query.fromLocalDatastore()
+                return query.findObjectsInBackground()
+        }.continueWithBlock {
+                (task: BFTask!) -> AnyObject! in
+                if (task.error != nil) { print(task.error) }
+                else if (task.result != nil) { print(task.result) }
+                return nil
+        }
+    }
+    
+    func makePost(sender: AnyObject) {
+        
+        // create a post with a comment and pin it
+        let post1 = PFObject(className:"Post")
+        post1["text"] = "I am another post"
+        let comment1 = PFObject(className:"Comment")
+        comment1["post"] = post1
+        
+        comment1.pinInBackground().continueWithBlock {
+            (task: BFTask!) -> AnyObject! in
+            if (task.error != nil) { print(task.error) }
+            else if (task.result != nil) { print(task.result) }
+            return nil 
+        } 
+    }
+    
     /*
     // MARK: - Navigation
 
