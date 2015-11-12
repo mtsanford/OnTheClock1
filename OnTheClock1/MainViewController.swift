@@ -28,6 +28,8 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
         activityTextField.delegate = self
         activityTextField.mDelegate = self
         
+        //userButton.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 0, 0)
+        
         updateRecentItems(true)
     }
     

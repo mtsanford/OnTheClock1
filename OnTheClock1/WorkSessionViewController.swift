@@ -105,6 +105,7 @@ class WorkSessionViewController: UIViewController, UINavigationControllerDelegat
         }
     }
 
+    /*
     @IBAction func donePressed(sender: UIBarButtonItem) {
         print("donePressed")
         if finishing { return }
@@ -118,6 +119,8 @@ class WorkSessionViewController: UIViewController, UINavigationControllerDelegat
         }
         return;
     }
+    */
+    
     
     func continueSession() {
         print("continueSession")
@@ -148,7 +151,6 @@ class WorkSessionViewController: UIViewController, UINavigationControllerDelegat
             timer?.invalidate()
             updateTime()
             accumulatedTimeLastPause = accumulatedTime
-            self.view.backgroundColor = UIColor.lightGrayColor()
             
             let timeSinceStart = -(startTime?.timeIntervalSinceNow)!
             print("timeSinceStart: \(timeSinceStart)")

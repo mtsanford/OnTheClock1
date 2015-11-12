@@ -11,6 +11,8 @@ import UIKit
 // This view is tighly coupled to WorkSessionViewController
 
 class StopWorkSessionViewController: UIViewController {
+    @IBOutlet weak var timePicker: UIDatePicker!
+    @IBOutlet weak var activityLabel: UILabel!
 
     
     //var workSessionViewController: WorkSessionViewController?
@@ -23,6 +25,9 @@ class StopWorkSessionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        timePicker.countDownDuration = 300;
+        activityLabel.text = activityName
     }
 
     override func didReceiveMemoryWarning() {
@@ -33,8 +38,16 @@ class StopWorkSessionViewController: UIViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         print("StopWorkSessionViewController prepareForSegue")
         if segue.identifier == "workSessionFinished" {
-            delegate?.workSessionFinished(activityName!, startTime: startTime!, duration: duration!)            
+            print("StopWorkSessionViewController workSessionFinished")
+            delegate?.workSessionFinished(activityName!, startTime: startTime!, duration: duration!)
         }
     }
 
+    @IBAction func timePickerChanged(sender: AnyObject) {
+        print("timePickerChanged: \(timePicker.countDownDuration)");
+        if (timePicker.countDownDuration > 40 * 60) {
+            timePicker.countDownDuration = 40 * 60;
+        }
+    }
+    
 }
