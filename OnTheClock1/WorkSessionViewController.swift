@@ -56,7 +56,7 @@ class WorkSessionViewController: UIViewController, UINavigationControllerDelegat
         activityLabel.text = activityString
         
         self.navigationController?.delegate = self
-
+        
         continueSession()
     }
 
@@ -74,20 +74,18 @@ class WorkSessionViewController: UIViewController, UINavigationControllerDelegat
     
     // MARK: - Navigation
     @IBAction func cancel(sender: UIBarButtonItem) {
+        func cancelWorkSession() {
+            self.pause()
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
         if accumulatedTime >= minimumWorkTime {
             let refreshAlert = UIAlertController(title: "Cancel work?", message: "Cancel and forget about this work session?", preferredStyle: UIAlertControllerStyle.Alert)
-            
-            refreshAlert.addAction(UIAlertAction(title: "Confirm cancel", style: .Default, handler: { (action: UIAlertAction!) in
-                self.dismissViewControllerAnimated(true, completion: nil)
-            }))
-            
-            refreshAlert.addAction(UIAlertAction(title: "Keep working", style: .Default, handler: { (action: UIAlertAction!) in
-            }))
-            
+            refreshAlert.addAction(UIAlertAction(title: "Confirm cancel", style: .Default, handler: { (action: UIAlertAction!) in cancelWorkSession() }))
+            refreshAlert.addAction(UIAlertAction(title: "Keep working", style: .Default, handler: nil))
             presentViewController(refreshAlert, animated: true, completion: nil)
         }
         else {
-            self.dismissViewControllerAnimated(true, completion: nil)
+            cancelWorkSession()
         }
     }
 
@@ -105,23 +103,6 @@ class WorkSessionViewController: UIViewController, UINavigationControllerDelegat
         }
     }
 
-    /*
-    @IBAction func donePressed(sender: UIBarButtonItem) {
-        print("donePressed")
-        if finishing { return }
-        finishing = true
-        pause()
-        
-        DataSync.sharedInstance.newWorkSession(activityString!, start: self.firstStartTime!, duration: self.accumulatedTime).continueWithBlock {
-            (task: BFTask!) -> AnyObject! in
-            self.performSegueWithIdentifier("unwindToMainView", sender: self)
-            return nil
-        }
-        return;
-    }
-    */
-    
-    
     func continueSession() {
         print("continueSession")
         if (running == false) {
@@ -164,6 +145,8 @@ class WorkSessionViewController: UIViewController, UINavigationControllerDelegat
         minutesLabel.text = "\(minutes)"
         doneButton.enabled = accumulatedTime >= minimumWorkTime
     }
+    
+    // MARK: - UINavigationControllerDelegate
     
     func navigationController(navigationController: UINavigationController, willShowViewController viewController: UIViewController, animated: Bool) {
         if (viewController == self) {

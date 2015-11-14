@@ -28,7 +28,9 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
         activityTextField.delegate = self
         activityTextField.mDelegate = self
         
-        //userButton.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 0, 0)
+        let paddingView = UIView(frame: CGRectMake(0,0,5,self.activityTextField.frame.height))
+        activityTextField.leftView = paddingView
+        activityTextField.leftViewMode = UITextFieldViewMode.Always
         
         updateRecentItems(true)
     }

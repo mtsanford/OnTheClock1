@@ -28,6 +28,8 @@ class StopWorkSessionViewController: UIViewController {
         
         timePicker.countDownDuration = 300;
         activityLabel.text = activityName
+        
+        timePicker.setValue(UIColor.whiteColor(), forKeyPath: "textColor")
     }
 
     override func didReceiveMemoryWarning() {
