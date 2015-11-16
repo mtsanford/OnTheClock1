@@ -297,6 +297,27 @@ class DataSync {
         }
         return ourTask.task
     }
-
+    
+    // Fetch recent activities from LOCAL DATASTORE
+    func getRecentWorkSessions() -> BFTask {
+        let ourTask = BFTaskCompletionSource()
+        let query: PFQuery! = WorkSession.query()
+        query.fromLocalDatastore()
+        query.whereKey("user", equalTo: PFUser.currentUser()!)
+        query.orderByDescending("last")
+        query.includeKey("activity")
+        query?.findObjectsInBackground().continueWithBlock {
+            (task: BFTask!) -> AnyObject! in
+            if task.error != nil {
+                print(task.error)
+                ourTask.setError(task.error)
+            } else {
+                ourTask.setResult(task.result)
+            }
+            return nil
+        }
+        return ourTask.task
+    }
+    
     
 }

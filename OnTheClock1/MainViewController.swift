@@ -82,6 +82,10 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
             workSessionViewController?.delegate = self
             workSessionViewController?.activityString = activityTextField.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
         }
+        if segue.identifier == "showWorkSessionHistory" {
+            let navController = segue.destinationViewController as? UINavigationController
+            let workSessionViewHistoryController = navController?.topViewController as? WorkSessionHistoryTableViewController
+        }
     }
     
     @IBAction func unwindToMainView(sender: UIStoryboardSegue) {
