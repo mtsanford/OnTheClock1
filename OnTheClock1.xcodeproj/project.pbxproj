@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		96092D961B8D347C000A6BD4 /* MPGTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96092D951B8D347C000A6BD4 /* MPGTextField.swift */; };
 		9611DF9A1BED4BF500E54102 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9611DF991BED4BF500E54102 /* Utils.swift */; };
+		9612CCAE1C051995000FC5BB /* WorkSessionDurationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9612CCAD1C051995000FC5BB /* WorkSessionDurationTableViewCell.swift */; };
 		9615916D1BA48E3D007A573A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9615916C1BA48E3D007A573A /* AudioToolbox.framework */; };
 		9615916F1BA48E49007A573A /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9615916E1BA48E49007A573A /* CFNetwork.framework */; };
 		961591711BA48E55007A573A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 961591701BA48E55007A573A /* CoreGraphics.framework */; };
@@ -22,6 +23,8 @@
 		96202E791BED15AB001EB6C6 /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96202E781BED15AB001EB6C6 /* DebugViewController.swift */; };
 		966B134D1BAC9CA600951E19 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966B134C1BAC9CA600951E19 /* Activity.swift */; };
 		966B134F1BACE45B00951E19 /* DataSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966B134E1BACE45B00951E19 /* DataSync.swift */; };
+		96B8887F1BFA2C7B00CDFD02 /* WorkSessionFullTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96B8887D1BFA2C7B00CDFD02 /* WorkSessionFullTableViewCell.swift */; };
+		96B888801BFA2C7B00CDFD02 /* WorkSessionHistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96B8887E1BFA2C7B00CDFD02 /* WorkSessionHistoryTableViewController.swift */; };
 		96C2490E1B85660F00AF01BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2490D1B85660F00AF01BE /* AppDelegate.swift */; };
 		96C249101B85660F00AF01BE /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2490F1B85660F00AF01BE /* MainViewController.swift */; };
 		96C249131B85660F00AF01BE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96C249111B85660F00AF01BE /* Main.storyboard */; };
@@ -52,6 +55,7 @@
 		96092D951B8D347C000A6BD4 /* MPGTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPGTextField.swift; sourceTree = "<group>"; };
 		96092DAF1B90D57B000A6BD4 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		9611DF991BED4BF500E54102 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		9612CCAD1C051995000FC5BB /* WorkSessionDurationTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkSessionDurationTableViewCell.swift; sourceTree = "<group>"; };
 		9615916C1BA48E3D007A573A /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		9615916E1BA48E49007A573A /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		961591701BA48E55007A573A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -65,6 +69,8 @@
 		96202E781BED15AB001EB6C6 /* DebugViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugViewController.swift; sourceTree = "<group>"; };
 		966B134C1BAC9CA600951E19 /* Activity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
 		966B134E1BACE45B00951E19 /* DataSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSync.swift; sourceTree = "<group>"; };
+		96B8887D1BFA2C7B00CDFD02 /* WorkSessionFullTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkSessionFullTableViewCell.swift; sourceTree = "<group>"; };
+		96B8887E1BFA2C7B00CDFD02 /* WorkSessionHistoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkSessionHistoryTableViewController.swift; sourceTree = "<group>"; };
 		96C2490A1B85660F00AF01BE /* OnTheClock1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheClock1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		96C2490D1B85660F00AF01BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		96C2490F1B85660F00AF01BE /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -138,6 +144,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		9612CCAC1C051902000FC5BB /* supporting files */ = {
+			isa = PBXGroup;
+			children = (
+				96C249161B85660F00AF01BE /* LaunchScreen.storyboard */,
+				96FC38241B99FCBD005B2D36 /* OnTheClock1-Bridging-Header.h */,
+				96092D951B8D347C000A6BD4 /* MPGTextField.swift */,
+				96C249191B85660F00AF01BE /* Info.plist */,
+			);
+			name = "supporting files";
+			sourceTree = "<group>";
+		};
 		96C249011B85660F00AF01BE = {
 			isa = PBXGroup;
 			children = (
@@ -160,8 +177,7 @@
 		96C2490C1B85660F00AF01BE /* OnTheClock1 */ = {
 			isa = PBXGroup;
 			children = (
-				96FC38241B99FCBD005B2D36 /* OnTheClock1-Bridging-Header.h */,
-				96092D951B8D347C000A6BD4 /* MPGTextField.swift */,
+				9612CCAC1C051902000FC5BB /* supporting files */,
 				96C2490D1B85660F00AF01BE /* AppDelegate.swift */,
 				96C2490F1B85660F00AF01BE /* MainViewController.swift */,
 				96C249111B85660F00AF01BE /* Main.storyboard */,
@@ -169,8 +185,9 @@
 				96202E781BED15AB001EB6C6 /* DebugViewController.swift */,
 				96C249301B86A76700AF01BE /* WorkSessionViewController.swift */,
 				96C249141B85660F00AF01BE /* Assets.xcassets */,
-				96C249161B85660F00AF01BE /* LaunchScreen.storyboard */,
-				96C249191B85660F00AF01BE /* Info.plist */,
+				96B8887D1BFA2C7B00CDFD02 /* WorkSessionFullTableViewCell.swift */,
+				9612CCAD1C051995000FC5BB /* WorkSessionDurationTableViewCell.swift */,
+				96B8887E1BFA2C7B00CDFD02 /* WorkSessionHistoryTableViewController.swift */,
 				966B134C1BAC9CA600951E19 /* Activity.swift */,
 				9615917E1BA71C6F007A573A /* WorkSession.swift */,
 				966B134E1BACE45B00951E19 /* DataSync.swift */,
@@ -296,13 +313,16 @@
 				966B134D1BAC9CA600951E19 /* Activity.swift in Sources */,
 				96C249101B85660F00AF01BE /* MainViewController.swift in Sources */,
 				9611DF9A1BED4BF500E54102 /* Utils.swift in Sources */,
+				96B888801BFA2C7B00CDFD02 /* WorkSessionHistoryTableViewController.swift in Sources */,
 				96D751B71BEFD94200778DDE /* MySignUpViewController.swift in Sources */,
 				96D751B51BEFD65C00778DDE /* MyLoginViewController.swift in Sources */,
 				966B134F1BACE45B00951E19 /* DataSync.swift in Sources */,
+				96B8887F1BFA2C7B00CDFD02 /* WorkSessionFullTableViewCell.swift in Sources */,
 				96C249311B86A76700AF01BE /* WorkSessionViewController.swift in Sources */,
 				96202E791BED15AB001EB6C6 /* DebugViewController.swift in Sources */,
 				96C2490E1B85660F00AF01BE /* AppDelegate.swift in Sources */,
 				96D751B91BF0062E00778DDE /* StopWorkSessionViewController.swift in Sources */,
+				9612CCAE1C051995000FC5BB /* WorkSessionDurationTableViewCell.swift in Sources */,
 				9615917F1BA71C6F007A573A /* WorkSession.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

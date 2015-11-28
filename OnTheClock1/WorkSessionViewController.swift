@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol WorkSessionControllerDelegate {
+protocol WorkSessionControllerDelegate: class {
     func workSessionFinished(activityName: String, startTime: NSDate, duration: NSNumber)
 }
 
@@ -35,7 +35,7 @@ class WorkSessionViewController: UIViewController, UINavigationControllerDelegat
     
     var workSession: WorkSession?
     
-    var delegate: WorkSessionControllerDelegate?
+    weak var delegate: WorkSessionControllerDelegate?
     
     
     // TODO: Does this need to be implemented correctly?

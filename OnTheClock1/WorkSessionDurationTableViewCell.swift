@@ -1,15 +1,14 @@
 //
-//  WorkSessionHistoryTableViewCell.swift
+//  WorkSessionDurationTableViewCell.swift
 //  OnTheClock1
 //
-//  Created by Mark Sanford on 11/14/15.
+//  Created by Work on 11/24/15.
 //  Copyright © 2015 Mark Sanford. All rights reserved.
 //
 
 import UIKit
 
-class WorkSessionHistoryTableViewCell: UITableViewCell {
-    @IBOutlet weak var activityNameLabel: UILabel!
+class WorkSessionDurationTableViewCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()

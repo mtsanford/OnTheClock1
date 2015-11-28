@@ -69,6 +69,9 @@ Parse.Cloud.define("newWorkSession", function(request, response) {
 			if (result) {
 				activity = result;
 				activity.increment("totalTime", duration);
+				if (start > activity.get("last")) {
+					activity.set("last", start);				
+				} 
 			}
 			else {
 				activity = new Activity();
@@ -76,8 +79,8 @@ Parse.Cloud.define("newWorkSession", function(request, response) {
 				activity.set("totalTime", duration);
 				activity.set("user", user);
 				activity.set("provisional", false);
+				activity.set("last", start);				
 			}
-			activity.set("last", start);
 		    workSession.set("activity", activity);
 			return workSession.save();
 		}).then(function(result) {

@@ -6,6 +6,7 @@
 //  Copyright © 2015 Mark Sanford. All rights reserved.
 //
 
+import Foundation
 import UIKit
 
 class DebugViewController: UIViewController {
@@ -38,6 +39,8 @@ class DebugViewController: UIViewController {
         [ "action": "pinPostFirst", "text": "pinPostFirst"],
         [ "action": "flatSave", "text": "flatSave"],
         [ "action": "makePost", "text": "makePost"],
+        [ "action": "makeWorkSessions", "text": "makeWorkSessions"],
+        [ "action": "firstDayOfWeek", "text": "firstDayOfWeek"],
     ]
     
     func createTestButtons() {
@@ -223,9 +226,64 @@ class DebugViewController: UIViewController {
             (task: BFTask!) -> AnyObject! in
             if (task.error != nil) { print(task.error) }
             else if (task.result != nil) { print(task.result) }
-            return nil 
-        } 
+            return nil
+        }
     }
+    
+    func makeWorkSessions(sender: AnyObject) {
+        let localTimeZone = NSTimeZone.localTimeZone()
+
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.timeZone = localTimeZone
+        dateFormatter.dateFormat = "yyyy.MM.dd G 'at' HH:mm:ss zzz"
+        
+        var remaining = 100
+        
+        func randWS() -> (String, NSDate, NSNumber) {
+            let maxMinutes = 120
+            let secondsAgo = random() % (3600 * 24 * 180)  // 180 days
+            let startTime = NSDate (timeIntervalSinceNow: NSTimeInterval(-secondsAgo))
+            let duration = pow(Double(random() % maxMinutes), 2.0) * 60 / Double(maxMinutes) + 600
+            
+            let activityRand = random() % 100
+            var activityName = "Work on novel"
+            if (activityRand > 70) { activityName = "Learn swift" }
+            if (activityRand > 90) { activityName = "Build flying robot" }
+            if (activityRand > 97) { activityName = "Replace carpet in stairway" }
+            
+            return (activityName, startTime, duration)
+        }
+        
+        let task = BFTask(result: nil)
+        task.continueWithBlock {
+            (var task) -> AnyObject! in
+            for _ in 1...remaining {
+                task = task.continueWithBlock({ (task) -> AnyObject! in
+                    let (activityName, startTime, duration) = randWS()
+                    let dateString = dateFormatter.stringFromDate(startTime)
+                    print("\(activityName) \(dateString) \(duration)")
+                    return DataSync.sharedInstance.newWorkSession(activityName, start: startTime, duration: duration)
+                })
+            }
+            return task
+        }
+        
+    }
+    
+    func firstDayOfWeek(sender: AnyObject) {
+        let now = NSDate()
+        var startDate: NSDate?
+        var duration: NSTimeInterval = 0
+        NSCalendar.currentCalendar().rangeOfUnit(
+            NSCalendarUnit.WeekOfYear,
+            startDate: &startDate,
+            interval: &duration,
+            forDate: now)
+        print(startDate)
+        print(NSCalendar.currentCalendar().firstWeekday)
+    }
+    
+    
     
     /*
     // MARK: - Navigation

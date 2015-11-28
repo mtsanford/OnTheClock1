@@ -33,3 +33,34 @@ class Utils {
     }
     
 }
+
+extension NSCalendar {
+    func startOfWeekForDate(date: NSDate) -> NSDate? {
+        return nil
+    }
+}
+
+
+
+extension NSDate {
+    
+    private static var is24hour: Bool? = nil
+    
+    class var is24HoursFormat : Bool  {
+        if is24hour == nil {
+            let dateString = NSDate.test24hourFormatter.stringFromDate(NSDate())
+            is24hour = !(dateString.containsString(NSDate.test24hourFormatter.AMSymbol) || dateString.containsString(NSDate.test24hourFormatter.PMSymbol))
+        }
+        return is24hour!
+    }
+    
+    private static let test24hourFormatter : NSDateFormatter = {
+        let formatter = NSDateFormatter()
+        
+        formatter.locale    = NSLocale.autoupdatingCurrentLocale()
+        formatter.timeStyle = .ShortStyle
+        formatter.dateStyle = .NoStyle
+        
+        return formatter
+    }()
+}

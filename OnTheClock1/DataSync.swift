@@ -319,5 +319,128 @@ class DataSync {
         return ourTask.task
     }
     
+
+    struct ActivitySummary {
+        var name: String
+        var duration: NSTimeInterval
+    }
+    
+    struct WorkSessionSummary {
+        var timePeriod: NSDate
+        var activities: [ActivitySummary]
+    }
+    
+    /*
+        From an array of WorkSession objects, return summaries by day, week, and month
+    
+        sample input:
+    
+        [
+            { activityName: 'Wash car',   startDate: Nov 24 11:00, duration: 00:45 }
+            { activityName: 'Eat Cheese', startDate: Nov 24 13:12, duration: 00:20 }
+            { activityName: 'Eat Cheese', startDate: Nov 24 14:30, duration: 00:15 }
+            { activityName: 'Eat Cheese', startDate: Nov 25 08:12, duration: 00:40 }
+            { activityName: 'Eat Cheese', startDate: Dec 01 10:12, duration: 01:05 }
+        ]
+    
+        sample return value (json format)
+    
+        {
+            "day" : [
+                {
+                    timePeriod: Nov 24 00:00
+                    activities [
+                        { name: 'Wash car',   duration: 00:45 }
+                        { name: 'Eat cheese', duration: 00:35 }
+                    ]
+                }
+                {
+                    timePeriod: Nov 25 00:00
+                    activities [
+                        { name: 'Eat cheese', duration: 00:40 }
+                    ]
+                }
+                {
+                    timePeriod: Dec 01 00:00
+                    activities [
+                        { name: 'Eat cheese', duration: 01:05 }
+                    ]
+                }
+            ]
+            "week" : [
+                {
+                    timePeriod: Nov 22 00:00
+                    activities [
+                        { name: 'Wash car',   duration: 00:45 }
+                        { name: 'Eat cheese', duration: 01:15 }
+                    ]
+                }
+                {
+                    timePeriod: Nov 29 00:00
+                    activities [
+                        { name: 'Eat cheese', duration: 01:05 }
+                    ]
+                }
+            ]
+            "month" : [
+                {
+                    timePeriod: Nov 01 00:00
+                    activities [
+                        { name: 'Wash car',   duration: 00:45 }
+                        { name: 'Eat cheese', duration: 01:15 }
+                    ]
+                }
+                {
+                    timePeriod: Dec 01 00:00
+                    activities [
+                        { name: 'Eat cheese', duration: 01:05 }
+                    ]
+                }
+            ]
+        }
+    
+    */
+    
+    func summarizeWorkSessions(calendarUnit: NSCalendarUnit, workSessions: [WorkSession]) -> [WorkSessionSummary] {
+        var startDate: NSDate?
+        var duration: NSTimeInterval = 0
+        
+        var result = [WorkSessionSummary]()
+        
+        var buckets = [NSDate:[String:Double]]()
+        
+        for workSession in workSessions {
+            
+            // Add to a day bucket
+            if NSCalendar.currentCalendar().rangeOfUnit(
+                calendarUnit,
+                startDate: &startDate,
+                interval: &duration,
+                forDate: workSession.start) {
+                    
+                    if (buckets[startDate!] == nil) { buckets[startDate!] = [String:Double]() }
+                    if (buckets[startDate!]![workSession.activity.name] == nil) { buckets[startDate!]![workSession.activity.name] = 0.0 }
+                    buckets[startDate!]![workSession.activity.name]! += workSession.duration.doubleValue
+            }
+        }
+        
+        let sortedBuckets = buckets.sort() {
+            ( t1: (NSDate, [String:Double]) , t2: (NSDate, [String:Double]) ) -> Bool in
+            return t1.0.compare(t2.0) == NSComparisonResult.OrderedAscending
+        }
+        
+        for bucket in sortedBuckets {
+            let sortedBucket = bucket.1.sort({ (t1:(String, Double), t2:(String, Double)) -> Bool in
+                return t1.1 > t2.1
+            })
+            var activities = [ActivitySummary]()
+            for activity in sortedBucket { activities.append(ActivitySummary(name: activity.0, duration: activity.1)) }
+            result.append(WorkSessionSummary(timePeriod: bucket.0, activities: activities))
+        }
+        
+        
+        return result
+    }
+
     
 }

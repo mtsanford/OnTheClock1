@@ -83,8 +83,8 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
             workSessionViewController?.activityString = activityTextField.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
         }
         if segue.identifier == "showWorkSessionHistory" {
-            let navController = segue.destinationViewController as? UINavigationController
-            let workSessionViewHistoryController = navController?.topViewController as? WorkSessionHistoryTableViewController
+            //let navController = segue.destinationViewController as? UINavigationController
+            //let workSessionViewHistoryController = navController?.topViewController as? WorkSessionHistoryTableViewController
         }
     }
     

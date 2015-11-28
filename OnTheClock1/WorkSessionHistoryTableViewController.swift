@@ -10,7 +10,14 @@ import UIKit
 
 class WorkSessionHistoryTableViewController: UITableViewController {
 
+    @IBOutlet weak var detailButton: UIBarButtonItem!
+    var detailInnerButton: UIButton! = nil
+    
+    let offImage = UIImage(named: "list-unselected")?.imageWithRenderingMode(.AlwaysTemplate)
+    let onImage = UIImage(named: "list-selected")?.imageWithRenderingMode(.AlwaysTemplate)
+
     var workSessions: [WorkSession]?
+    var workSessionsSummary: [DataSync.WorkSessionSummary]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,16 +26,28 @@ class WorkSessionHistoryTableViewController: UITableViewController {
             (task: BFTask!) -> AnyObject! in
             if (task.result != nil) {
                 self.workSessions = task.result as? [WorkSession]
+                self.workSessionsSummary = DataSync.sharedInstance.summarizeWorkSessions(NSCalendarUnit.Day, workSessions: self.workSessions!)
                 self.tableView.reloadData()
             }
             return nil
         }
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
 
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        detailInnerButton = UIButton()
+        detailInnerButton.setImage(offImage, forState: .Normal)
+        detailInnerButton.setImage(onImage, forState: .Selected)
+        detailInnerButton.tintColor = UIColor.redColor()
+        detailInnerButton.frame = CGRect(x: 0, y: 0, width: 35, height: 33)
+        detailButton.customView = detailInnerButton
+        detailInnerButton.addTarget(self, action: "detailPressed:", forControlEvents: .TouchUpInside)
+        
+        // TODO - Do I really have to hard code this?  tableView.rowHeight = -1 on load
+        self.tableView.estimatedRowHeight = 72
+        
+    }
+
+    @IBAction func detailPressed(sender: UIBarButtonItem) {
+        let currentlySelected = detailInnerButton.selected
+        detailInnerButton.selected = !currentlySelected
     }
 
     override func didReceiveMemoryWarning() {
@@ -36,6 +55,10 @@ class WorkSessionHistoryTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    func summarizeWorkSessions() {
+        
+    }
+    
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -54,10 +77,12 @@ class WorkSessionHistoryTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("WorkSessionHistoryTableViewCell", forIndexPath: indexPath)
-            as! WorkSessionHistoryTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("WorkSessionFullTableViewCell", forIndexPath: indexPath)
+            as! WorkSessionFullTableViewCell
 
-        cell.activityNameLabel.text = self.workSessions![indexPath.row].activity.name
+        cell.activityName = self.workSessions![indexPath.row].activity.name
+        cell.start = self.workSessions![indexPath.row].start
+        cell.duration = self.workSessions![indexPath.row].duration
 
         return cell
     }
