@@ -10,6 +10,9 @@ import UIKit
 
 class WorkSessionDurationTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var activityNameLabel: UILabel!
+    @IBOutlet weak var durationLabel: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

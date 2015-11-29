@@ -328,6 +328,7 @@ class DataSync {
     struct WorkSessionSummary {
         var timePeriod: NSDate
         var activities: [ActivitySummary]
+        var workSessions: [WorkSession]
     }
     
     /*
@@ -343,61 +344,39 @@ class DataSync {
             { activityName: 'Eat Cheese', startDate: Dec 01 10:12, duration: 01:05 }
         ]
     
-        sample return value (json format)
+        sample return value for calendarUnit == NSCalendarUnit.Day
     
-        {
-            "day" : [
-                {
-                    timePeriod: Nov 24 00:00
-                    activities [
-                        { name: 'Wash car',   duration: 00:45 }
-                        { name: 'Eat cheese', duration: 00:35 }
-                    ]
-                }
-                {
-                    timePeriod: Nov 25 00:00
-                    activities [
-                        { name: 'Eat cheese', duration: 00:40 }
-                    ]
-                }
-                {
-                    timePeriod: Dec 01 00:00
-                    activities [
-                        { name: 'Eat cheese', duration: 01:05 }
-                    ]
-                }
-            ]
-            "week" : [
-                {
-                    timePeriod: Nov 22 00:00
-                    activities [
-                        { name: 'Wash car',   duration: 00:45 }
-                        { name: 'Eat cheese', duration: 01:15 }
-                    ]
-                }
-                {
-                    timePeriod: Nov 29 00:00
-                    activities [
-                        { name: 'Eat cheese', duration: 01:05 }
-                    ]
-                }
-            ]
-            "month" : [
-                {
-                    timePeriod: Nov 01 00:00
-                    activities [
-                        { name: 'Wash car',   duration: 00:45 }
-                        { name: 'Eat cheese', duration: 01:15 }
-                    ]
-                }
-                {
-                    timePeriod: Dec 01 00:00
-                    activities [
-                        { name: 'Eat cheese', duration: 01:05 }
-                    ]
-                }
-            ]
-        }
+        [
+            {
+                timePeriod: Nov 24 00:00
+                activities [
+                    { name: 'Wash car',   duration: 00:45 }
+                    { name: 'Eat cheese', duration: 00:35 }
+                ]
+                workSessions [   /* Pointers to original objects in workSessions argument */
+                    { activityName: 'Wash car',   startDate: Nov 24 11:00, duration: 00:45 }
+                    { activityName: 'Eat Cheese', startDate: Nov 24 13:12, duration: 00:20 }
+                    { activityName: 'Eat Cheese', startDate: Nov 24 14:30, duration: 00:15 }                ]
+                ]
+            {
+                timePeriod: Nov 25 00:00
+                activities [
+                    { name: 'Eat cheese', duration: 00:40 }
+                ]
+                workSessions: [
+                    { activityName: 'Eat Cheese', startDate: Nov 25 08:12, duration: 00:40 }
+                ]
+            }
+            {
+                timePeriod: Dec 01 00:00
+                activities [
+                    { name: 'Eat cheese', duration: 01:05 }
+                ]
+                workSessions: [
+                    { activityName: 'Eat Cheese', startDate: Dec 01 10:12, duration: 01:05 }
+                ]
+            }
+        ]
     
     */
     
@@ -407,7 +386,7 @@ class DataSync {
         
         var result = [WorkSessionSummary]()
         
-        var buckets = [NSDate:[String:Double]]()
+        var buckets = [NSDate:(summaries: [String:Double], workSessions:[WorkSession])]()
         
         for workSession in workSessions {
             
@@ -416,28 +395,47 @@ class DataSync {
                 calendarUnit,
                 startDate: &startDate,
                 interval: &duration,
-                forDate: workSession.start) {
-                    
-                    if (buckets[startDate!] == nil) { buckets[startDate!] = [String:Double]() }
-                    if (buckets[startDate!]![workSession.activity.name] == nil) { buckets[startDate!]![workSession.activity.name] = 0.0 }
-                    buckets[startDate!]![workSession.activity.name]! += workSession.duration.doubleValue
+                forDate: workSession.start)
+            {
+                if (buckets[startDate!] == nil) {
+                    buckets[startDate!] = ([String:Double](), [WorkSession]())
+                }
+                
+                if (buckets[startDate!]!.summaries[workSession.activity.name] == nil) {
+                    buckets[startDate!]!.summaries[workSession.activity.name] = 0.0
+                }
+                buckets[startDate!]!.summaries[workSession.activity.name]! += workSession.duration.doubleValue
+                
+                buckets[startDate!]!.workSessions.append(workSession)
             }
         }
         
-        let sortedBuckets = buckets.sort() {
-            ( t1: (NSDate, [String:Double]) , t2: (NSDate, [String:Double]) ) -> Bool in
+        let sortedBuckets = buckets.sort {
+            ( t1: (NSDate, (summaries: [String : Double], workSessions: [WorkSession])),
+              t2: (NSDate, (summaries: [String : Double], workSessions: [WorkSession]))) -> Bool in
             return t1.0.compare(t2.0) == NSComparisonResult.OrderedAscending
         }
-        
         for bucket in sortedBuckets {
-            let sortedBucket = bucket.1.sort({ (t1:(String, Double), t2:(String, Double)) -> Bool in
-                return t1.1 > t2.1
+            var summary = WorkSessionSummary(timePeriod: bucket.0, activities:[ActivitySummary](), workSessions: [WorkSession]())
+            
+            // sort summaries by total duration
+            let sortedSummaries = bucket.1.summaries.sort({ (t1:(String, Double), t2:(String, Double)) -> Bool in
+                t1.1 > t2.1
             })
-            var activities = [ActivitySummary]()
-            for activity in sortedBucket { activities.append(ActivitySummary(name: activity.0, duration: activity.1)) }
-            result.append(WorkSessionSummary(timePeriod: bucket.0, activities: activities))
+            for s in sortedSummaries {
+                summary.activities.append(ActivitySummary(name: s.0, duration: s.1))
+            }
+            
+            summary.workSessions.sortInPlace({ (t1: WorkSession, t2: WorkSession) -> Bool in
+                return t1.start.compare(t2.start) == NSComparisonResult.OrderedAscending
+            })
+            summary.workSessions = bucket.1.workSessions
+            
+            result.append(summary)
         }
         
+        print("Summaries: \(result.count)")
+        for a in result { print ("\(a.timePeriod) activities: \(a.activities.count) workSessions: \(a.workSessions.count)") }
         
         return result
     }

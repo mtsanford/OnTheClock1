@@ -18,6 +18,11 @@ class WorkSessionHistoryTableViewController: UITableViewController {
 
     var workSessions: [WorkSession]?
     var workSessionsSummary: [DataSync.WorkSessionSummary]?
+    var showDetail: Bool = true {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,6 +53,7 @@ class WorkSessionHistoryTableViewController: UITableViewController {
     @IBAction func detailPressed(sender: UIBarButtonItem) {
         let currentlySelected = detailInnerButton.selected
         detailInnerButton.selected = !currentlySelected
+        showDetail = !showDetail
     }
 
     override func didReceiveMemoryWarning() {
