@@ -23,6 +23,13 @@ class WorkSessionHistoryTableViewController: UITableViewController {
             tableView.reloadData()
         }
     }
+
+    private static let sectionHeaderFormatter : NSDateFormatter = {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.timeZone = NSTimeZone.localTimeZone()
+        dateFormatter.dateFormat = "E MMMM d"
+        return dateFormatter
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,27 +76,50 @@ class WorkSessionHistoryTableViewController: UITableViewController {
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+        return workSessionsSummary?.count ?? 0
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        if workSessions != nil {
-            return workSessions!.count
+        if showDetail {
+            return (workSessionsSummary?[section])?.workSessions.count ?? 0
         }
         else {
-            return 0
+            return (workSessionsSummary?[section])?.activities.count ?? 0
         }
     }
 
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if let timePeriod = (workSessionsSummary?[section])?.timePeriod {
+            return WorkSessionHistoryTableViewController.sectionHeaderFormatter.stringFromDate(timePeriod)
+        }
+        else {
+            return  ""
+        }
+    }
+    
+    override func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        view.tintColor = UIColor.lightGrayColor()
+    }
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("WorkSessionFullTableViewCell", forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier(showDetail ? "WorkSessionFullTableViewCell" : "WorkSessionDurationTableViewCell", forIndexPath: indexPath)
             as! WorkSessionFullTableViewCell
 
-        cell.activityName = self.workSessions![indexPath.row].activity.name
-        cell.start = self.workSessions![indexPath.row].start
-        cell.duration = self.workSessions![indexPath.row].duration
-
+        if showDetail {
+            if let workSession = (workSessionsSummary?[indexPath.section])?.workSessions[indexPath.row] {
+                cell.activityName = workSession.activity.name
+                cell.start = workSession.start
+                cell.duration = workSession.duration
+            }
+        }
+        else {
+            if let activitySummary = (workSessionsSummary?[indexPath.section])?.activities[indexPath.row] {
+                cell.activityName = activitySummary.name
+                cell.duration = activitySummary.duration
+            }
+        }
+        
         return cell
     }
 

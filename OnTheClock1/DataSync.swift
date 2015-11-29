@@ -413,7 +413,7 @@ class DataSync {
         let sortedBuckets = buckets.sort {
             ( t1: (NSDate, (summaries: [String : Double], workSessions: [WorkSession])),
               t2: (NSDate, (summaries: [String : Double], workSessions: [WorkSession]))) -> Bool in
-            return t1.0.compare(t2.0) == NSComparisonResult.OrderedAscending
+            return t1.0.compare(t2.0) == NSComparisonResult.OrderedDescending
         }
         for bucket in sortedBuckets {
             var summary = WorkSessionSummary(timePeriod: bucket.0, activities:[ActivitySummary](), workSessions: [WorkSession]())
@@ -426,10 +426,10 @@ class DataSync {
                 summary.activities.append(ActivitySummary(name: s.0, duration: s.1))
             }
             
+            summary.workSessions = bucket.1.workSessions
             summary.workSessions.sortInPlace({ (t1: WorkSession, t2: WorkSession) -> Bool in
                 return t1.start.compare(t2.start) == NSComparisonResult.OrderedAscending
             })
-            summary.workSessions = bucket.1.workSessions
             
             result.append(summary)
         }
