@@ -94,6 +94,39 @@
             </objects>
             <point key="canvasLocation" x="438" y="-134"/>
         </scene>
+        <!--Weekly-->
+        <scene sceneID="0jt-tH-727">
+            <objects>
+                <navigationController id="vvw-Zy-VVx" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Weekly" image="calendar-week" id="ryY-Ve-Cvq"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="8bD-AH-Q3H">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="lKA-M1-Dbq" kind="relationship" relationship="rootViewController" id="EKF-EX-Yh5"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IiR-zq-64f" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1358" y="-987"/>
+        </scene>
+        <!--Monthly-->
+        <scene sceneID="qjh-OB-4Hw">
+            <objects>
+                <navigationController id="0cD-a7-Ngp" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Monthly" image="calendar-month" id="Qo4-wc-LNP"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="79L-6P-tm7">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                    </navigationBar>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="txc-gb-V8z" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1358" y="-2294"/>
+        </scene>
         <!--Debug-->
         <scene sceneID="nZB-5X-PxI">
             <objects>
@@ -471,26 +504,6 @@
             </objects>
             <point key="canvasLocation" x="872" y="-341"/>
         </scene>
-        <!--Item 2-->
-        <scene sceneID="fAx-wo-42d">
-            <objects>
-                <viewController id="Qy8-uX-x0z" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="qq4-Ay-HFq"/>
-                        <viewControllerLayoutGuide type="bottom" id="9zl-Xt-otE"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8IX-lg-eYE">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <animations/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="Item 2" id="04i-no-ciJ"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="fc9-Lx-WMR" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1348" y="-959"/>
-        </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="eFh-h3-y4K">
             <objects>
@@ -503,18 +516,19 @@
                     </tabBar>
                     <connections>
                         <segue destination="4As-xk-Svi" kind="relationship" relationship="viewControllers" id="IML-DK-MDf"/>
-                        <segue destination="Qy8-uX-x0z" kind="relationship" relationship="viewControllers" id="fTY-gc-a2h"/>
+                        <segue destination="vvw-Zy-VVx" kind="relationship" relationship="viewControllers" id="zRJ-wV-VzE"/>
+                        <segue destination="0cD-a7-Ngp" kind="relationship" relationship="viewControllers" id="eaK-6G-ftc"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jLv-r9-Fc3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="872" y="-1297"/>
+            <point key="canvasLocation" x="890" y="-1640"/>
         </scene>
-        <!--Recent-->
+        <!--Daily-->
         <scene sceneID="20O-Ng-70Z">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="4As-xk-Svi" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Recent" id="feB-97-kgB"/>
+                    <tabBarItem key="tabBarItem" title="Daily" image="calendar-day" id="feB-97-kgB"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="okX-R3-uJ2">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -532,7 +546,13 @@
         </scene>
     </scenes>
     <resources>
+        <image name="calendar-day" width="25" height="25"/>
+        <image name="calendar-month" width="25" height="25"/>
+        <image name="calendar-week" width="25" height="25"/>
         <image name="history" width="22" height="22"/>
         <image name="user" width="22" height="22"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="XQg-VA-Eoy"/>
+    </inferredMetricsTieBreakers>
 </document>

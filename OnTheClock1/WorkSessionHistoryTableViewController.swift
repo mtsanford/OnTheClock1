@@ -34,6 +34,8 @@ class WorkSessionHistoryTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        tableView.registerNib(UINib(nibName: "WorkSessionSummaryCell", bundle: nil), forCellReuseIdentifier: "WorkSessionSummaryCell")
+        
         DataSync.sharedInstance.getRecentWorkSessions().continueWithBlock {
             (task: BFTask!) -> AnyObject! in
             if (task.result != nil) {
@@ -53,6 +55,7 @@ class WorkSessionHistoryTableViewController: UITableViewController {
         detailInnerButton.addTarget(self, action: "detailPressed:", forControlEvents: .TouchUpInside)
         
         // TODO - Do I really have to hard code this?  tableView.rowHeight = -1 on load
+        // TODO - Set on view change
         self.tableView.estimatedRowHeight = 72
         
     }
@@ -103,7 +106,7 @@ class WorkSessionHistoryTableViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(showDetail ? "WorkSessionFullTableViewCell" : "WorkSessionDurationTableViewCell", forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier(showDetail ? "WorkSessionFullTableViewCell" : "WorkSessionSummaryCell", forIndexPath: indexPath)
             as! WorkSessionFullTableViewCell
 
         if showDetail {

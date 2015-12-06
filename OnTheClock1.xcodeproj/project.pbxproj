@@ -21,8 +21,11 @@
 		9615917D1BA48EA4007A573A /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9615917C1BA48EA4007A573A /* libz.tbd */; };
 		9615917F1BA71C6F007A573A /* WorkSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9615917E1BA71C6F007A573A /* WorkSession.swift */; };
 		96202E791BED15AB001EB6C6 /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96202E781BED15AB001EB6C6 /* DebugViewController.swift */; };
+		963057BC1C0D106100401840 /* WorkSessionSummaryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 963057BB1C0D106100401840 /* WorkSessionSummaryCell.xib */; };
+		963057BE1C0D115F00401840 /* WorkSessionSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963057BD1C0D115F00401840 /* WorkSessionSummaryCell.swift */; };
 		966B134D1BAC9CA600951E19 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966B134C1BAC9CA600951E19 /* Activity.swift */; };
 		966B134F1BACE45B00951E19 /* DataSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966B134E1BACE45B00951E19 /* DataSync.swift */; };
+		968CC8C71C11FADA00EBF5C5 /* OTCUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968CC8C61C11FADA00EBF5C5 /* OTCUser.swift */; };
 		96B8887F1BFA2C7B00CDFD02 /* WorkSessionFullTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96B8887D1BFA2C7B00CDFD02 /* WorkSessionFullTableViewCell.swift */; };
 		96B888801BFA2C7B00CDFD02 /* WorkSessionHistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96B8887E1BFA2C7B00CDFD02 /* WorkSessionHistoryTableViewController.swift */; };
 		96C2490E1B85660F00AF01BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2490D1B85660F00AF01BE /* AppDelegate.swift */; };
@@ -67,8 +70,11 @@
 		9615917C1BA48EA4007A573A /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		9615917E1BA71C6F007A573A /* WorkSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkSession.swift; sourceTree = "<group>"; };
 		96202E781BED15AB001EB6C6 /* DebugViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugViewController.swift; sourceTree = "<group>"; };
+		963057BB1C0D106100401840 /* WorkSessionSummaryCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = WorkSessionSummaryCell.xib; path = ../WorkSessionSummaryCell.xib; sourceTree = "<group>"; };
+		963057BD1C0D115F00401840 /* WorkSessionSummaryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkSessionSummaryCell.swift; sourceTree = "<group>"; };
 		966B134C1BAC9CA600951E19 /* Activity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
 		966B134E1BACE45B00951E19 /* DataSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSync.swift; sourceTree = "<group>"; };
+		968CC8C61C11FADA00EBF5C5 /* OTCUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTCUser.swift; sourceTree = "<group>"; };
 		96B8887D1BFA2C7B00CDFD02 /* WorkSessionFullTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkSessionFullTableViewCell.swift; sourceTree = "<group>"; };
 		96B8887E1BFA2C7B00CDFD02 /* WorkSessionHistoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkSessionHistoryTableViewController.swift; sourceTree = "<group>"; };
 		96C2490A1B85660F00AF01BE /* OnTheClock1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheClock1.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -185,10 +191,13 @@
 				96202E781BED15AB001EB6C6 /* DebugViewController.swift */,
 				96C249301B86A76700AF01BE /* WorkSessionViewController.swift */,
 				96C249141B85660F00AF01BE /* Assets.xcassets */,
+				963057BB1C0D106100401840 /* WorkSessionSummaryCell.xib */,
+				963057BD1C0D115F00401840 /* WorkSessionSummaryCell.swift */,
 				96B8887D1BFA2C7B00CDFD02 /* WorkSessionFullTableViewCell.swift */,
 				9612CCAD1C051995000FC5BB /* WorkSessionDurationTableViewCell.swift */,
 				96B8887E1BFA2C7B00CDFD02 /* WorkSessionHistoryTableViewController.swift */,
 				966B134C1BAC9CA600951E19 /* Activity.swift */,
+				968CC8C61C11FADA00EBF5C5 /* OTCUser.swift */,
 				9615917E1BA71C6F007A573A /* WorkSession.swift */,
 				966B134E1BACE45B00951E19 /* DataSync.swift */,
 				9611DF991BED4BF500E54102 /* Utils.swift */,
@@ -289,6 +298,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				963057BC1C0D106100401840 /* WorkSessionSummaryCell.xib in Resources */,
 				96C249181B85660F00AF01BE /* LaunchScreen.storyboard in Resources */,
 				96C249151B85660F00AF01BE /* Assets.xcassets in Resources */,
 				96C249131B85660F00AF01BE /* Main.storyboard in Resources */,
@@ -321,8 +331,10 @@
 				96C249311B86A76700AF01BE /* WorkSessionViewController.swift in Sources */,
 				96202E791BED15AB001EB6C6 /* DebugViewController.swift in Sources */,
 				96C2490E1B85660F00AF01BE /* AppDelegate.swift in Sources */,
+				963057BE1C0D115F00401840 /* WorkSessionSummaryCell.swift in Sources */,
 				96D751B91BF0062E00778DDE /* StopWorkSessionViewController.swift in Sources */,
 				9612CCAE1C051995000FC5BB /* WorkSessionDurationTableViewCell.swift in Sources */,
+				968CC8C71C11FADA00EBF5C5 /* OTCUser.swift in Sources */,
 				9615917F1BA71C6F007A573A /* WorkSession.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

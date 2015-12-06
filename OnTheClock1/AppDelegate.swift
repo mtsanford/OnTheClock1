@@ -25,6 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         WorkSession.initialize()
         Activity.initialize()
+        OTCUser.initialize()
         
         PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)
         

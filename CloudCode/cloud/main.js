@@ -1,6 +1,21 @@
+var moment = require('cloud/moment-timezone-with-data.js');
+
 
 var WorkSession = Parse.Object.extend("WorkSession");
 var Activity = Parse.Object.extend("Activity");
+
+Parse.Cloud.define("testMoment", function(request, response) {
+	var now = moment();
+	now.locale('be')	
+	console.log("weekday " + now.weekday())
+	console.log("locale " + now.locale())
+	console.log("now in America/Los_Angeles = " + now.tz('America/Los_Angeles').format());
+	
+	var user = request.user;
+	var firstDate = user.get*
+	
+	response.success()
+});
 
 /*
  * newWorkSession
@@ -91,9 +106,104 @@ Parse.Cloud.define("newWorkSession", function(request, response) {
 	});
 });
 
+
+/*
+ * fetchSummary
+ * 
+ * Fetch a summary by day/week/month of activites within a caller specified range.  response.more = false
+ * if the end of all WorkSessions for the user was reached.
+ *
+ * Required parameters:
+ *   start    	(Date)
+ *   end		(Date)	
+ *   timeZone   (String)
+ *   unit       (String)   day/week/month
+ *
+ * Return:
+ *   {
+ *		summaries: [
+ *        {
+ *          time: "2015-10-21 00:00 +0000"
+ *          activities: [
+ *            { activityName: "Make food", duration: 600.0 }
+ *            { activityName: "Paint the dog", duration: 300.0 }
+ *          ]
+ *        }
+ *      ]
+ *      more: false
+ *   }
+ *
+ */
+
+Parse.Cloud.define("fetchSummary", function(request, response) {
+	var workSession, activity,
+	    user = request.user,
+	    start = request.params.start,
+		end = request.params.duration,
+		unit = request.parans.unit;
+	
+	console.log("request:\n" + JSON.stringify(request));
+	
+    if (!user) {
+       response.error("Must be signed in to call fetchSummary.")
+       return;
+    }
+	if (!start || get_type(start) != "[object Date]") {
+		response.error("Parameter 'start' (type Date) missing");
+		return;
+	}
+	if (!end || get_type(end) != "[object Date]") {
+		response.error("Parameter 'end' (type Date) missing");
+		return;
+	}
+	if (!timeZone || typeof timeZone != "string") {
+		response.error("Parameter 'timeZone' (type string) missing");
+		return;
+	}
+	if (!unit || typeof unit != "string"
+	        || (unit != "day" && unit != "week" && unit != "month" ) ) {
+		response.error("Parameter 'unit' (type string) missing or invalid");
+		return;
+	}
+    
+	// Just get ALL of the 
+	var queryAllPromise = new Parse.Promise()
+	
+	var wsQuery = new Parse.Query(WorkSession);
+	wsQuery.include(actitity)
+
+
+});
+
+function getAllWorkSessions() {
+	var queryAllPromise = new Parse.Promise()
+	
+	var wsQuery = new Parse.Query(WorkSession);
+	wsQuery.include("actitity");
+	wsQuery.limit(1000);
+	queryAllPromise = wsQuery.find().then(function(workSessions) {
+		queryAllPromise.resolve(workSessions);
+	}, function(error) {
+		queryAllPromise.reject(error);
+	});
+	
+	return queryAllPromise;	
+}
+
 /*
  * Utility functions
  */
+
+
+/*
+    Get WorkSessions for user with startDate <= WS.start < endDate
+
+	return value = [WorkSession] with Activities loaded
+
+ */
+function getWorkSessions(user, startDate, endDate) {
+	
+}
 
 function get_type(thing){
     if(thing===null)return "[object Null]"; // special case

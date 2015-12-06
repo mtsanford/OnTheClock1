@@ -40,7 +40,10 @@ class DebugViewController: UIViewController {
         [ "action": "flatSave", "text": "flatSave"],
         [ "action": "makePost", "text": "makePost"],
         [ "action": "makeWorkSessions", "text": "makeWorkSessions"],
-        [ "action": "firstDayOfWeek", "text": "firstDayOfWeek"],
+        [ "action": "timeZone", "text": "timeZone"],
+        [ "action": "testMoment", "text": "testMoment"],
+        [ "action": "addDate", "text": "add firstTime to user"],
+        [ "action": "getDate", "text": "get firstTime from user"],
     ]
     
     func createTestButtons() {
@@ -270,18 +273,30 @@ class DebugViewController: UIViewController {
         
     }
     
-    func firstDayOfWeek(sender: AnyObject) {
-        let now = NSDate()
-        var startDate: NSDate?
-        var duration: NSTimeInterval = 0
-        NSCalendar.currentCalendar().rangeOfUnit(
-            NSCalendarUnit.WeekOfYear,
-            startDate: &startDate,
-            interval: &duration,
-            forDate: now)
-        print(startDate)
-        print(NSCalendar.currentCalendar().firstWeekday)
+    func timeZone(sender: AnyObject) {
+        var currentLocale = NSLocale.currentLocale()
+        print(currentLocale)
+        print(currentLocale.localeIdentifier)
+        
+        var systemTimeZone = NSTimeZone.defaultTimeZone()
+        print(systemTimeZone)
     }
+    
+    func testMoment(sender: AnyObject) {
+        PFCloud.callFunctionInBackground("testMoment", withParameters: nil)
+    }
+    
+    func addDate(sender: AnyObject) {
+        let user = PFUser.currentUser() as? OTCUser
+        user?.firstTime = NSDate()
+        user?.saveInBackground()
+    }
+    
+    func getDate(sender: AnyObject) {
+        let user = PFUser.currentUser() as? OTCUser
+        print(user?.firstTime)
+    }
+    
     
     
     
