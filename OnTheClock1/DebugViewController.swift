@@ -44,6 +44,7 @@ class DebugViewController: UIViewController {
         [ "action": "testMoment", "text": "testMoment"],
         [ "action": "addDate", "text": "add firstTime to user"],
         [ "action": "getDate", "text": "get firstTime from user"],
+        [ "action": "summary", "text": "get WS summary"],
     ]
     
     func createTestButtons() {
@@ -274,12 +275,10 @@ class DebugViewController: UIViewController {
     }
     
     func timeZone(sender: AnyObject) {
-        var currentLocale = NSLocale.currentLocale()
+        let currentLocale = NSLocale.currentLocale()
         print(currentLocale)
         print(currentLocale.localeIdentifier)
-        
-        var systemTimeZone = NSTimeZone.defaultTimeZone()
-        print(systemTimeZone)
+        print(NSTimeZone.defaultTimeZone().name)
     }
     
     func testMoment(sender: AnyObject) {
@@ -296,6 +295,41 @@ class DebugViewController: UIViewController {
         let user = PFUser.currentUser() as? OTCUser
         print(user?.firstTime)
     }
+
+    
+    
+    func summary(sender: AnyObject) {
+        var parameters = Dictionary<NSObject, AnyObject>()
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let date = dateFormatter.dateFromString("2015-12-01")
+        
+        parameters["unit"] = "week"
+        parameters["howMany"] = 6
+        parameters["firstUnitDate"] = date
+        parameters["locale"] = "en"
+        parameters["timeZone"] = "America/Los_Angeles"
+
+        PFCloud.callFunctionInBackground("summarizeWorkSessions", withParameters: parameters).continueWithBlock { (task: BFTask!) -> AnyObject! in
+            if let summaries = task.result as? [NSDictionary] {
+                for s in summaries {
+                    print(s["unitStart"]!)
+                    if let activities = s["activities"] as? NSArray {
+                        for a in activities {
+                            let name = a["name"]
+                            let duration = a["duration"]
+                            print("\(name) \(duration)");
+                        }
+                    }
+                }
+            }
+            if let error = task.error {
+                print(error.description)
+            }
+            return nil
+        }
+    }
+    
     
     
     

@@ -439,6 +439,60 @@ class DataSync {
         
         return result
     }
+    
+    /*
+        Fetch WorkSession summaries from Parse
+    */
+    func fetchSummaries(firstUnitDate: NSDate, unit: String, howMany: Int) -> BFTask {
+        var startDate: NSDate?
+        var nextStartDate: NSDate?
+        var duration: NSTimeInterval = 0
+        let ourTask = BFTaskCompletionSource()
+        let calendarUnits = [ "day" : NSCalendarUnit.Day, "week" : NSCalendarUnit.WeekOfYear, "month" : NSCalendarUnit.Month]
+
+        if !NSCalendar.currentCalendar().rangeOfUnit(
+            calendarUnits[unit]!,
+            startDate: &startDate,
+            interval: &duration,
+            forDate: firstUnitDate)
+        {
+            return BFTask(error: NSError(domain: "bad date", code: 0, userInfo: nil))
+        }
+
+        nextStartDate = NSCalendar.currentCalendar().dateByAddingUnit(calendarUnits[unit]!, value: howMany, toDate: startDate!, options: [])
+        
+        var parameters = Dictionary<NSObject, AnyObject>()
+        parameters["unit"] = unit
+        parameters["howMany"] = howMany
+        parameters["firstUnitDate"] = firstUnitDate
+        parameters["locale"] = NSLocale.currentLocale().localeIdentifier
+        parameters["timeZone"] = NSTimeZone.defaultTimeZone().name
+        
+        PFCloud.callFunctionInBackground("summarizeWorkSessions", withParameters: parameters).continueWithBlock {
+            (task: BFTask!) -> AnyObject! in
+            if let summaries = task.result as? [NSDictionary] {
+                for s in summaries {
+                    print(s["unitStart"]!)
+                    if let activities = s["activities"] as? NSArray {
+                        for a in activities {
+                            let name = a["name"]
+                            let duration = a["duration"]
+                            print("\(name) \(duration)");
+                        }
+                    }
+                }
+                ourTask.setResult(task.result)
+            }
+            if let error = task.error {
+                ourTask.setError(task.error)
+                print(error.description)
+            }
+            return nil
+        }
+        return ourTask.task
+    }
+    
+
 
     
 }
