@@ -10,6 +10,12 @@ import Foundation
 import UIKit
 
 class DebugViewController: UIViewController {
+    
+    var someString = "initial value"
+    
+    deinit {
+        print("deinit")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,7 +48,7 @@ class DebugViewController: UIViewController {
         [ "action": "makeWorkSessions", "text": "makeWorkSessions"],
         [ "action": "timeZone", "text": "timeZone"],
         [ "action": "testMoment", "text": "testMoment"],
-        [ "action": "addDate", "text": "add firstTime to user"],
+        [ "action": "timer", "text": "run timer"],
         [ "action": "getDate", "text": "get firstTime from user"],
         [ "action": "summary", "text": "get WS summary"],
     ]
@@ -282,13 +288,32 @@ class DebugViewController: UIViewController {
     }
     
     func testMoment(sender: AnyObject) {
-        PFCloud.callFunctionInBackground("testMoment", withParameters: nil)
+        PFCloud.callFunctionInBackground("testMoment", withParameters: nil).continueWithBlock {
+            (task: BFTask!) -> AnyObject! in
+            print("testMoment returned")
+            self.someString = "testMoment done"
+            return nil
+        }
     }
     
-    func addDate(sender: AnyObject) {
-        let user = PFUser.currentUser() as? OTCUser
-        user?.firstTime = NSDate()
-        user?.saveInBackground()
+    func timer(sender: AnyObject) {
+        causeDelay().continueWithBlock { (task: BFTask!) -> AnyObject! in
+            print("delay done")
+            self.someString = "timer fired"
+            return nil
+        }
+    }
+    var ourDelayTask = BFTaskCompletionSource()
+    var timer: NSTimer? = nil
+    
+    func causeDelay() -> BFTask {
+        timer = NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: "timerFired", userInfo: nil, repeats: true)
+        return ourDelayTask.task
+    }
+    func timerFired() {
+        timer?.invalidate()
+        timer = nil
+        ourDelayTask.setResult(true)
     }
     
     func getDate(sender: AnyObject) {

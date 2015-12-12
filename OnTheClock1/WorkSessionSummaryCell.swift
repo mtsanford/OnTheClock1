@@ -12,6 +12,18 @@ class WorkSessionSummaryCell: UITableViewCell {
     @IBOutlet weak var activityNameLabel: UILabel!
     @IBOutlet weak var durationLabel: UILabel!
 
+    var activityName: String? = nil {
+        didSet {
+            activityNameLabel?.text = activityName
+        }
+    }
+    
+    var duration: NSNumber = 0 {
+        didSet {
+            durationLabel?.text = stringFromTimeInterval(duration.doubleValue)
+        }
+    }
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -23,4 +35,11 @@ class WorkSessionSummaryCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+    func stringFromTimeInterval(interval: NSTimeInterval) -> String {
+        let interval = Int(interval)
+        let minutes = (interval / 60) % 60
+        let hours = (interval / 3600)
+        return String(format: "%02d:%02d", hours, minutes)
+    }
+    
 }

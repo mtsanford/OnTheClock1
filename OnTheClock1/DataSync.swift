@@ -10,6 +10,18 @@ import Foundation
 import Bolts
 import Parse
 
+
+struct ActivitySummary {
+    var name: String
+    var duration: NSTimeInterval
+}
+
+struct WorkSessionSummary {
+    var timePeriod: NSDate!
+    var activities: [ActivitySummary]!
+    var workSessions: [WorkSession]?
+}
+
 class DataSync {
     
     static var sharedInstance = DataSync()
@@ -320,16 +332,6 @@ class DataSync {
     }
     
 
-    struct ActivitySummary {
-        var name: String
-        var duration: NSTimeInterval
-    }
-    
-    struct WorkSessionSummary {
-        var timePeriod: NSDate
-        var activities: [ActivitySummary]
-        var workSessions: [WorkSession]
-    }
     
     /*
         From an array of WorkSession objects, return summaries by day, week, and month
@@ -416,7 +418,7 @@ class DataSync {
             return t1.0.compare(t2.0) == NSComparisonResult.OrderedDescending
         }
         for bucket in sortedBuckets {
-            var summary = WorkSessionSummary(timePeriod: bucket.0, activities:[ActivitySummary](), workSessions: [WorkSession]())
+            var summary = WorkSessionSummary(timePeriod: bucket.0, activities:[ActivitySummary](), workSessions: nil)
             
             // sort summaries by total duration
             let sortedSummaries = bucket.1.summaries.sort({ (t1:(String, Double), t2:(String, Double)) -> Bool in
@@ -427,7 +429,7 @@ class DataSync {
             }
             
             summary.workSessions = bucket.1.workSessions
-            summary.workSessions.sortInPlace({ (t1: WorkSession, t2: WorkSession) -> Bool in
+            summary.workSessions!.sortInPlace({ (t1: WorkSession, t2: WorkSession) -> Bool in
                 return t1.start.compare(t2.start) == NSComparisonResult.OrderedAscending
             })
             
@@ -435,20 +437,21 @@ class DataSync {
         }
         
         print("Summaries: \(result.count)")
-        for a in result { print ("\(a.timePeriod) activities: \(a.activities.count) workSessions: \(a.workSessions.count)") }
+        for a in result { print ("\(a.timePeriod) activities: \(a.activities.count) workSessions: \(a.workSessions!.count)") }
         
         return result
     }
     
     /*
         Fetch WorkSession summaries from Parse
+        note: Not using BFTask because it won't allow struct results, we want to return an array and an NSDate
     */
-    func fetchSummaries(firstUnitDate: NSDate, unit: String, howMany: Int) -> BFTask {
+    func fetchSummaries(firstUnitDate: NSDate, unit: String, howMany: Int, callback: (summaries: [WorkSessionSummary]?, nextStartDate: NSDate?) -> ())  {
         var startDate: NSDate?
-        var nextStartDate: NSDate?
         var duration: NSTimeInterval = 0
-        let ourTask = BFTaskCompletionSource()
         let calendarUnits = [ "day" : NSCalendarUnit.Day, "week" : NSCalendarUnit.WeekOfYear, "month" : NSCalendarUnit.Month]
+        var workSessionSummaries = [WorkSessionSummary]()
+        var nextStartDate: NSDate?
 
         if !NSCalendar.currentCalendar().rangeOfUnit(
             calendarUnits[unit]!,
@@ -456,11 +459,10 @@ class DataSync {
             interval: &duration,
             forDate: firstUnitDate)
         {
-            return BFTask(error: NSError(domain: "bad date", code: 0, userInfo: nil))
+            callback(summaries: nil, nextStartDate: nil);
         }
+        nextStartDate = NSCalendar.currentCalendar().dateByAddingUnit(calendarUnits[unit]!, value: howMany, toDate: startDate!, options: [])!
 
-        nextStartDate = NSCalendar.currentCalendar().dateByAddingUnit(calendarUnits[unit]!, value: howMany, toDate: startDate!, options: [])
-        
         var parameters = Dictionary<NSObject, AnyObject>()
         parameters["unit"] = unit
         parameters["howMany"] = howMany
@@ -472,27 +474,47 @@ class DataSync {
             (task: BFTask!) -> AnyObject! in
             if let summaries = task.result as? [NSDictionary] {
                 for s in summaries {
+                    var summary = WorkSessionSummary(timePeriod: s["unitStart"] as? NSDate, activities:[ActivitySummary](), workSessions: nil);
                     print(s["unitStart"]!)
                     if let activities = s["activities"] as? NSArray {
                         for a in activities {
-                            let name = a["name"]
-                            let duration = a["duration"]
+                            let name = a["name"] as! String
+                            let duration = a["duration"] as! Double
                             print("\(name) \(duration)");
+                            let activitySummary = ActivitySummary(name: a["name"] as! String, duration: a["duration"] as! Double);
+                            summary.activities.append(activitySummary)
                         }
                     }
+                    workSessionSummaries.append(summary)
                 }
-                ourTask.setResult(task.result)
+                callback(summaries: workSessionSummaries, nextStartDate: nextStartDate)
             }
             if let error = task.error {
-                ourTask.setError(task.error)
                 print(error.description)
+                callback(summaries: nil, nextStartDate: nil);
             }
             return nil
         }
-        return ourTask.task
     }
     
 
+    /*
+    
+    */
+    func nextStartDate(firstUnitDate: NSDate, unit: String, howMany: Int) -> NSDate {
+        var startDate: NSDate?
+        var duration: NSTimeInterval = 0
+        let calendarUnits = [ "day" : NSCalendarUnit.Day, "week" : NSCalendarUnit.WeekOfYear, "month" : NSCalendarUnit.Month]
+        
+        NSCalendar.currentCalendar().rangeOfUnit(
+            calendarUnits[unit]!,
+            startDate: &startDate,
+            interval: &duration,
+            forDate: firstUnitDate)
+        
+        return NSCalendar.currentCalendar().dateByAddingUnit(calendarUnits[unit]!, value: howMany, toDate: startDate!, options: [])!
+    }
 
+    
     
 }

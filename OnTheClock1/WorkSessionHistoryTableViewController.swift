@@ -17,7 +17,7 @@ class WorkSessionHistoryTableViewController: UITableViewController {
     let onImage = UIImage(named: "list-selected")?.imageWithRenderingMode(.AlwaysTemplate)
 
     var workSessions: [WorkSession]?
-    var workSessionsSummary: [DataSync.WorkSessionSummary]?
+    var workSessionsSummary: [WorkSessionSummary]?
     var showDetail: Bool = true {
         didSet {
             tableView.reloadData()
@@ -58,8 +58,20 @@ class WorkSessionHistoryTableViewController: UITableViewController {
         // TODO - Set on view change
         self.tableView.estimatedRowHeight = 72
         
+        showProgressIndicator();
+        
+        //BFCancellationTokenSource
+        
     }
 
+    func showProgressIndicator() {
+        let spinner: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        spinner.startAnimating()
+        spinner.color = UIColor(red: 22.0/255.0, green: 106.0/255.0, blue: 176.0/255.0, alpha: 1.0) // Spinner Colour
+        spinner.frame = CGRectMake(0, 0, 320, 44)
+        self.tableView.tableFooterView = spinner
+    }
+    
     @IBAction func detailPressed(sender: UIBarButtonItem) {
         let currentlySelected = detailInnerButton.selected
         detailInnerButton.selected = !currentlySelected
@@ -85,7 +97,7 @@ class WorkSessionHistoryTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         if showDetail {
-            return (workSessionsSummary?[section])?.workSessions.count ?? 0
+            return (workSessionsSummary?[section])?.workSessions!.count ?? 0
         }
         else {
             return (workSessionsSummary?[section])?.activities.count ?? 0
@@ -106,21 +118,24 @@ class WorkSessionHistoryTableViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(showDetail ? "WorkSessionFullTableViewCell" : "WorkSessionSummaryCell", forIndexPath: indexPath)
-            as! WorkSessionFullTableViewCell
-
+        var cell: UITableViewCell!
+        
         if showDetail {
-            if let workSession = (workSessionsSummary?[indexPath.section])?.workSessions[indexPath.row] {
-                cell.activityName = workSession.activity.name
-                cell.start = workSession.start
-                cell.duration = workSession.duration
+            let c = tableView.dequeueReusableCellWithIdentifier("WorkSessionFullTableViewCell", forIndexPath: indexPath) as! WorkSessionFullTableViewCell
+            if let workSession = (workSessionsSummary?[indexPath.section])?.workSessions![indexPath.row] {
+                c.activityName = workSession.activity.name
+                c.start = workSession.start
+                c.duration = workSession.duration
             }
+            cell = c
         }
         else {
+            let c = tableView.dequeueReusableCellWithIdentifier("WorkSessionSummaryCell", forIndexPath: indexPath) as! WorkSessionSummaryCell
             if let activitySummary = (workSessionsSummary?[indexPath.section])?.activities[indexPath.row] {
-                cell.activityName = activitySummary.name
-                cell.duration = activitySummary.duration
+                c.activityName = activitySummary.name
+                c.duration = activitySummary.duration
             }
+            cell = c
         }
         
         return cell
