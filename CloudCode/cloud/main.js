@@ -205,7 +205,7 @@ function fetchWorkSessions(user, onOrAfterDate, beforeDate) {
  *
  */
 Parse.Cloud.define("newWorkSession", function(request, response) {
-	var workSession, activity,
+	var workSession, activity, firstTime,
 	    user = request.user,
 	    start = request.params.start,
 	    duration = request.params.duration,
@@ -272,7 +272,14 @@ Parse.Cloud.define("newWorkSession", function(request, response) {
 		    workSession.set("activity", activity);
 			return workSession.save();
 		}).then(function(result) {
-			response.success("saved!");
+			firstTime = user.get("firstTime");
+			if (!firstTime || start < firstTime) {
+				user.set("firstTime", start);
+				console.log("saving first time: " + start)
+				return user.save();
+			}
+		}).then(function(result) {
+			response.success("saved");			
 		});
 	}, function(error) {
 		response.error(error);

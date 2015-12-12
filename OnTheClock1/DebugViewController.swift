@@ -51,6 +51,7 @@ class DebugViewController: UIViewController {
         [ "action": "timer", "text": "run timer"],
         [ "action": "getDate", "text": "get firstTime from user"],
         [ "action": "summary", "text": "get WS summary"],
+        [ "action": "setFirstTime", "text": "setFirstTime"],
     ]
     
     func createTestButtons() {
@@ -355,6 +356,22 @@ class DebugViewController: UIViewController {
         }
     }
     
+    func setFirstTime(sender: AnyObject) {
+        let currentUser = PFUser.currentUser()!
+        let query = WorkSession.query()
+        query?.whereKey("user", equalTo: currentUser)
+        query?.orderByAscending("start")
+        query?.getFirstObjectInBackground().continueWithBlock {
+            (task: BFTask!) -> AnyObject! in
+            if (task.error == nil && task.result != nil) {
+                if let ws = task.result as? WorkSession {
+                    currentUser.setValue(ws.start, forKey: "firstTime")
+                    currentUser.saveInBackground()
+                }
+            }
+            return nil
+        }
+    }
     
     
     
