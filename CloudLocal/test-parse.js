@@ -24,13 +24,13 @@ else {
   
 function runTests() {
 	var user = Parse.User.current();
-	var unit = 'month';
+	var unit = 'week';
 	var onOrBeforeDate = moment.utc('2015-12-01 08:00:00').toDate();
 	var locale = 'en';
 	//var timeZone = 'Europe/Paris';
 	var timeZone = 'America/Los_Angeles';
 	// America/New_York
-	summarizeWorkSessions(user, unit, 9, onOrBeforeDate, locale, timeZone).then(
+	summarizeWorkSessions(user, unit, 50, onOrBeforeDate, locale, timeZone).then(
 		function(result) {
 			log('ok');
 			console.log(result);
@@ -85,24 +85,19 @@ $("#test-moment").click(function() {
 
 */
 function summarizeWorkSessions(user, unit, howMany, firstUnitDate, locale, timeZone) {
-	var m, b, firstUnitMoment, afterDate, activityName, duration, i, j,
+	var i, j,
 	    maxTime, summary, bucket, sortedBucketKeys, sortedActivityKeys,
-	    // moment.js uses different unit strings for startOf() and add()... frigin' genius!
 	    addUnit = { 'day' : 'days', 'week' : 'weeks', 'month' : 'months' }[unit],
 	    itemsPerFetch = 100,
 	    promise = new Parse.Promise(),
-	    firstTime = user.get('firstTime'),
+	    //firstTime = user.get('firstTime'),
 	    buckets = {},
 	    result = [];
 
 	if (addUnit == undefined) { return Parse.Promise.error("bad unit: " + unit); }
 	
-	// Need to add one unit the max time value, since firstUnitMoment is the START of the unit 
-	maxTime = moment(firstUnitDate).tz(timeZone).locale(locale).startOf(unit).add(1, addUnit).toDate();
-	
     function fillMeSomeBuckets(maxTime) {
-		var earliest, exhaustedData, 
-		    done = false,
+		var done = false,
 			fillPromise = new Parse.Promise();
 			wsQuery = new Parse.Query(WorkSession);
 
@@ -110,12 +105,21 @@ function summarizeWorkSessions(user, unit, howMany, firstUnitDate, locale, timeZ
 		wsQuery.include("activity");
 		wsQuery.limit(itemsPerFetch);
 		wsQuery.lessThan("start", maxTime);
-		wsQuery.addAscending("start");
+		wsQuery.addDescending("start");
+  
+  	  	console.log("fillMeSomeBuckets!  maxTime = " + maxTime);
   
 		wsQuery.find().then(
 			function(workSessions) {
-			    earliest = workSessions[0].get('start'),
-			    exhaustedData = (!firstTime || earliest <= firstTime);
+			    var b, duration, activityName,
+				    //earliest = workSessions[0].get('start'),
+				    exhaustedData = workSessions.length < itemsPerFetch;
+				    //TODO: I don't think first time is actually needed!
+		            //exhaustedData = (!firstTime || earliest <= firstTime || workSessions.length < itemsPerFetch);
+			
+				console.log("fetched " + workSessions.length + " items");
+				if (workSessions.length > 0) { console.log("latest = " + workSessions[0].get('start')); }
+				if (workSessions.length > 0) { console.log("eariest = " + workSessions[workSessions.length-1].get('start')); }
 			
 				for (i=0; i<workSessions.length; i++) {
 					b = moment(workSessions[i].get('start')).tz(timeZone).locale(locale).startOf(unit).valueOf().toString();
@@ -128,23 +132,32 @@ function summarizeWorkSessions(user, unit, howMany, firstUnitDate, locale, timeZ
 				}
 			
 				sortedBucketKeys = Object.keys(buckets).sort(function(a,b) { return b-a; });
-				if (exhaustedData || bucketKeys.length >= howMany) {
-					// we done! But unless we've exhaused all the data, assume the last bucket is not complete!
+				console.log("" + sortedBucketKeys.length + " buckets so far");
+				if (exhaustedData || sortedBucketKeys.length > howMany) {
+					// we're done! But unless we've exhaused all the data, assume the last bucket is not complete!
 					if (!exhaustedData) { delete buckets[sortedBucketKeys[sortedBucketKeys.length-1]]; }
-					return fillPromise.resolve();
+					fillPromise.resolve();
+					return;
 				}
 				
-				return fillMeSomeBuckets(earliest)
+				fillMeSomeBuckets(workSessions[workSessions.length-1].get('start')).then(
+					function() { fillPromise.resolve(); }, function() { fillPromise.reject(); }
+				);
 			},
 			function(error) { fillPromise.reject(error); }
 		);
+		
 		return fillPromise;
 	}
 	
+	// Query maximum time is the start of the unit following the unit firstUnitDate is in
+	maxTime = moment(firstUnitDate).tz(timeZone).locale(locale).startOf(unit).add(1, addUnit).toDate();
+	
 	fillMeSomeBuckets(maxTime).then(
-		function(workSessions) {
+		function() {
 			// Now munge up all those hashs into sorted arrays for the final result
 			sortedBucketKeys = Object.keys(buckets).sort(function(a,b) { return b-a; });
+			console.log("buckets filled at end: " + sortedBucketKeys.length);
 			for (i=0; i<sortedBucketKeys.length; i++) {
 				bucket = buckets[sortedBucketKeys[i]];
 				summary = { unitStart: moment(parseInt(sortedBucketKeys[i])).tz(timeZone).locale(locale).toDate(), activities: [] };
