@@ -443,7 +443,9 @@ class DataSync {
     }
     
     /*
-        Fetch WorkSession summaries from Parse
+        Fetch WorkSession summaries from Parse.  nextStartDate will be the date to use for the next call to fetchSummaries when
+        fetching more data, or nil if there is no more data.
+    
         note: Not using BFTask because it won't allow struct results, we want to return an array and an NSDate
     */
     func fetchSummaries(firstUnitDate: NSDate, unit: String, howMany: Int, callback: (summaries: [WorkSessionSummary]?, nextStartDate: NSDate?) -> ())  {
@@ -451,7 +453,7 @@ class DataSync {
         var duration: NSTimeInterval = 0
         let calendarUnits = [ "day" : NSCalendarUnit.Day, "week" : NSCalendarUnit.WeekOfYear, "month" : NSCalendarUnit.Month]
         var workSessionSummaries = [WorkSessionSummary]()
-        var nextStartDate: NSDate?
+        var nextStartDate: NSDate? = nil
 
         if !NSCalendar.currentCalendar().rangeOfUnit(
             calendarUnits[unit]!,
@@ -461,7 +463,7 @@ class DataSync {
         {
             callback(summaries: nil, nextStartDate: nil);
         }
-        nextStartDate = NSCalendar.currentCalendar().dateByAddingUnit(calendarUnits[unit]!, value: howMany, toDate: startDate!, options: [])!
+        //nextStartDate = NSCalendar.currentCalendar().dateByAddingUnit(calendarUnits[unit]!, value: howMany, toDate: startDate!, options: [])!
 
         var parameters = Dictionary<NSObject, AnyObject>()
         parameters["unit"] = unit
@@ -472,22 +474,27 @@ class DataSync {
         
         PFCloud.callFunctionInBackground("summarizeWorkSessions", withParameters: parameters).continueWithBlock {
             (task: BFTask!) -> AnyObject! in
-            if let summaries = task.result as? [NSDictionary] {
-                for s in summaries {
-                    var summary = WorkSessionSummary(timePeriod: s["unitStart"] as? NSDate, activities:[ActivitySummary](), workSessions: nil);
-                    print(s["unitStart"]!)
-                    if let activities = s["activities"] as? NSArray {
-                        for a in activities {
-                            let name = a["name"] as! String
-                            let duration = a["duration"] as! Double
-                            print("\(name) \(duration)");
-                            let activitySummary = ActivitySummary(name: a["name"] as! String, duration: a["duration"] as! Double);
-                            summary.activities.append(activitySummary)
+            if let result = task.result as? NSDictionary {
+                if let summaries = result["summaries"] as? [NSDictionary] {
+                    for s in summaries {
+                        var summary = WorkSessionSummary(timePeriod: s["unitStart"] as? NSDate, activities:[ActivitySummary](), workSessions: nil);
+                        print(s["unitStart"]!)
+                        if let activities = s["activities"] as? NSArray {
+                            for a in activities {
+                                let name = a["name"] as! String
+                                let duration = a["duration"] as! Double
+                                print("\(name) \(duration)");
+                                let activitySummary = ActivitySummary(name: a["name"] as! String, duration: a["duration"] as! Double);
+                                summary.activities.append(activitySummary)
+                            }
                         }
+                        workSessionSummaries.append(summary)
                     }
-                    workSessionSummaries.append(summary)
+                    if (result["exhaustedData"] as! Bool == false) {
+                        nextStartDate = NSCalendar.currentCalendar().dateByAddingUnit(calendarUnits[unit]!, value: -1, toDate: workSessionSummaries.last!.timePeriod, options: [])!
+                    }
+                    callback(summaries: workSessionSummaries, nextStartDate: nextStartDate)
                 }
-                callback(summaries: workSessionSummaries, nextStartDate: nextStartDate)
             }
             if let error = task.error {
                 print(error.description)

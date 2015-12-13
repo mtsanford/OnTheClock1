@@ -13,12 +13,12 @@ class HistoryTableViewController: UITableViewController {
 
     var loadingMore: Bool = false
     var summaries = [WorkSessionSummary]()
-    var nextLoadDate = NSDate()
+    var nextLoadDate: NSDate? = NSDate()
 
     private static let sectionHeaderFormatter : NSDateFormatter = {
         let dateFormatter = NSDateFormatter()
         dateFormatter.timeZone = NSTimeZone.localTimeZone()
-        dateFormatter.dateFormat = "MMMM d"
+        dateFormatter.dateFormat = "MMMM d YYYY"
         return dateFormatter
     }()
     
@@ -41,11 +41,11 @@ class HistoryTableViewController: UITableViewController {
     }
     
     func loadMore() {
-        DataSync.sharedInstance.fetchSummaries(nextLoadDate, unit: "week", howMany: 26) {
+        DataSync.sharedInstance.fetchSummaries(nextLoadDate!, unit: "week", howMany: 12) {
             (s: [WorkSessionSummary]?, d: NSDate?) -> () in
             if (s != nil) {
                 self.summaries += s!
-                self.nextLoadDate = d!
+                self.nextLoadDate = d
                 self.tableView.reloadData()
             }
         }
@@ -73,7 +73,7 @@ class HistoryTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if let timePeriod = (summaries[section]).timePeriod {
-            return "Week of" + HistoryTableViewController.sectionHeaderFormatter.stringFromDate(timePeriod)
+            return "Week of " + HistoryTableViewController.sectionHeaderFormatter.stringFromDate(timePeriod)
         }
         else {
             return  ""
