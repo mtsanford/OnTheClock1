@@ -57,7 +57,8 @@ $("#test-moment").click(function() {
 /*
 	user			PFUser object
 	unit			'day', 'week', or 'month'
-	howMany			how many units to summarize
+	howMany			how many units to summarize, not including empty units.   May
+					may be less if data is exhausted, or more if queries fetched extra data.
 	firstUnitDate	Date object.   *Most recent* unit. 
 	locale			String (locale code.  Used for determining first day of week - e.g. Sun or Mon)
 	timeZone		String
@@ -66,7 +67,7 @@ $("#test-moment").click(function() {
  	if the unit is 'month', and firstUnitDate is 2015-03-15T13:45:00, then the first unit will be
     2015-03-01 through 2015-03-31, with the index of 2015-03-01T00:00:00 in the timeZone provided.
 
-	result will be an array of howMany summaries of unit size sorted in descending order of unit start date.
+	result will be an array of howMany *nonempty* summaries of unit size sorted in descending order of unit start date.
     Summaries will include the unit start date, and a list of activity duration totals, sorted in descending
 	ordr of duration.
 
@@ -85,43 +86,63 @@ $("#test-moment").click(function() {
 */
 function summarizeWorkSessions(user, unit, howMany, firstUnitDate, locale, timeZone) {
 	var m, b, firstUnitMoment, afterDate, activityName, duration, i, j,
-	    minMoment, maxMoment, summary, bucket, sortedBucketKeys, sortedActivityKeys,
+	    maxTime, summary, bucket, sortedBucketKeys, sortedActivityKeys,
 	    // moment.js uses different unit strings for startOf() and add()... frigin' genius!
 	    addUnit = { 'day' : 'days', 'week' : 'weeks', 'month' : 'months' }[unit],
+	    itemsPerFetch = 100,
 	    promise = new Parse.Promise(),
+	    firstTime = user.get('firstTime'),
 	    buckets = {},
 	    result = [];
 
 	if (addUnit == undefined) { return Parse.Promise.error("bad unit: " + unit); }
 	
-	firstUnitMoment = moment(firstUnitDate).tz(timeZone).locale(locale).startOf(unit);
+	// Need to add one unit the max time value, since firstUnitMoment is the START of the unit 
+	maxTime = moment(firstUnitDate).tz(timeZone).locale(locale).startOf(unit).add(1, addUnit).toDate();
 	
-	// Create buckets { '32423523523' : { 'activityname1' : 360.00, ... }, ... }
-	m = firstUnitMoment.clone();
-	for (i=0; i<howMany; i++) {
-		buckets[m.valueOf()] = {}		
-		m.subtract(1, addUnit);
+    function fillMeSomeBuckets(maxTime) {
+		var earliest, exhaustedData, 
+		    done = false,
+			fillPromise = new Parse.Promise();
+			wsQuery = new Parse.Query(WorkSession);
+
+		wsQuery.equalTo("user", user);
+		wsQuery.include("activity");
+		wsQuery.limit(itemsPerFetch);
+		wsQuery.lessThan("start", maxTime);
+		wsQuery.addAscending("start");
+  
+		wsQuery.find().then(
+			function(workSessions) {
+			    earliest = workSessions[0].get('start'),
+			    exhaustedData = (!firstTime || earliest <= firstTime);
+			
+				for (i=0; i<workSessions.length; i++) {
+					b = moment(workSessions[i].get('start')).tz(timeZone).locale(locale).startOf(unit).valueOf().toString();
+					activityName = workSessions[i].get('activity').get('name');
+					duration = workSessions[i].get('duration');
+				
+					if (buckets[b] == undefined) { buckets[b] = {} }
+					buckets[b][activityName] = buckets[b][activityName] || 0
+					buckets[b][activityName] += duration;
+				}
+			
+				sortedBucketKeys = Object.keys(buckets).sort(function(a,b) { return b-a; });
+				if (exhaustedData || bucketKeys.length >= howMany) {
+					// we done! But unless we've exhaused all the data, assume the last bucket is not complete!
+					if (!exhaustedData) { delete buckets[sortedBucketKeys[sortedBucketKeys.length-1]]; }
+					return fillPromise.resolve();
+				}
+				
+				return fillMeSomeBuckets(earliest)
+			},
+			function(error) { fillPromise.reject(error); }
+		);
+		return fillPromise;
 	}
 	
-	// Need to add one unit the max time value, since firstUnitMoment is the START of the unit 
-	maxMoment = firstUnitMoment.clone().add(1, addUnit);
-	minMoment = maxMoment.clone().subtract(howMany, addUnit);
-	fetchWorkSessions(user, minMoment.toDate(), maxMoment.toDate()).then(
+	fillMeSomeBuckets(maxTime).then(
 		function(workSessions) {
-			for (i=0; i<workSessions.length; i++) {
-				b = moment(workSessions[i].get('start')).tz(timeZone).locale(locale).startOf(unit).valueOf().toString();
-				activityName = workSessions[i].get('activity').get('name');
-				duration = workSessions[i].get('duration');
-				
-				// This should not happen, and if it does, we did not set up the buckets correctly above,
-				// or fetchWorkSessions is returning out of bounds results!
-				// TODO: This should be better resolved
-				if (buckets[b] == undefined) { var s = "BAD bucket: " + b; log(s); promise.reject(s); return; }
-				
-				buckets[b][activityName] = buckets[b][activityName] || 0
-				buckets[b][activityName] += duration;
-			}
-			
 			// Now munge up all those hashs into sorted arrays for the final result
 			sortedBucketKeys = Object.keys(buckets).sort(function(a,b) { return b-a; });
 			for (i=0; i<sortedBucketKeys.length; i++) {
@@ -137,8 +158,9 @@ function summarizeWorkSessions(user, unit, howMany, firstUnitDate, locale, timeZ
 		},
 		function(error) {
 			promise.reject(error);		  	
-		}
+		}			
 	);
+		
 	return promise;
 }
   
