@@ -41,16 +41,35 @@ class HistoryTableViewController: UITableViewController {
     }
     
     func loadMore() {
+        if (loadingMore || nextLoadDate == nil) { return }
+        loadingMore = true;
+        showProgressIndicator();
         DataSync.sharedInstance.fetchSummaries(nextLoadDate!, unit: "week", howMany: 12) {
             (s: [WorkSessionSummary]?, d: NSDate?) -> () in
             if (s != nil) {
-                self.summaries += s!
-                self.nextLoadDate = d
-                self.tableView.reloadData()
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.loadingMore = false;
+                    self.summaries += s!
+                    self.nextLoadDate = d
+                    self.removeProgressIndicator()
+                    self.tableView.reloadData()
+                }
             }
         }
     }
     
+    func showProgressIndicator() {
+        let spinner: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        spinner.startAnimating()
+        spinner.color = UIColor(red: 22.0/255.0, green: 106.0/255.0, blue: 176.0/255.0, alpha: 1.0) // Spinner Colour
+        spinner.frame = CGRectMake(0, 0, 320, 44)
+        self.tableView.tableFooterView = spinner
+    }
+
+    func removeProgressIndicator() {
+        self.tableView.tableFooterView = nil
+    }
+
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -84,6 +103,11 @@ class HistoryTableViewController: UITableViewController {
         view.tintColor = UIColor.lightGrayColor()
     }
     
+    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        if (indexPath.section == summaries.count - 1  && indexPath.row == (summaries[indexPath.section].activities.count - 1) ) {
+            loadMore()
+        }
+    }
     
     
     /*

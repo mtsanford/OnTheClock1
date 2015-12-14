@@ -102,7 +102,7 @@ Parse.Cloud.define("summarizeWorkSessions", function(request, response) {
 function summarizeWorkSessions(user, unit, howMany, firstUnitDate, locale, timeZone) {
 	var maxTime, i, j, sortedBucketKeys, sortedActivityKeys,
 	    addUnit = { 'day' : 'days', 'week' : 'weeks', 'month' : 'months' }[unit],
-	    itemsPerFetch = 200,
+	    itemsPerFetch = 100,
 	    promise = new Parse.Promise(),
 	    exhaustedData = false,
 	    buckets = {};
