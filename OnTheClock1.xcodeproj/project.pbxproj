@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		96092D961B8D347C000A6BD4 /* MPGTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96092D951B8D347C000A6BD4 /* MPGTextField.swift */; };
 		9611DF9A1BED4BF500E54102 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9611DF991BED4BF500E54102 /* Utils.swift */; };
-		9612CCAE1C051995000FC5BB /* WorkSessionDurationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9612CCAD1C051995000FC5BB /* WorkSessionDurationTableViewCell.swift */; };
 		9615916D1BA48E3D007A573A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9615916C1BA48E3D007A573A /* AudioToolbox.framework */; };
 		9615916F1BA48E49007A573A /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9615916E1BA48E49007A573A /* CFNetwork.framework */; };
 		961591711BA48E55007A573A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 961591701BA48E55007A573A /* CoreGraphics.framework */; };
@@ -27,11 +26,11 @@
 		96630AE51C1F993500332D3B /* WorkSessionFullCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96630AE41C1F993500332D3B /* WorkSessionFullCell.swift */; };
 		96630AE71C1FA9B500332D3B /* MonthHistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96630AE61C1FA9B500332D3B /* MonthHistoryTableViewController.swift */; };
 		96630AE91C1FB36200332D3B /* WeekHistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96630AE81C1FB36200332D3B /* WeekHistoryTableViewController.swift */; };
+		96630AEB1C1FB81900332D3B /* DayHistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96630AEA1C1FB81900332D3B /* DayHistoryTableViewController.swift */; };
 		966B134D1BAC9CA600951E19 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966B134C1BAC9CA600951E19 /* Activity.swift */; };
 		966B134F1BACE45B00951E19 /* DataSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966B134E1BACE45B00951E19 /* DataSync.swift */; };
 		968CC8C71C11FADA00EBF5C5 /* OTCUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968CC8C61C11FADA00EBF5C5 /* OTCUser.swift */; };
 		969947FC1C1753A70030DDE0 /* HistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969947FB1C1753A70030DDE0 /* HistoryTableViewController.swift */; };
-		96B888801BFA2C7B00CDFD02 /* WorkSessionHistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96B8887E1BFA2C7B00CDFD02 /* WorkSessionHistoryTableViewController.swift */; };
 		96C2490E1B85660F00AF01BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2490D1B85660F00AF01BE /* AppDelegate.swift */; };
 		96C249101B85660F00AF01BE /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2490F1B85660F00AF01BE /* MainViewController.swift */; };
 		96C249131B85660F00AF01BE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96C249111B85660F00AF01BE /* Main.storyboard */; };
@@ -62,7 +61,6 @@
 		96092D951B8D347C000A6BD4 /* MPGTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPGTextField.swift; sourceTree = "<group>"; };
 		96092DAF1B90D57B000A6BD4 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		9611DF991BED4BF500E54102 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
-		9612CCAD1C051995000FC5BB /* WorkSessionDurationTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkSessionDurationTableViewCell.swift; sourceTree = "<group>"; };
 		9615916C1BA48E3D007A573A /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		9615916E1BA48E49007A573A /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		961591701BA48E55007A573A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -80,11 +78,11 @@
 		96630AE41C1F993500332D3B /* WorkSessionFullCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkSessionFullCell.swift; sourceTree = "<group>"; };
 		96630AE61C1FA9B500332D3B /* MonthHistoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonthHistoryTableViewController.swift; sourceTree = "<group>"; };
 		96630AE81C1FB36200332D3B /* WeekHistoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeekHistoryTableViewController.swift; sourceTree = "<group>"; };
+		96630AEA1C1FB81900332D3B /* DayHistoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayHistoryTableViewController.swift; sourceTree = "<group>"; };
 		966B134C1BAC9CA600951E19 /* Activity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
 		966B134E1BACE45B00951E19 /* DataSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSync.swift; sourceTree = "<group>"; };
 		968CC8C61C11FADA00EBF5C5 /* OTCUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTCUser.swift; sourceTree = "<group>"; };
 		969947FB1C1753A70030DDE0 /* HistoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTableViewController.swift; sourceTree = "<group>"; };
-		96B8887E1BFA2C7B00CDFD02 /* WorkSessionHistoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkSessionHistoryTableViewController.swift; sourceTree = "<group>"; };
 		96C2490A1B85660F00AF01BE /* OnTheClock1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheClock1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		96C2490D1B85660F00AF01BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		96C2490F1B85660F00AF01BE /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -203,11 +201,10 @@
 				963057BD1C0D115F00401840 /* WorkSessionSummaryCell.swift */,
 				96630AE21C1F987700332D3B /* WorkSessionFullCell.xib */,
 				96630AE41C1F993500332D3B /* WorkSessionFullCell.swift */,
-				9612CCAD1C051995000FC5BB /* WorkSessionDurationTableViewCell.swift */,
-				96B8887E1BFA2C7B00CDFD02 /* WorkSessionHistoryTableViewController.swift */,
 				969947FB1C1753A70030DDE0 /* HistoryTableViewController.swift */,
 				96630AE61C1FA9B500332D3B /* MonthHistoryTableViewController.swift */,
 				96630AE81C1FB36200332D3B /* WeekHistoryTableViewController.swift */,
+				96630AEA1C1FB81900332D3B /* DayHistoryTableViewController.swift */,
 				966B134C1BAC9CA600951E19 /* Activity.swift */,
 				968CC8C61C11FADA00EBF5C5 /* OTCUser.swift */,
 				9615917E1BA71C6F007A573A /* WorkSession.swift */,
@@ -334,10 +331,10 @@
 			files = (
 				96630AE91C1FB36200332D3B /* WeekHistoryTableViewController.swift in Sources */,
 				96092D961B8D347C000A6BD4 /* MPGTextField.swift in Sources */,
+				96630AEB1C1FB81900332D3B /* DayHistoryTableViewController.swift in Sources */,
 				966B134D1BAC9CA600951E19 /* Activity.swift in Sources */,
 				96C249101B85660F00AF01BE /* MainViewController.swift in Sources */,
 				9611DF9A1BED4BF500E54102 /* Utils.swift in Sources */,
-				96B888801BFA2C7B00CDFD02 /* WorkSessionHistoryTableViewController.swift in Sources */,
 				96D751B71BEFD94200778DDE /* MySignUpViewController.swift in Sources */,
 				96D751B51BEFD65C00778DDE /* MyLoginViewController.swift in Sources */,
 				966B134F1BACE45B00951E19 /* DataSync.swift in Sources */,
@@ -348,7 +345,6 @@
 				963057BE1C0D115F00401840 /* WorkSessionSummaryCell.swift in Sources */,
 				96D751B91BF0062E00778DDE /* StopWorkSessionViewController.swift in Sources */,
 				969947FC1C1753A70030DDE0 /* HistoryTableViewController.swift in Sources */,
-				9612CCAE1C051995000FC5BB /* WorkSessionDurationTableViewCell.swift in Sources */,
 				96630AE71C1FA9B500332D3B /* MonthHistoryTableViewController.swift in Sources */,
 				968CC8C71C11FADA00EBF5C5 /* OTCUser.swift in Sources */,
 				9615917F1BA71C6F007A573A /* WorkSession.swift in Sources */,

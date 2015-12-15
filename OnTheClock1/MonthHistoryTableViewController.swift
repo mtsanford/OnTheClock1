@@ -35,11 +35,7 @@ class MonthHistoryTableViewController: HistoryTableViewController {
     
 
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return ((summaries[section]).timePeriod == nil) ? "" : MonthHistoryTableViewController.sectionHeaderFormatter.stringFromDate((summaries[section]).timePeriod!)
-    }
-    
-    override func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        view.tintColor = UIColor.lightGrayColor()
+        return MonthHistoryTableViewController.sectionHeaderFormatter.stringFromDate(summaries[section].timePeriod)
     }
 
 }

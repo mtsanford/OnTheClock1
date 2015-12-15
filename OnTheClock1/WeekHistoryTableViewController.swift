@@ -30,14 +30,8 @@ class WeekHistoryTableViewController: HistoryTableViewController {
     // MARK: - Table view data source
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if (section == 0) { return "This week" }
-        if (summaries[section].timePeriod == nil) { return "" }
         return "Week of " + WeekHistoryTableViewController.sectionHeaderFormatter.stringFromDate(summaries[section].timePeriod)
     }
-    
-    override func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        view.tintColor = UIColor.lightGrayColor()
-    }
-    
+
 
 }

@@ -31,7 +31,7 @@ class HistoryTableViewController: UITableViewController {
 
         spinner = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
         spinner.startAnimating()
-        spinner.color = UIColor(red: 22.0/255.0, green: 106.0/255.0, blue: 176.0/255.0, alpha: 1.0) // Spinner Colour
+        spinner.color = UIColor(red: 22.0/255.0, green: 106.0/255.0, blue: 176.0/255.0, alpha: 1.0)
         spinner.frame = CGRectMake(0, 0, 320, 44)
 
         startLoadingMore()
@@ -63,8 +63,7 @@ class HistoryTableViewController: UITableViewController {
     // if there was an error, set s to nil.   Set d to the next date to query for more data
     // or nil if there is no more data.
     func loadMore(callback: (newSummaries: [WorkSessionSummary]?, nextLoadDate: NSDate?) -> ()) {
-        //fatalError("HistoryTableViewController::loadMore must be implemented by subclass!")
-        DataSync.sharedInstance.fetchSummaries(nextLoadDate!, unit: "week", howMany: 12, callback: callback)
+        fatalError("HistoryTableViewController::loadMore must be implemented by subclass!")
     }
     
     
@@ -89,13 +88,7 @@ class HistoryTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if let timePeriod = (summaries[section]).timePeriod {
-            if (section == 0) { return "This week" }
-            return "Week of " + HistoryTableViewController.sectionHeaderFormatter.stringFromDate(timePeriod)
-        }
-        else {
-            return  ""
-        }
+        fatalError("tableView::titleForHeaderInSection must be implemented by subclass!")
     }
     
     override func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
@@ -107,16 +100,5 @@ class HistoryTableViewController: UITableViewController {
             startLoadingMore()
         }
     }
-    
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
