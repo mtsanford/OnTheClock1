@@ -35,6 +35,7 @@ class WorkSessionHistoryTableViewController: UITableViewController {
         super.viewDidLoad()
 
         tableView.registerNib(UINib(nibName: "WorkSessionSummaryCell", bundle: nil), forCellReuseIdentifier: "WorkSessionSummaryCell")
+        tableView.registerNib(UINib(nibName: "WorkSessionFullCell", bundle: nil), forCellReuseIdentifier: "WorkSessionFullCell")
         
         DataSync.sharedInstance.getRecentWorkSessions().continueWithBlock {
             (task: BFTask!) -> AnyObject! in
@@ -121,7 +122,8 @@ class WorkSessionHistoryTableViewController: UITableViewController {
         var cell: UITableViewCell!
         
         if showDetail {
-            let c = tableView.dequeueReusableCellWithIdentifier("WorkSessionFullTableViewCell", forIndexPath: indexPath) as! WorkSessionFullTableViewCell
+            //let c = tableView.dequeueReusableCellWithIdentifier("WorkSessionFullTableViewCell", forIndexPath: indexPath) as! WorkSessionFullTableViewCell
+            let c = tableView.dequeueReusableCellWithIdentifier("WorkSessionFullCell", forIndexPath: indexPath) as! WorkSessionFullCell
             if let workSession = (workSessionsSummary?[indexPath.section])?.workSessions![indexPath.row] {
                 c.activityName = workSession.activity.name
                 c.start = workSession.start

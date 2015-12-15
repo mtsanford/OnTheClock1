@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="WorkSessionFullCell" rowHeight="74" id="iga-1G-nLA" customClass="WorkSessionFullCell" customModule="OnTheClock1" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="74"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="iga-1G-nLA" id="0R6-Bl-Wji">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="73"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" horizontalCompressionResistancePriority="700" text="Activity name label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Fu-5l-ZTC" userLabel="activity">
+                        <rect key="frame" x="8" y="8" width="178" height="26"/>
+                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Start time label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jcb-jC-W2Y" userLabel="start">
+                        <rect key="frame" x="8" y="42" width="304" height="23"/>
+                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="88:00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="82L-MW-Rk3" userLabel="duration">
+                        <rect key="frame" x="194" y="8" width="118" height="26"/>
+                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="82L-MW-Rk3" firstAttribute="leading" secondItem="0Fu-5l-ZTC" secondAttribute="trailing" constant="8" symbolic="YES" id="3kU-GD-xjb"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="82L-MW-Rk3" secondAttribute="trailing" id="OVB-bP-dC0"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="jcb-jC-W2Y" secondAttribute="trailing" id="RRS-QS-jja"/>
+                    <constraint firstAttribute="leadingMargin" secondItem="0Fu-5l-ZTC" secondAttribute="leading" id="VBR-jC-x8E"/>
+                    <constraint firstAttribute="leadingMargin" secondItem="jcb-jC-W2Y" secondAttribute="leading" id="YP0-8J-av5"/>
+                    <constraint firstItem="0Fu-5l-ZTC" firstAttribute="top" secondItem="0R6-Bl-Wji" secondAttribute="topMargin" id="bkq-aV-j3l"/>
+                    <constraint firstItem="82L-MW-Rk3" firstAttribute="top" secondItem="0R6-Bl-Wji" secondAttribute="topMargin" id="cCM-AY-QYj"/>
+                    <constraint firstItem="jcb-jC-W2Y" firstAttribute="top" secondItem="0Fu-5l-ZTC" secondAttribute="bottom" constant="8" symbolic="YES" id="rqO-TI-pXK"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="jcb-jC-W2Y" secondAttribute="bottom" id="v5u-67-1Gs"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="activityNameLabel" destination="0Fu-5l-ZTC" id="SLy-0e-5AC"/>
+                <outlet property="durationLabel" destination="82L-MW-Rk3" id="m5f-GI-xdc"/>
+                <outlet property="startTimeLabel" destination="jcb-jC-W2Y" id="ce7-Vp-wDg"/>
+            </connections>
+            <point key="canvasLocation" x="-22" y="261"/>
+        </tableViewCell>
+    </objects>
+</document>

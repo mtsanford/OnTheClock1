@@ -11,10 +11,11 @@ import UIKit
 
 class HistoryTableViewController: UITableViewController {
 
+    var spinner: UIActivityIndicatorView!
     var loadingMore: Bool = false
     var summaries = [WorkSessionSummary]()
     var nextLoadDate: NSDate? = NSDate()
-
+    
     private static let sectionHeaderFormatter : NSDateFormatter = {
         let dateFormatter = NSDateFormatter()
         dateFormatter.timeZone = NSTimeZone.localTimeZone()
@@ -26,50 +27,47 @@ class HistoryTableViewController: UITableViewController {
         super.viewDidLoad()
 
         tableView.registerNib(UINib(nibName: "WorkSessionSummaryCell", bundle: nil), forCellReuseIdentifier: "WorkSessionSummaryCell")
+        self.tableView.estimatedRowHeight = 44
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-        loadMore()
-        
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        spinner = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        spinner.startAnimating()
+        spinner.color = UIColor(red: 22.0/255.0, green: 106.0/255.0, blue: 176.0/255.0, alpha: 1.0) // Spinner Colour
+        spinner.frame = CGRectMake(0, 0, 320, 44)
+
+        startLoadingMore()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
-    func loadMore() {
+    func startLoadingMore() {
         if (loadingMore || nextLoadDate == nil) { return }
         loadingMore = true;
-        showProgressIndicator();
-        DataSync.sharedInstance.fetchSummaries(nextLoadDate!, unit: "week", howMany: 12) {
-            (s: [WorkSessionSummary]?, d: NSDate?) -> () in
-            if (s != nil) {
+        self.tableView.tableFooterView = spinner
+        loadMore {
+            (newSummaries: [WorkSessionSummary]?, nextLoadDate: NSDate?) -> () in
+            if (newSummaries != nil) {
                 dispatch_async(dispatch_get_main_queue()) {
                     self.loadingMore = false;
-                    self.summaries += s!
-                    self.nextLoadDate = d
-                    self.removeProgressIndicator()
+                    self.summaries += newSummaries!
+                    self.nextLoadDate = nextLoadDate
+                    self.tableView.tableFooterView = nil
                     self.tableView.reloadData()
                 }
             }
         }
     }
     
-    func showProgressIndicator() {
-        let spinner: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
-        spinner.startAnimating()
-        spinner.color = UIColor(red: 22.0/255.0, green: 106.0/255.0, blue: 176.0/255.0, alpha: 1.0) // Spinner Colour
-        spinner.frame = CGRectMake(0, 0, 320, 44)
-        self.tableView.tableFooterView = spinner
+    // Do the actual fetching of new data to be added to self.summaries, then call the callback
+    // if there was an error, set s to nil.   Set d to the next date to query for more data
+    // or nil if there is no more data.
+    func loadMore(callback: (newSummaries: [WorkSessionSummary]?, nextLoadDate: NSDate?) -> ()) {
+        //fatalError("HistoryTableViewController::loadMore must be implemented by subclass!")
+        DataSync.sharedInstance.fetchSummaries(nextLoadDate!, unit: "week", howMany: 12, callback: callback)
     }
-
-    func removeProgressIndicator() {
-        self.tableView.tableFooterView = nil
-    }
-
+    
+    
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -92,6 +90,7 @@ class HistoryTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if let timePeriod = (summaries[section]).timePeriod {
+            if (section == 0) { return "This week" }
             return "Week of " + HistoryTableViewController.sectionHeaderFormatter.stringFromDate(timePeriod)
         }
         else {
@@ -105,7 +104,7 @@ class HistoryTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
         if (indexPath.section == summaries.count - 1  && indexPath.row == (summaries[indexPath.section].activities.count - 1) ) {
-            loadMore()
+            startLoadingMore()
         }
     }
     
