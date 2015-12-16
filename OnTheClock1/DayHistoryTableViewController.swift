@@ -15,7 +15,7 @@ class DayHistoryTableViewController: HistoryTableViewController {
     var detailInnerButton: UIButton! = nil
     let offImage = UIImage(named: "list-unselected")?.imageWithRenderingMode(.AlwaysTemplate)
     let onImage = UIImage(named: "list-selected")?.imageWithRenderingMode(.AlwaysTemplate)
-    var showDetail: Bool = true {
+    var showDetail: Bool = false {
         didSet {
             tableView.reloadData()
         }
@@ -35,7 +35,7 @@ class DayHistoryTableViewController: HistoryTableViewController {
         detailInnerButton = UIButton()
         detailInnerButton.setImage(offImage, forState: .Normal)
         detailInnerButton.setImage(onImage, forState: .Selected)
-        detailInnerButton.tintColor = UIColor.redColor()
+        detailInnerButton.tintColor = UIColor.OTCDark()
         detailInnerButton.frame = CGRect(x: 0, y: 0, width: 35, height: 33)
         detailButton.customView = detailInnerButton
         detailInnerButton.addTarget(self, action: "detailPressed:", forControlEvents: .TouchUpInside)
@@ -87,9 +87,8 @@ class DayHistoryTableViewController: HistoryTableViewController {
     }
 
     @IBAction func detailPressed(sender: UIBarButtonItem) {
-        let currentlySelected = detailInnerButton.selected
-        detailInnerButton.selected = !currentlySelected
-        showDetail = !showDetail
+        showDetail = !detailInnerButton.selected
+        detailInnerButton.selected = showDetail
     }
     
     

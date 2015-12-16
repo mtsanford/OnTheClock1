@@ -15,13 +15,13 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="700" text="Activity name label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uyD-Ty-8Kj">
-                        <rect key="frame" x="8" y="8" width="178" height="21"/>
+                        <rect key="frame" x="8" y="8" width="178" height="27"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="88:00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dg3-tV-6gl">
-                        <rect key="frame" x="194" y="0.0" width="118" height="35"/>
+                        <rect key="frame" x="194" y="8" width="118" height="27"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
@@ -32,9 +32,9 @@
                     <constraint firstAttribute="trailingMargin" secondItem="dg3-tV-6gl" secondAttribute="trailing" id="Bcn-ov-mJ8"/>
                     <constraint firstAttribute="leadingMargin" secondItem="uyD-Ty-8Kj" secondAttribute="leading" id="OLK-ef-RCK"/>
                     <constraint firstItem="dg3-tV-6gl" firstAttribute="leading" secondItem="uyD-Ty-8Kj" secondAttribute="trailing" constant="8" symbolic="YES" id="Zc8-iL-Q0u"/>
-                    <constraint firstItem="dg3-tV-6gl" firstAttribute="top" secondItem="78R-Nf-I7a" secondAttribute="topMargin" constant="-8" id="cVh-kt-vUI"/>
+                    <constraint firstItem="dg3-tV-6gl" firstAttribute="top" secondItem="78R-Nf-I7a" secondAttribute="topMargin" id="cVh-kt-vUI"/>
                     <constraint firstAttribute="bottomMargin" secondItem="dg3-tV-6gl" secondAttribute="bottom" id="jmt-dE-z3N"/>
-                    <constraint firstAttribute="bottomMargin" secondItem="uyD-Ty-8Kj" secondAttribute="bottom" constant="6" id="urD-oU-eTb"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="uyD-Ty-8Kj" secondAttribute="bottom" id="urD-oU-eTb"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		960349141C20ECB0004EB8CD /* NoHistory.xib in Resources */ = {isa = PBXBuildFile; fileRef = 960349131C20ECB0004EB8CD /* NoHistory.xib */; };
+		960349161C20F682004EB8CD /* OTCColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 960349151C20F682004EB8CD /* OTCColors.swift */; };
 		96092D961B8D347C000A6BD4 /* MPGTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96092D951B8D347C000A6BD4 /* MPGTextField.swift */; };
 		9611DF9A1BED4BF500E54102 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9611DF991BED4BF500E54102 /* Utils.swift */; };
 		9615916D1BA48E3D007A573A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9615916C1BA48E3D007A573A /* AudioToolbox.framework */; };
@@ -58,6 +60,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		960349131C20ECB0004EB8CD /* NoHistory.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = NoHistory.xib; path = ../NoHistory.xib; sourceTree = "<group>"; };
+		960349151C20F682004EB8CD /* OTCColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTCColors.swift; sourceTree = "<group>"; };
 		96092D951B8D347C000A6BD4 /* MPGTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPGTextField.swift; sourceTree = "<group>"; };
 		96092DAF1B90D57B000A6BD4 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		9611DF991BED4BF500E54102 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
@@ -163,6 +167,7 @@
 				96FC38241B99FCBD005B2D36 /* OnTheClock1-Bridging-Header.h */,
 				96092D951B8D347C000A6BD4 /* MPGTextField.swift */,
 				96C249191B85660F00AF01BE /* Info.plist */,
+				960349151C20F682004EB8CD /* OTCColors.swift */,
 			);
 			name = "supporting files";
 			sourceTree = "<group>";
@@ -205,6 +210,7 @@
 				96630AE61C1FA9B500332D3B /* MonthHistoryTableViewController.swift */,
 				96630AE81C1FB36200332D3B /* WeekHistoryTableViewController.swift */,
 				96630AEA1C1FB81900332D3B /* DayHistoryTableViewController.swift */,
+				960349131C20ECB0004EB8CD /* NoHistory.xib */,
 				966B134C1BAC9CA600951E19 /* Activity.swift */,
 				968CC8C61C11FADA00EBF5C5 /* OTCUser.swift */,
 				9615917E1BA71C6F007A573A /* WorkSession.swift */,
@@ -310,6 +316,7 @@
 				963057BC1C0D106100401840 /* WorkSessionSummaryCell.xib in Resources */,
 				96630AE31C1F987700332D3B /* WorkSessionFullCell.xib in Resources */,
 				96C249181B85660F00AF01BE /* LaunchScreen.storyboard in Resources */,
+				960349141C20ECB0004EB8CD /* NoHistory.xib in Resources */,
 				96C249151B85660F00AF01BE /* Assets.xcassets in Resources */,
 				96C249131B85660F00AF01BE /* Main.storyboard in Resources */,
 			);
@@ -331,6 +338,7 @@
 			files = (
 				96630AE91C1FB36200332D3B /* WeekHistoryTableViewController.swift in Sources */,
 				96092D961B8D347C000A6BD4 /* MPGTextField.swift in Sources */,
+				960349161C20F682004EB8CD /* OTCColors.swift in Sources */,
 				96630AEB1C1FB81900332D3B /* DayHistoryTableViewController.swift in Sources */,
 				966B134D1BAC9CA600951E19 /* Activity.swift in Sources */,
 				96C249101B85660F00AF01BE /* MainViewController.swift in Sources */,

@@ -454,6 +454,9 @@
         <scene sceneID="eFh-h3-y4K">
             <objects>
                 <tabBarController id="GXz-xO-MIC" sceneMemberID="viewController">
+                    <keyCommands>
+                        <keyCommand/>
+                    </keyCommands>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="lkD-Cs-ioO">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>

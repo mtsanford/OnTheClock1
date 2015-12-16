@@ -12,6 +12,7 @@ import UIKit
 class HistoryTableViewController: UITableViewController {
 
     var spinner: UIActivityIndicatorView!
+    var noDataView: UIView!
     var loadingMore: Bool = false
     var summaries = [WorkSessionSummary]()
     var nextLoadDate: NSDate? = NSDate()
@@ -28,12 +29,15 @@ class HistoryTableViewController: UITableViewController {
 
         tableView.registerNib(UINib(nibName: "WorkSessionSummaryCell", bundle: nil), forCellReuseIdentifier: "WorkSessionSummaryCell")
         self.tableView.estimatedRowHeight = 44
-
+        
+        
+        noDataView = UINib(nibName: "NoHistory", bundle: nil).instantiateWithOwner(nil, options: nil)[0] as! UIView
+        
         spinner = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
         spinner.startAnimating()
-        spinner.color = UIColor(red: 22.0/255.0, green: 106.0/255.0, blue: 176.0/255.0, alpha: 1.0)
+        spinner.color = UIColor.OTCDark()
         spinner.frame = CGRectMake(0, 0, 320, 44)
-
+        
         startLoadingMore()
     }
 
@@ -44,16 +48,24 @@ class HistoryTableViewController: UITableViewController {
     func startLoadingMore() {
         if (loadingMore || nextLoadDate == nil) { return }
         loadingMore = true;
+        spinner.startAnimating()
         self.tableView.tableFooterView = spinner
         loadMore {
             (newSummaries: [WorkSessionSummary]?, nextLoadDate: NSDate?) -> () in
             if (newSummaries != nil) {
                 dispatch_async(dispatch_get_main_queue()) {
+                    self.spinner.stopAnimating()
                     self.loadingMore = false;
                     self.summaries += newSummaries!
                     self.nextLoadDate = nextLoadDate
-                    self.tableView.tableFooterView = nil
-                    self.tableView.reloadData()
+                    if (self.summaries.count == 0) {
+                        self.tableView.backgroundView = self.noDataView
+                        self.tableView.tableFooterView = UIView(frame: CGRect.zero)
+                    }
+                    else {
+                        self.tableView.reloadData()
+                        self.tableView.tableFooterView = nil
+                    }
                 }
             }
         }
@@ -92,7 +104,10 @@ class HistoryTableViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        view.tintColor = UIColor.lightGrayColor()
+        if let headerView = view as? UITableViewHeaderFooterView {
+            headerView.textLabel?.textColor = UIColor.OTCDark()
+        }
+        view.tintColor = UIColor.OTCLightGray()
     }
     
     override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -100,5 +115,5 @@ class HistoryTableViewController: UITableViewController {
             startLoadingMore()
         }
     }
-
+    
 }
