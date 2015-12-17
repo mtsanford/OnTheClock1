@@ -139,6 +139,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		960A27411C23577B003F9ECB /* History */ = {
+			isa = PBXGroup;
+			children = (
+				963057BB1C0D106100401840 /* WorkSessionSummaryCell.xib */,
+				963057BD1C0D115F00401840 /* WorkSessionSummaryCell.swift */,
+				96630AE21C1F987700332D3B /* WorkSessionFullCell.xib */,
+				96630AE41C1F993500332D3B /* WorkSessionFullCell.swift */,
+				969947FB1C1753A70030DDE0 /* HistoryTableViewController.swift */,
+				96630AE61C1FA9B500332D3B /* MonthHistoryTableViewController.swift */,
+				96630AE81C1FB36200332D3B /* WeekHistoryTableViewController.swift */,
+				96630AEA1C1FB81900332D3B /* DayHistoryTableViewController.swift */,
+				960349131C20ECB0004EB8CD /* NoHistory.xib */,
+			);
+			name = History;
+			sourceTree = "<group>";
+		};
 		960AE5FD1BAC6FF1001DD11D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -194,23 +210,13 @@
 		96C2490C1B85660F00AF01BE /* OnTheClock1 */ = {
 			isa = PBXGroup;
 			children = (
-				9612CCAC1C051902000FC5BB /* supporting files */,
-				96C2490D1B85660F00AF01BE /* AppDelegate.swift */,
-				96C2490F1B85660F00AF01BE /* MainViewController.swift */,
-				96C249111B85660F00AF01BE /* Main.storyboard */,
-				96D751B81BF0062E00778DDE /* StopWorkSessionViewController.swift */,
-				96202E781BED15AB001EB6C6 /* DebugViewController.swift */,
-				96C249301B86A76700AF01BE /* WorkSessionViewController.swift */,
 				96C249141B85660F00AF01BE /* Assets.xcassets */,
-				963057BB1C0D106100401840 /* WorkSessionSummaryCell.xib */,
-				963057BD1C0D115F00401840 /* WorkSessionSummaryCell.swift */,
-				96630AE21C1F987700332D3B /* WorkSessionFullCell.xib */,
-				96630AE41C1F993500332D3B /* WorkSessionFullCell.swift */,
-				969947FB1C1753A70030DDE0 /* HistoryTableViewController.swift */,
-				96630AE61C1FA9B500332D3B /* MonthHistoryTableViewController.swift */,
-				96630AE81C1FB36200332D3B /* WeekHistoryTableViewController.swift */,
-				96630AEA1C1FB81900332D3B /* DayHistoryTableViewController.swift */,
-				960349131C20ECB0004EB8CD /* NoHistory.xib */,
+				96C249111B85660F00AF01BE /* Main.storyboard */,
+				96C2490D1B85660F00AF01BE /* AppDelegate.swift */,
+				960A27411C23577B003F9ECB /* History */,
+				96C2490F1B85660F00AF01BE /* MainViewController.swift */,
+				96D751B81BF0062E00778DDE /* StopWorkSessionViewController.swift */,
+				96C249301B86A76700AF01BE /* WorkSessionViewController.swift */,
 				966B134C1BAC9CA600951E19 /* Activity.swift */,
 				968CC8C61C11FADA00EBF5C5 /* OTCUser.swift */,
 				9615917E1BA71C6F007A573A /* WorkSession.swift */,
@@ -218,6 +224,8 @@
 				9611DF991BED4BF500E54102 /* Utils.swift */,
 				96D751B41BEFD65C00778DDE /* MyLoginViewController.swift */,
 				96D751B61BEFD94200778DDE /* MySignUpViewController.swift */,
+				96202E781BED15AB001EB6C6 /* DebugViewController.swift */,
+				9612CCAC1C051902000FC5BB /* supporting files */,
 			);
 			path = OnTheClock1;
 			sourceTree = "<group>";

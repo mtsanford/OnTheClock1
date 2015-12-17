@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         PFUser.enableAutomaticUser()
         
-        let blankImage = UIImage()
+        //let ddd = UIImage()
         UINavigationBar.appearance().tintColor = UIColor.OTCDark()
         //UINavigationBar.appearance().setBackgroundImage(blankImage, forBarPosition: UIBarPosition.Any, barMetrics: UIBarMetrics.Default)
         //UINavigationBar.appearance().shadowImage = blankImage

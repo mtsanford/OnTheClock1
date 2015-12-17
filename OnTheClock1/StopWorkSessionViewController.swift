@@ -30,6 +30,15 @@ class StopWorkSessionViewController: UIViewController {
         activityLabel.text = activityName
         
         timePicker.setValue(UIColor.whiteColor(), forKeyPath: "textColor")
+        
+        let backButton = UIBarButtonItem(
+            title: "Keep working",
+            style: UIBarButtonItemStyle.Plain,
+            target: nil,
+            action: nil
+        )
+        
+        self.navigationController!.navigationBar.topItem!.backBarButtonItem = backButton
     }
 
     override func didReceiveMemoryWarning() {

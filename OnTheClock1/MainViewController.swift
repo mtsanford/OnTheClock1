@@ -16,7 +16,11 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
     @IBOutlet weak var activityTextField: MPGTextField!
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var userButton: UIButton!
+    @IBOutlet weak var historyButton: UIButton!
 
+    let userImage: UIImage! = UIImage(named: "user")?.imageWithRenderingMode(.AlwaysTemplate)
+    let signoutImage: UIImage! = UIImage(named: "signout")?.imageWithRenderingMode(.AlwaysTemplate)
+    let historyImage: UIImage! = UIImage(named: "history")?.imageWithRenderingMode(.AlwaysTemplate)
     
     var activityString: String?
     var recentActivities: [Activity]?
@@ -32,6 +36,15 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
         activityTextField.leftView = paddingView
         activityTextField.leftViewMode = UITextFieldViewMode.Always
         
+        userButton.setImage(userImage, forState: .Normal)
+        userButton.tintColor = UIColor.OTCDark()
+        
+        historyButton.setImage(historyImage, forState: .Normal)
+        historyButton.tintColor = UIColor.OTCDark()
+        
+        activityTextField.layer.borderColor = UIColor.OTCDark().CGColor
+        activityTextField.layer.borderWidth = 2.0
+
         updateRecentItems(true)
     }
     
@@ -147,14 +160,8 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
     }
     
     func setUserButtonImage() {
-        var userImage: UIImage!
-        if (PFAnonymousUtils.isLinkedWithUser(PFUser.currentUser())) {
-            userImage = UIImage(named: "user.png")
-        }
-        else {
-            userImage = UIImage(named: "signout.png")
-        }
-        userButton.setImage(userImage, forState: .Normal)
+        let newImage: UIImage = PFAnonymousUtils.isLinkedWithUser(PFUser.currentUser()) ? userImage : signoutImage
+        userButton.setImage(newImage, forState: .Normal)
     }
 
     

@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Main View Controller-->
@@ -17,76 +16,77 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xBK-Dg-Z6f">
-                                <rect key="frame" x="135" y="164" width="51" height="41"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                <state key="normal" title="Start">
-                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <connections>
-                                    <segue destination="UaH-AZ-08e" kind="show" identifier="workSessionSegue" animates="NO" id="9wh-Gl-hWx"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RoZ-AD-vYu">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RoZ-AD-vYu">
                                 <rect key="frame" x="16" y="518" width="46" height="30"/>
                                 <state key="normal" title="Debug"/>
                                 <connections>
                                     <segue destination="huf-OK-a0L" kind="show" identifier="debugSegue" id="aDm-Qk-Zw2"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PQy-F7-iet">
-                                <rect key="frame" x="5" y="40" width="44" height="44"/>
-                                <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                <state key="normal" image="user"/>
-                                <connections>
-                                    <action selector="userPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1ho-M6-Qg4"/>
-                                </connections>
-                            </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="Enter activity name" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="B8H-i0-0wL" userLabel="EnterActivity" customClass="MPGTextField" customModule="OnTheClock1" customModuleProvider="target">
-                                <rect key="frame" x="16" y="104" width="288" height="40"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yHc-rt-08S" userLabel="History">
+                                <rect key="frame" x="267" y="40" width="33" height="33"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="4fx-jL-MzH"/>
+                                    <constraint firstAttribute="height" constant="33" id="8If-Lm-0Gb"/>
+                                    <constraint firstAttribute="width" constant="33" id="iIc-8l-MQW"/>
                                 </constraints>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yHc-rt-08S">
-                                <rect key="frame" x="271" y="40" width="44" height="44"/>
-                                <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                <state key="normal" image="history"/>
+                                <state key="normal" title="H"/>
                                 <connections>
                                     <segue destination="GXz-xO-MIC" kind="show" id="PVq-sc-zgr"/>
                                 </connections>
                             </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="Enter activity name" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="B8H-i0-0wL" userLabel="Activity" customClass="MPGTextField" customModule="OnTheClock1" customModuleProvider="target">
+                                <rect key="frame" x="20" y="93" width="280" height="40"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="4fx-jL-MzH"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="twS-vv-VQ9" userLabel="User">
+                                <rect key="frame" x="20" y="40" width="33" height="33"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="33" id="VFe-zO-heH"/>
+                                    <constraint firstAttribute="width" constant="33" id="vLM-v0-LbO"/>
+                                </constraints>
+                                <state key="normal" title="U"/>
+                                <connections>
+                                    <action selector="userPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="FBf-KZ-p19"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xBK-Dg-Z6f">
+                                <rect key="frame" x="135" y="141" width="51" height="41"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                <state key="normal" title="Start"/>
+                                <connections>
+                                    <segue destination="UaH-AZ-08e" kind="show" identifier="workSessionSegue" animates="NO" id="9wh-Gl-hWx"/>
+                                </connections>
+                            </button>
                         </subviews>
-                        <color key="backgroundColor" red="0.98431372549999996" green="0.54979046909999996" blue="0.9215766554" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="yHc-rt-08S" firstAttribute="centerY" secondItem="PQy-F7-iet" secondAttribute="centerY" id="35m-Vm-afy"/>
-                            <constraint firstItem="RoZ-AD-vYu" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="3FN-Sh-wAg"/>
-                            <constraint firstItem="B8H-i0-0wL" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="AKF-Ia-5cm"/>
-                            <constraint firstItem="B8H-i0-0wL" firstAttribute="top" secondItem="PQy-F7-iet" secondAttribute="bottom" constant="20" id="BYI-mR-0oy"/>
-                            <constraint firstItem="PQy-F7-iet" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-11" id="DcW-mI-Bpd"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="B8H-i0-0wL" secondAttribute="trailing" id="K1f-Ud-Jql"/>
-                            <constraint firstItem="PQy-F7-iet" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="20" id="YWJ-jG-aOk"/>
-                            <constraint firstItem="xBK-Dg-Z6f" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="edb-WZ-xHQ"/>
-                            <constraint firstItem="B8H-i0-0wL" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="jaZ-xA-DmA"/>
-                            <constraint firstItem="xBK-Dg-Z6f" firstAttribute="top" secondItem="B8H-i0-0wL" secondAttribute="bottom" constant="20" id="kIW-Yb-hzz"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="yHc-rt-08S" secondAttribute="trailing" constant="-11" id="kZE-Bu-tQ6"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="RoZ-AD-vYu" secondAttribute="bottom" constant="20" id="poN-b1-bY6"/>
+                            <constraint firstItem="twS-vv-VQ9" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" symbolic="YES" id="1ZI-NS-8SS"/>
+                            <constraint firstAttribute="trailing" secondItem="yHc-rt-08S" secondAttribute="trailing" constant="20" symbolic="YES" id="6Lf-q0-kyd"/>
+                            <constraint firstItem="twS-vv-VQ9" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="20" id="8Lm-WS-0mq"/>
+                            <constraint firstItem="xBK-Dg-Z6f" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="KQi-pJ-5NU"/>
+                            <constraint firstItem="B8H-i0-0wL" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" symbolic="YES" id="PIc-DY-aB3"/>
+                            <constraint firstAttribute="trailing" secondItem="B8H-i0-0wL" secondAttribute="trailing" constant="20" symbolic="YES" id="SCR-o4-B2l"/>
+                            <constraint firstItem="twS-vv-VQ9" firstAttribute="top" secondItem="yHc-rt-08S" secondAttribute="top" id="c7P-nd-WxR"/>
+                            <constraint firstItem="B8H-i0-0wL" firstAttribute="top" secondItem="twS-vv-VQ9" secondAttribute="bottom" constant="20" id="jwo-3y-Kds"/>
+                            <constraint firstItem="xBK-Dg-Z6f" firstAttribute="top" secondItem="B8H-i0-0wL" secondAttribute="bottom" constant="8" symbolic="YES" id="oMR-95-azJ"/>
                         </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
                         <outlet property="activityTextField" destination="B8H-i0-0wL" id="i8S-Z7-NNH"/>
+                        <outlet property="historyButton" destination="yHc-rt-08S" id="HkY-Cl-jWq"/>
                         <outlet property="startButton" destination="xBK-Dg-Z6f" id="Vq2-V1-3cD"/>
-                        <outlet property="userButton" destination="PQy-F7-iet" id="fZ7-oZ-H7z"/>
+                        <outlet property="userButton" destination="twS-vv-VQ9" id="hNK-qu-b08"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="438" y="-134"/>
+            <point key="canvasLocation" x="437" y="-177"/>
         </scene>
         <!--Weekly-->
         <scene sceneID="0jt-tH-727">
@@ -119,7 +119,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Weekly history" id="a6y-HF-jrI">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="1eb-mH-ITO">
+                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="1eb-mH-ITO">
                             <connections>
                                 <segue destination="2QK-vR-bgq" kind="unwind" unwindAction="unwindToMainView:" id="7dy-Aa-0mA"/>
                             </connections>
@@ -162,7 +162,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Monthly history" id="K4B-d3-Bnh">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="P8z-3B-k1M">
+                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="P8z-3B-k1M">
                             <connections>
                                 <segue destination="VMD-EU-VqX" kind="unwind" unwindAction="unwindToMainView:" id="XZT-Jd-V8P"/>
                             </connections>
@@ -203,7 +203,7 @@
         <!--Work Session View Controller-->
         <scene sceneID="tmK-h5-O1o">
             <objects>
-                <viewController id="3mo-3V-SmK" customClass="WorkSessionViewController" customModule="OnTheClock1" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController wantsFullScreenLayout="YES" id="3mo-3V-SmK" customClass="WorkSessionViewController" customModule="OnTheClock1" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="fgp-h2-FwH"/>
                         <viewControllerLayoutGuide type="bottom" id="Gq0-ba-1p5"/>
@@ -250,7 +250,7 @@
                                 </subviews>
                             </stackView>
                         </subviews>
-                        <color key="backgroundColor" red="0.98431372549019602" green="0.54979046914959251" blue="0.92157665537821698" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="V0Y-xr-mKR" firstAttribute="top" secondItem="3Nf-B1-8pX" secondAttribute="top" constant="255" id="0FS-SD-GzF"/>
                             <constraint firstItem="1gS-E4-w0K" firstAttribute="centerY" secondItem="3Nf-B1-8pX" secondAttribute="centerY" id="7pK-9g-Jzz"/>
@@ -279,13 +279,11 @@
                     </view>
                     <navigationItem key="navigationItem" id="97Z-Vb-GYr">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="IYa-PO-Ubu">
-                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="cancel:" destination="3mo-3V-SmK" id="DdN-11-Q8u"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" enabled="NO" title="Stop" id="WWx-WD-fZo">
-                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <segue destination="ewP-ve-38d" kind="show" identifier="stopWorkSession" id="9Ou-kY-9q6"/>
                             </connections>
@@ -347,7 +345,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.98431372549999996" green="0.54979046909999996" blue="0.9215766554" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="vsG-EG-3d3" firstAttribute="centerX" secondItem="PiO-5x-s3M" secondAttribute="centerX" id="0oi-tF-3rC"/>
                             <constraint firstItem="dqt-xH-gkt" firstAttribute="top" secondItem="HPv-JP-W9f" secondAttribute="bottom" constant="20" id="7Dy-hA-sR9"/>
@@ -384,7 +382,6 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="aWP-O8-vIA">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="barTintColor" red="0.98431372549999996" green="0.54979046909999996" blue="0.9215766554" alpha="1" colorSpace="calibratedRGB"/>
                         <textAttributes key="titleTextAttributes">
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         </textAttributes>
@@ -412,7 +409,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Daily history" id="w3M-9T-MTC">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="6qC-Jt-sSg">
+                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="6qC-Jt-sSg">
                             <connections>
                                 <segue destination="s7B-Xz-kbd" kind="unwind" unwindAction="unwindToMainView:" id="eDI-iz-BW4"/>
                             </connections>
@@ -496,7 +493,5 @@
         <image name="calendar-day" width="25" height="25"/>
         <image name="calendar-month" width="25" height="25"/>
         <image name="calendar-week" width="25" height="25"/>
-        <image name="history" width="22" height="22"/>
-        <image name="user" width="22" height="22"/>
     </resources>
 </document>

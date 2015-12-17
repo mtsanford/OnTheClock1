@@ -30,7 +30,6 @@ class HistoryTableViewController: UITableViewController {
         tableView.registerNib(UINib(nibName: "WorkSessionSummaryCell", bundle: nil), forCellReuseIdentifier: "WorkSessionSummaryCell")
         self.tableView.estimatedRowHeight = 44
         
-        
         noDataView = UINib(nibName: "NoHistory", bundle: nil).instantiateWithOwner(nil, options: nil)[0] as! UIView
         
         spinner = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
