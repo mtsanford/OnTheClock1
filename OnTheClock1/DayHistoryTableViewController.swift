@@ -22,6 +22,7 @@ class DayHistoryTableViewController: HistoryTableViewController {
     }
 
     var localLoaded = false;
+    var lastDate: NSDate?
     var buckets = [NSDate:(summaries: [String:Double], workSessions:[WorkSession])]()
     
     private static let sectionHeaderFormatter : NSDateFormatter = {
@@ -50,15 +51,47 @@ class DayHistoryTableViewController: HistoryTableViewController {
     // Do the actual fetching of new data to be added to self.summaries, then call the callback
     // if there was an error, set s to nil.   Set d to the next date to query for more data
     // or nil if there is no more data.
-    override func loadMore(callback: (newSummaries: [WorkSessionSummary]?, nextLoadDate: NSDate?) -> ()) {
-        getMoreWorkSessions(!localLoaded).continueWithBlock {
+    override func loadMore(callback: (error: NSError?) -> ()) {
+        let queryLimit = 100
+        let loadLocalData = !localLoaded
+        let query: PFQuery! = WorkSession.query()
+
+        query.whereKey("user", equalTo: PFUser.currentUser()!)
+        query.orderByDescending("start")
+        query.includeKey("activity")
+        if (lastDate != nil) { query.whereKey("start", lessThan: lastDate!) }
+        
+        if (loadLocalData) {
+            query.fromLocalDatastore()
+            localLoaded = true;
+        }
+        else {
+            query.limit = queryLimit
+        }
+        
+        query?.findObjectsInBackground().continueWithBlock {
             (task: BFTask!) -> AnyObject! in
-            if (task.result != nil) {
-                callback(newSummaries: summaries, nextLoadDate: nil)
+            if task.error == nil {
+                let newWorkSessions = task.result as! [WorkSession]
+                self.addWorkSessionsToBuckets(newWorkSessions)
+                self.makeSummaries()
+                // If we've not exhaused data, assume last summary is incomplete
+                if ( (loadLocalData && self.summaries.count > 1) || (!loadLocalData && newWorkSessions.count == queryLimit)) {
+                    self.summaries.removeLast()
+                    self.lastDate = newWorkSessions.last!.start
+                }
+                else {
+                    self.exhaustedData = true;
+                }
+                callback(error: nil)
+            }
+            else {
+                self.exhaustedData = true;
+                callback(error: task.error)
             }
             return nil
         }
-        localLoaded = true;
+
     }
     
     
@@ -95,63 +128,21 @@ class DayHistoryTableViewController: HistoryTableViewController {
     
     /*******************************/
     
-    // Fetch recent activities from LOCAL DATASTORE.   Task result is empty, as
-    // query results are added to controllers model
-    private func getMoreWorkSessions(local: Bool) -> BFTask {
-        let queryLimit = 100
-        let ourTask = BFTaskCompletionSource()
-        let query: PFQuery! = WorkSession.query()
-        if (local) {
-            query.fromLocalDatastore()
-        }
-        query.whereKey("user", equalTo: PFUser.currentUser()!)
-        query.orderByDescending("last")
-        query.includeKey("activity")
-
-        if (local) {
-            query.fromLocalDatastore()
-        }
-        else {
-            query.limit = queryLimit
-        }
-
-        query?.findObjectsInBackground().continueWithBlock {
-            (task: BFTask!) -> AnyObject! in
-            if task.error != nil {
-                ourTask.setError(task.error)
-            } else {
-                let workSessions = task.result as! [WorkSession]
-                self.addWorkSessionsToBuckets(workSessions)
-                self.makeSummaries();
-                // If we've not exhaused data, assume last summary is incomplete
-                if ( (local && self.summaries.count > 1) || (!local && workSessions.count == queryLimit)) {
-                    self.summaries.removeLast()
-                }
-                ourTask.setResult(true)
-            }
-            return nil
-        }
-        return ourTask.task
-    }
-
-    
     private func addWorkSessionsToBuckets(workSessions: [WorkSession]) {
         var startDate: NSDate?
         var duration: NSTimeInterval = 0
+        
         for workSession in workSessions {
-            
             // Add to a day bucket
             if NSCalendar.currentCalendar().rangeOfUnit(.Day, startDate: &startDate, interval: &duration, forDate: workSession.start)
             {
                 if (buckets[startDate!] == nil) {
                     buckets[startDate!] = ([String:Double](), [WorkSession]())
                 }
-                
                 if (buckets[startDate!]!.summaries[workSession.activity.name] == nil) {
                     buckets[startDate!]!.summaries[workSession.activity.name] = 0.0
                 }
                 buckets[startDate!]!.summaries[workSession.activity.name]! += workSession.duration.doubleValue
-                
                 buckets[startDate!]!.workSessions.append(workSession)
             }
         }
@@ -184,9 +175,6 @@ class DayHistoryTableViewController: HistoryTableViewController {
             
             result.append(summary)
         }
-        
-        print("Summaries: \(result.count)")
-        for a in result { print ("\(a.timePeriod) activities: \(a.activities.count) workSessions: \(a.workSessions!.count)") }
         
         summaries = result
     }

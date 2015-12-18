@@ -14,8 +14,10 @@ class HistoryTableViewController: UITableViewController {
     var spinner: UIActivityIndicatorView!
     var noDataView: UIView!
     var loadingMore: Bool = false
+    
+    // subclass should keep update these on loadMore() calls
     var summaries = [WorkSessionSummary]()
-    var nextLoadDate: NSDate? = NSDate()
+    var exhaustedData = false
     
     private static let sectionHeaderFormatter : NSDateFormatter = {
         let dateFormatter = NSDateFormatter()
@@ -45,26 +47,22 @@ class HistoryTableViewController: UITableViewController {
     }
     
     func startLoadingMore() {
-        if (loadingMore || nextLoadDate == nil) { return }
+        if (loadingMore || exhaustedData) { return }
         loadingMore = true;
         spinner.startAnimating()
         self.tableView.tableFooterView = spinner
         loadMore {
-            (newSummaries: [WorkSessionSummary]?, nextLoadDate: NSDate?) -> () in
-            if (newSummaries != nil) {
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.spinner.stopAnimating()
-                    self.loadingMore = false;
-                    self.summaries += newSummaries!
-                    self.nextLoadDate = nextLoadDate
-                    if (self.summaries.count == 0) {
-                        self.tableView.backgroundView = self.noDataView
-                        self.tableView.tableFooterView = UIView(frame: CGRect.zero)
-                    }
-                    else {
-                        self.tableView.reloadData()
-                        self.tableView.tableFooterView = nil
-                    }
+            (error: NSError?) -> () in
+            dispatch_async(dispatch_get_main_queue()) {
+                self.spinner.stopAnimating()
+                self.loadingMore = false;
+                if (self.summaries.count == 0) {
+                    self.tableView.backgroundView = self.noDataView
+                    self.tableView.tableFooterView = UIView(frame: CGRect.zero)
+                }
+                else {
+                    self.tableView.reloadData()
+                    self.tableView.tableFooterView = nil
                 }
             }
         }
@@ -73,7 +71,7 @@ class HistoryTableViewController: UITableViewController {
     // Do the actual fetching of new data to be added to self.summaries, then call the callback
     // if there was an error, set s to nil.   Set d to the next date to query for more data
     // or nil if there is no more data.
-    func loadMore(callback: (newSummaries: [WorkSessionSummary]?, nextLoadDate: NSDate?) -> ()) {
+    func loadMore(callback: (error: NSError?) -> ()) {
         fatalError("HistoryTableViewController::loadMore must be implemented by subclass!")
     }
     
