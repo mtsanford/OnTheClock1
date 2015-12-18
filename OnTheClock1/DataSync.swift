@@ -478,12 +478,8 @@ class DataSync {
                 if let summaries = result["summaries"] as? [NSDictionary] {
                     for s in summaries {
                         var summary = WorkSessionSummary(timePeriod: s["unitStart"] as? NSDate, activities:[ActivitySummary](), workSessions: nil);
-                        print(s["unitStart"]!)
                         if let activities = s["activities"] as? NSArray {
                             for a in activities {
-                                let name = a["name"] as! String
-                                let duration = a["duration"] as! Double
-                                print("\(name) \(duration)");
                                 let activitySummary = ActivitySummary(name: a["name"] as! String, duration: a["duration"] as! Double);
                                 summary.activities.append(activitySummary)
                             }

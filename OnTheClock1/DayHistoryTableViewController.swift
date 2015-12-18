@@ -20,6 +20,9 @@ class DayHistoryTableViewController: HistoryTableViewController {
             tableView.reloadData()
         }
     }
+
+    var localLoaded = false;
+    var buckets = [NSDate:(summaries: [String:Double], workSessions:[WorkSession])]()
     
     private static let sectionHeaderFormatter : NSDateFormatter = {
         let dateFormatter = NSDateFormatter()
@@ -48,16 +51,14 @@ class DayHistoryTableViewController: HistoryTableViewController {
     // if there was an error, set s to nil.   Set d to the next date to query for more data
     // or nil if there is no more data.
     override func loadMore(callback: (newSummaries: [WorkSessionSummary]?, nextLoadDate: NSDate?) -> ()) {
-        DataSync.sharedInstance.getRecentWorkSessions().continueWithBlock {
+        getMoreWorkSessions(!localLoaded).continueWithBlock {
             (task: BFTask!) -> AnyObject! in
             if (task.result != nil) {
-                if let workSessions = task.result as? [WorkSession] {
-                    let summaries = DataSync.sharedInstance.summarizeWorkSessions(NSCalendarUnit.Day, workSessions: workSessions)
-                    callback(newSummaries: summaries, nextLoadDate: nil)
-                }
+                callback(newSummaries: summaries, nextLoadDate: nil)
             }
             return nil
         }
+        localLoaded = true;
     }
     
     
@@ -91,6 +92,105 @@ class DayHistoryTableViewController: HistoryTableViewController {
         detailInnerButton.selected = showDetail
     }
     
+    
+    /*******************************/
+    
+    // Fetch recent activities from LOCAL DATASTORE.   Task result is empty, as
+    // query results are added to controllers model
+    private func getMoreWorkSessions(local: Bool) -> BFTask {
+        let queryLimit = 100
+        let ourTask = BFTaskCompletionSource()
+        let query: PFQuery! = WorkSession.query()
+        if (local) {
+            query.fromLocalDatastore()
+        }
+        query.whereKey("user", equalTo: PFUser.currentUser()!)
+        query.orderByDescending("last")
+        query.includeKey("activity")
+
+        if (local) {
+            query.fromLocalDatastore()
+        }
+        else {
+            query.limit = queryLimit
+        }
+
+        query?.findObjectsInBackground().continueWithBlock {
+            (task: BFTask!) -> AnyObject! in
+            if task.error != nil {
+                ourTask.setError(task.error)
+            } else {
+                let workSessions = task.result as! [WorkSession]
+                self.addWorkSessionsToBuckets(workSessions)
+                self.makeSummaries();
+                // If we've not exhaused data, assume last summary is incomplete
+                if ( (local && self.summaries.count > 1) || (!local && workSessions.count == queryLimit)) {
+                    self.summaries.removeLast()
+                }
+                ourTask.setResult(true)
+            }
+            return nil
+        }
+        return ourTask.task
+    }
+
+    
+    private func addWorkSessionsToBuckets(workSessions: [WorkSession]) {
+        var startDate: NSDate?
+        var duration: NSTimeInterval = 0
+        for workSession in workSessions {
+            
+            // Add to a day bucket
+            if NSCalendar.currentCalendar().rangeOfUnit(.Day, startDate: &startDate, interval: &duration, forDate: workSession.start)
+            {
+                if (buckets[startDate!] == nil) {
+                    buckets[startDate!] = ([String:Double](), [WorkSession]())
+                }
+                
+                if (buckets[startDate!]!.summaries[workSession.activity.name] == nil) {
+                    buckets[startDate!]!.summaries[workSession.activity.name] = 0.0
+                }
+                buckets[startDate!]!.summaries[workSession.activity.name]! += workSession.duration.doubleValue
+                
+                buckets[startDate!]!.workSessions.append(workSession)
+            }
+        }
+    }
+    
+    // Mark summarise from buckets
+    private func makeSummaries(){
+        var result = [WorkSessionSummary]()
+        
+        let sortedBuckets = buckets.sort {
+            ( t1: (NSDate, (summaries: [String : Double], workSessions: [WorkSession])),
+            t2: (NSDate, (summaries: [String : Double], workSessions: [WorkSession]))) -> Bool in
+            return t1.0.compare(t2.0) == NSComparisonResult.OrderedDescending
+        }
+        for bucket in sortedBuckets {
+            var summary = WorkSessionSummary(timePeriod: bucket.0, activities:[ActivitySummary](), workSessions: nil)
+            
+            // sort summaries by total duration
+            let sortedSummaries = bucket.1.summaries.sort({ (t1:(String, Double), t2:(String, Double)) -> Bool in
+                t1.1 > t2.1
+            })
+            for s in sortedSummaries {
+                summary.activities.append(ActivitySummary(name: s.0, duration: s.1))
+            }
+            
+            summary.workSessions = bucket.1.workSessions
+            summary.workSessions!.sortInPlace({ (t1: WorkSession, t2: WorkSession) -> Bool in
+                return t1.start.compare(t2.start) == NSComparisonResult.OrderedAscending
+            })
+            
+            result.append(summary)
+        }
+        
+        print("Summaries: \(result.count)")
+        for a in result { print ("\(a.timePeriod) activities: \(a.activities.count) workSessions: \(a.workSessions!.count)") }
+        
+        summaries = result
+    }
+
     
     
 }
