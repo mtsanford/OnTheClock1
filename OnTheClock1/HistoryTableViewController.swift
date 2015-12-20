@@ -52,26 +52,30 @@ class HistoryTableViewController: UITableViewController {
         spinner.startAnimating()
         self.tableView.tableFooterView = spinner
         loadMore {
-            (error: NSError?) -> () in
+            (newSummaries: [WorkSessionSummary]?, exhaustedData: Bool, error: NSError?) -> () in
             dispatch_async(dispatch_get_main_queue()) {
+                let oldCount = self.summaries.count
+                if (newSummaries != nil) { self.summaries += newSummaries! }
+                self.exhaustedData = exhaustedData
+
                 self.spinner.stopAnimating()
                 self.loadingMore = false;
-                if (self.summaries.count == 0) {
+                if (error != nil || self.summaries.count == 0) {
                     self.tableView.backgroundView = self.noDataView
                     self.tableView.tableFooterView = UIView(frame: CGRect.zero)
                 }
                 else {
-                    self.tableView.reloadData()
+                    self.tableView.beginUpdates()
+                    let set = NSIndexSet(indexesInRange: NSRange(oldCount...self.summaries.count-1))
+                    self.tableView.insertSections(set, withRowAnimation: UITableViewRowAnimation.Fade)
+                    self.tableView.endUpdates()
                     self.tableView.tableFooterView = nil
                 }
             }
         }
     }
     
-    // Do the actual fetching of new data to be added to self.summaries, then call the callback
-    // if there was an error, set s to nil.   Set d to the next date to query for more data
-    // or nil if there is no more data.
-    func loadMore(callback: (error: NSError?) -> ()) {
+    func loadMore(callback: (newSummaries: [WorkSessionSummary]?, exhaustedData: Bool, error: NSError?) -> ()) {
         fatalError("HistoryTableViewController::loadMore must be implemented by subclass!")
     }
     

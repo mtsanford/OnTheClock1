@@ -21,22 +21,16 @@ class WeekHistoryTableViewController: HistoryTableViewController {
         return dateFormatter
     }()
     
-    // Do the actual fetching of new data to be added to self.summaries, then call the callback
-    // if there was an error, set s to nil.   Set d to the next date to query for more data
-    // or nil if there is no more data.
-    override func loadMore(callback: (error: NSError?) -> ()) {
+    override func loadMore(callback: (newSummaries: [WorkSessionSummary]?, exhaustedData: Bool, error: NSError?) -> ()) {
         DataSync.sharedInstance.fetchSummaries(nextLoadDate!, unit: "week", howMany: 12) {
             (newSummaries: [WorkSessionSummary]?, nextStartDate: NSDate?) -> () in
+            self.nextLoadDate = nextStartDate
             if newSummaries != nil {
-                self.nextLoadDate = nextStartDate
-                if (self.nextLoadDate == nil) { self.exhaustedData = true }
-                self.summaries += newSummaries!
-                callback(error: nil)
+                callback(newSummaries: newSummaries, exhaustedData: (self.nextLoadDate == nil), error: nil)
             }
             else {
                 let error = NSError(domain: "fetchSummaries", code: 0, userInfo: nil)
-                self.exhaustedData = true
-                callback(error: error)
+                callback(newSummaries: nil, exhaustedData: true, error: error)
             }
         }
     }

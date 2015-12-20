@@ -17,7 +17,13 @@ class DayHistoryTableViewController: HistoryTableViewController {
     let onImage = UIImage(named: "list-selected")?.imageWithRenderingMode(.AlwaysTemplate)
     var showDetail: Bool = false {
         didSet {
-            tableView.reloadData()
+            let topVisible = tableView.indexPathsForVisibleRows?.sort { $1.section > $0.section }.first
+            if (topVisible != nil) {
+                self.tableView.estimatedRowHeight = showDetail ? 52 : 44
+                tableView.reloadData()
+                let topSection = NSIndexPath(forRow: 0, inSection: topVisible!.section)
+                tableView.scrollToRowAtIndexPath(topSection, atScrollPosition: UITableViewScrollPosition.Top, animated: false)
+            }
         }
     }
 
@@ -43,18 +49,13 @@ class DayHistoryTableViewController: HistoryTableViewController {
         detailInnerButton.frame = CGRect(x: 0, y: 0, width: 35, height: 33)
         detailButton.customView = detailInnerButton
         detailInnerButton.addTarget(self, action: "detailPressed:", forControlEvents: .TouchUpInside)
-        
-        // TODO - Do I really have to hard code this?  tableView.rowHeight = -1 on load
-        self.tableView.estimatedRowHeight = 72
     }
 
-    // Do the actual fetching of new data to be added to self.summaries, then call the callback
-    // if there was an error, set s to nil.   Set d to the next date to query for more data
-    // or nil if there is no more data.
-    override func loadMore(callback: (error: NSError?) -> ()) {
+    override func loadMore(callback: (newSummaries: [WorkSessionSummary]?, exhaustedData: Bool, error: NSError?) -> ()) {
         let queryLimit = 100
         let loadLocalData = !localLoaded
         let query: PFQuery! = WorkSession.query()
+        var exhaustedData = false
 
         query.whereKey("user", equalTo: PFUser.currentUser()!)
         query.orderByDescending("start")
@@ -74,24 +75,76 @@ class DayHistoryTableViewController: HistoryTableViewController {
             if task.error == nil {
                 let newWorkSessions = task.result as! [WorkSession]
                 self.addWorkSessionsToBuckets(newWorkSessions)
-                self.makeSummaries()
+                var newSummaries = self.makeSummaries()
+                
                 // If we've not exhaused data, assume last summary is incomplete
-                if ( (loadLocalData && self.summaries.count > 1) || (!loadLocalData && newWorkSessions.count == queryLimit)) {
-                    self.summaries.removeLast()
+                if ( (loadLocalData && newSummaries.count > 1) || (!loadLocalData && newWorkSessions.count == queryLimit)) {
+                    newSummaries.removeLast()
                     self.lastDate = newWorkSessions.last!.start
                 }
                 else {
-                    self.exhaustedData = true;
+                    exhaustedData = true;
                 }
-                callback(error: nil)
+                callback(newSummaries: newSummaries, exhaustedData: exhaustedData, error: nil)
             }
             else {
-                self.exhaustedData = true;
-                callback(error: task.error)
+                callback(newSummaries: nil, exhaustedData: exhaustedData, error: task.error)
             }
             return nil
         }
 
+    }
+
+    private func addWorkSessionsToBuckets(workSessions: [WorkSession]) {
+        var startDate: NSDate?
+        var duration: NSTimeInterval = 0
+        
+        for workSession in workSessions {
+            // Add to a day bucket
+            if NSCalendar.currentCalendar().rangeOfUnit(.Day, startDate: &startDate, interval: &duration, forDate: workSession.start)
+            {
+                if (buckets[startDate!] == nil) {
+                    buckets[startDate!] = ([String:Double](), [WorkSession]())
+                }
+                if (buckets[startDate!]!.summaries[workSession.activity.name] == nil) {
+                    buckets[startDate!]!.summaries[workSession.activity.name] = 0.0
+                }
+                buckets[startDate!]!.summaries[workSession.activity.name]! += workSession.duration.doubleValue
+                buckets[startDate!]!.workSessions.append(workSession)
+            }
+        }
+    }
+    
+    // Mark summarise from buckets
+    private func makeSummaries() -> [WorkSessionSummary] {
+        var result = [WorkSessionSummary]()
+        
+        let sortedBuckets = buckets.sort {
+            ( t1: (NSDate, (summaries: [String : Double], workSessions: [WorkSession])),
+            t2: (NSDate, (summaries: [String : Double], workSessions: [WorkSession]))) -> Bool in
+            return t1.0.compare(t2.0) == NSComparisonResult.OrderedDescending
+        }
+        for bucket in sortedBuckets {
+            var summary = WorkSessionSummary(timePeriod: bucket.0, activities:[ActivitySummary](), workSessions: nil)
+            
+            // sort summaries by total duration
+            let sortedSummaries = bucket.1.summaries.sort({ (t1:(String, Double), t2:(String, Double)) -> Bool in
+                t1.1 > t2.1
+            })
+            for s in sortedSummaries {
+                summary.activities.append(ActivitySummary(name: s.0, duration: s.1))
+            }
+            
+            summary.workSessions = bucket.1.workSessions
+            summary.workSessions!.sortInPlace({ (t1: WorkSession, t2: WorkSession) -> Bool in
+                return t1.start.compare(t2.start) == NSComparisonResult.OrderedAscending
+            })
+            
+            result.append(summary)
+        }
+        
+        // only return the NEW work sessions, not the ones already summaries
+        return [WorkSessionSummary](result[summaries.count..<result.count])
     }
     
     
@@ -125,60 +178,6 @@ class DayHistoryTableViewController: HistoryTableViewController {
         detailInnerButton.selected = showDetail
     }
     
-    
-    /*******************************/
-    
-    private func addWorkSessionsToBuckets(workSessions: [WorkSession]) {
-        var startDate: NSDate?
-        var duration: NSTimeInterval = 0
-        
-        for workSession in workSessions {
-            // Add to a day bucket
-            if NSCalendar.currentCalendar().rangeOfUnit(.Day, startDate: &startDate, interval: &duration, forDate: workSession.start)
-            {
-                if (buckets[startDate!] == nil) {
-                    buckets[startDate!] = ([String:Double](), [WorkSession]())
-                }
-                if (buckets[startDate!]!.summaries[workSession.activity.name] == nil) {
-                    buckets[startDate!]!.summaries[workSession.activity.name] = 0.0
-                }
-                buckets[startDate!]!.summaries[workSession.activity.name]! += workSession.duration.doubleValue
-                buckets[startDate!]!.workSessions.append(workSession)
-            }
-        }
-    }
-    
-    // Mark summarise from buckets
-    private func makeSummaries(){
-        var result = [WorkSessionSummary]()
-        
-        let sortedBuckets = buckets.sort {
-            ( t1: (NSDate, (summaries: [String : Double], workSessions: [WorkSession])),
-            t2: (NSDate, (summaries: [String : Double], workSessions: [WorkSession]))) -> Bool in
-            return t1.0.compare(t2.0) == NSComparisonResult.OrderedDescending
-        }
-        for bucket in sortedBuckets {
-            var summary = WorkSessionSummary(timePeriod: bucket.0, activities:[ActivitySummary](), workSessions: nil)
-            
-            // sort summaries by total duration
-            let sortedSummaries = bucket.1.summaries.sort({ (t1:(String, Double), t2:(String, Double)) -> Bool in
-                t1.1 > t2.1
-            })
-            for s in sortedSummaries {
-                summary.activities.append(ActivitySummary(name: s.0, duration: s.1))
-            }
-            
-            summary.workSessions = bucket.1.workSessions
-            summary.workSessions!.sortInPlace({ (t1: WorkSession, t2: WorkSession) -> Bool in
-                return t1.start.compare(t2.start) == NSComparisonResult.OrderedAscending
-            })
-            
-            result.append(summary)
-        }
-        
-        summaries = result
-    }
-
     
     
 }
