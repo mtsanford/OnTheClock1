@@ -57,13 +57,23 @@ class WorkSessionViewController: UIViewController, UINavigationControllerDelegat
         
         self.navigationController?.delegate = self
         
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "willEnterBackground:", name: UIApplicationWillResignActiveNotification, object: nil)
+        
         continueSession()
     }
 
+    override func viewWillAppear(animated: Bool) {
+        //do stuff
+    }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        print("viewWillDisappear")
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    func willEnterBackground(notification: NSNotification) {
+        print("willEnterBackground")
     }
     
     // MARK: UITextFieldDelegate
@@ -140,6 +150,7 @@ class WorkSessionViewController: UIViewController, UINavigationControllerDelegat
     }
     
     func updateTime() {
+        print("updateTime")
         accumulatedTime = accumulatedTimeLastPause - (startTime?.timeIntervalSinceNow)!
         let minutes = Int(floor(accumulatedTime / 60.0))
         minutesLabel.text = "\(minutes)"

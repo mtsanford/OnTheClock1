@@ -36,6 +36,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //UINavigationBar.appearance().setBackgroundImage(blankImage, forBarPosition: UIBarPosition.Any, barMetrics: UIBarMetrics.Default)
         //UINavigationBar.appearance().shadowImage = blankImage
         
+        
+        
         self.window?.tintColor = UIColor.OTCDark()
         
         return true

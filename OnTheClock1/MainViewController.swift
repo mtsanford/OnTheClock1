@@ -32,18 +32,17 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
         activityTextField.delegate = self
         activityTextField.mDelegate = self
         
+        /*
         let paddingView = UIView(frame: CGRectMake(0,0,5,self.activityTextField.frame.height))
         activityTextField.leftView = paddingView
         activityTextField.leftViewMode = UITextFieldViewMode.Always
+        */
         
         userButton.setImage(userImage, forState: .Normal)
         userButton.tintColor = UIColor.OTCDark()
         
         historyButton.setImage(historyImage, forState: .Normal)
         historyButton.tintColor = UIColor.OTCDark()
-        
-        activityTextField.layer.borderColor = UIColor.OTCDark().CGColor
-        activityTextField.layer.borderWidth = 2.0
 
         updateRecentItems(true)
     }
