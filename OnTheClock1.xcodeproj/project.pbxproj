@@ -33,6 +33,8 @@
 		966B134F1BACE45B00951E19 /* DataSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966B134E1BACE45B00951E19 /* DataSync.swift */; };
 		968CC8C71C11FADA00EBF5C5 /* OTCUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968CC8C61C11FADA00EBF5C5 /* OTCUser.swift */; };
 		969947FC1C1753A70030DDE0 /* HistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969947FB1C1753A70030DDE0 /* HistoryTableViewController.swift */; };
+		969C9C781C41A9FF00B55EAA /* NewWorkSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969C9C771C41A9FE00B55EAA /* NewWorkSessionViewController.swift */; };
+		969C9C7A1C41C06000B55EAA /* MonoFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969C9C791C41C06000B55EAA /* MonoFont.swift */; };
 		96C2490E1B85660F00AF01BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2490D1B85660F00AF01BE /* AppDelegate.swift */; };
 		96C249101B85660F00AF01BE /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C2490F1B85660F00AF01BE /* MainViewController.swift */; };
 		96C249131B85660F00AF01BE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96C249111B85660F00AF01BE /* Main.storyboard */; };
@@ -87,6 +89,8 @@
 		966B134E1BACE45B00951E19 /* DataSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSync.swift; sourceTree = "<group>"; };
 		968CC8C61C11FADA00EBF5C5 /* OTCUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTCUser.swift; sourceTree = "<group>"; };
 		969947FB1C1753A70030DDE0 /* HistoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTableViewController.swift; sourceTree = "<group>"; };
+		969C9C771C41A9FE00B55EAA /* NewWorkSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewWorkSessionViewController.swift; sourceTree = "<group>"; };
+		969C9C791C41C06000B55EAA /* MonoFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonoFont.swift; sourceTree = "<group>"; };
 		96C2490A1B85660F00AF01BE /* OnTheClock1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheClock1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		96C2490D1B85660F00AF01BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		96C2490F1B85660F00AF01BE /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -179,6 +183,7 @@
 		9612CCAC1C051902000FC5BB /* supporting files */ = {
 			isa = PBXGroup;
 			children = (
+				969C9C791C41C06000B55EAA /* MonoFont.swift */,
 				96C249161B85660F00AF01BE /* LaunchScreen.storyboard */,
 				96FC38241B99FCBD005B2D36 /* OnTheClock1-Bridging-Header.h */,
 				96092D951B8D347C000A6BD4 /* MPGTextField.swift */,
@@ -217,6 +222,7 @@
 				96C2490F1B85660F00AF01BE /* MainViewController.swift */,
 				96D751B81BF0062E00778DDE /* StopWorkSessionViewController.swift */,
 				96C249301B86A76700AF01BE /* WorkSessionViewController.swift */,
+				969C9C771C41A9FE00B55EAA /* NewWorkSessionViewController.swift */,
 				966B134C1BAC9CA600951E19 /* Activity.swift */,
 				968CC8C61C11FADA00EBF5C5 /* OTCUser.swift */,
 				9615917E1BA71C6F007A573A /* WorkSession.swift */,
@@ -345,10 +351,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				96630AE91C1FB36200332D3B /* WeekHistoryTableViewController.swift in Sources */,
+				969C9C7A1C41C06000B55EAA /* MonoFont.swift in Sources */,
 				96092D961B8D347C000A6BD4 /* MPGTextField.swift in Sources */,
 				960349161C20F682004EB8CD /* OTCColors.swift in Sources */,
 				96630AEB1C1FB81900332D3B /* DayHistoryTableViewController.swift in Sources */,
 				966B134D1BAC9CA600951E19 /* Activity.swift in Sources */,
+				969C9C781C41A9FF00B55EAA /* NewWorkSessionViewController.swift in Sources */,
 				96C249101B85660F00AF01BE /* MainViewController.swift in Sources */,
 				9611DF9A1BED4BF500E54102 /* Utils.swift in Sources */,
 				96D751B71BEFD94200778DDE /* MySignUpViewController.swift in Sources */,
