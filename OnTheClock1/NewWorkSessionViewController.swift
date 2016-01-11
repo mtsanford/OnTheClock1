@@ -16,14 +16,15 @@ class NewWorkSessionViewController: UIViewController {
     
     @IBOutlet weak var activityNameLabel: UILabel!
     
-    @IBOutlet weak var hoursLabel: UILabel!
-    @IBOutlet weak var minutesLabel: UILabel!
-    @IBOutlet weak var colonLabel: UILabel!
+    @IBOutlet weak var counterLabel: UILabel!
+    @IBOutlet weak var counterCover: UIView!
     
     @IBOutlet weak var adjustLabel: UILabel!
     @IBOutlet weak var downButton: UIButton!
     @IBOutlet weak var upButton: UIButton!
     @IBOutlet weak var adjustAmountLabel: UILabel!
+    
+    @IBOutlet weak var minimumLabel: UILabel!
     
     @IBOutlet weak var pauseButton: UIButton!
     
@@ -38,7 +39,11 @@ class NewWorkSessionViewController: UIViewController {
     var accumulatedTimeLastPause: NSTimeInterval = 0.0
     var accumulatedTime: NSTimeInterval = 0.0
     var adjustTime: NSTimeInterval = 0.0
-    var accumulatedAdjustedTime = 0.0
+    var accumulatedAdjustedTime: NSTimeInterval {
+        get {
+            return accumulatedTime + adjustTime
+        }
+    }
     
     var running: Bool = false
     var finishing: Bool = false
@@ -66,82 +71,32 @@ class NewWorkSessionViewController: UIViewController {
         upButton.setImage(upButtonImage, forState: .Normal)
         upButton.tintColor = self.view.tintColor
         
-        hoursLabel.font = hoursLabel.font.monospacedDigitFont
-        minutesLabel.font = minutesLabel.font.monospacedDigitFont
+        counterLabel.font = counterLabel.font.monospacedDigitFont
         
         timeFormatter.positiveFormat = "00"
         
         run(true)
+        changeAdjustTime(0.0)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
 
-    func continueSession() {
-        if (running == false) {
-            running = true
-            updateUI()
-            startTime = NSDate()
-            print("timer started at \(startTime)")
-            if firstStartTime === nil  {
-                firstStartTime = startTime?.dateByAddingTimeInterval(0.0)
-            }
-            timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: Selector("updateTime"), userInfo: nil, repeats: true)
-        }
-    }
-    
-    func updateTime() {
-        
-        // Use 60.0 for debugging so time goes faster :)
-        //accumulatedTime = accumulatedTimeLastPause - (startTime?.timeIntervalSinceNow)!
-        accumulatedTime = accumulatedTimeLastPause - ((startTime?.timeIntervalSinceNow)! * 60.0)
-        
-        accumulatedAdjustedTime = accumulatedTime + adjustTime
-        
-        updateCounter()
-        
-        // "blink" colon to indicate time is running
-        colonLabel.hidden = !colonLabel.hidden
-    }
-    
-    func updateCounter() {
-        let minutes = (floor(accumulatedAdjustedTime / 60) % 60)
-        let hours = (floor(accumulatedAdjustedTime / 3600.0) % 100)
-        minutesLabel.text = timeFormatter.stringFromNumber(minutes)
-        hoursLabel.text = timeFormatter.stringFromNumber(hours)
-    }
-
-    func updateUI() {
+    func run(newRunning: Bool) {
+        if (running == newRunning) { return }
+        running = newRunning
         if (running) {
+            startTime = NSDate()
+            if firstStartTime === nil  { firstStartTime = startTime?.dateByAddingTimeInterval(0.0) }
+            timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: Selector("updateTime"), userInfo: nil, repeats: true)
             pauseButton.setTitle("Stop", forState: .Normal)
             pauseButton.titleLabel?.font = UIFont.systemFontOfSize(16)
             adjustLabel.hidden = true;
             downButton.hidden = true;
             upButton.hidden = true;
             adjustAmountLabel.hidden = true;
-            doneButton.enabled = false
-        }
-        else {
-            colonLabel.hidden = false
-            pauseButton.setTitle("Resume", forState: .Normal)
-            pauseButton.titleLabel?.font = UIFont.systemFontOfSize(13)
-            adjustLabel.hidden = false;
-            downButton.hidden = false;
-            upButton.hidden = false;
-            adjustAmountLabel.hidden = false;
-            doneButton.enabled = accumulatedTime >= minimumWorkTime
-        }
-    }
-    
-    func run(newRunning: Bool) {
-        if (running == newRunning) { return }
-        running = newRunning
-        if (running) {
-            startTime = NSDate()
-            print("timer started at \(startTime)")
-            if firstStartTime === nil  { firstStartTime = startTime?.dateByAddingTimeInterval(0.0) }
-            timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: Selector("updateTime"), userInfo: nil, repeats: true)
+            minimumLabel.hidden = true;
         }
         else {
             timer?.invalidate()
@@ -149,14 +104,47 @@ class NewWorkSessionViewController: UIViewController {
             // don't accumulate fractional seconds, so that colon blinks on when time visibly changes
             accumulatedTime = floor(accumulatedTime)
             accumulatedTimeLastPause = accumulatedTime
-            accumulatedAdjustedTime = accumulatedTime + adjustTime
             
-            let timeSinceStart = -(startTime?.timeIntervalSinceNow)!
-            print("timeSinceStart: \(timeSinceStart)")
-            print("accumulatedTime: + \(accumulatedTime)")
+            counterCover.hidden = true
+            pauseButton.setTitle("Resume", forState: .Normal)
+            pauseButton.titleLabel?.font = UIFont.systemFontOfSize(13)
+            if (accumulatedTime >= minimumWorkTime) {
+                adjustLabel.hidden = false;
+                downButton.hidden = false;
+                upButton.hidden = false;
+                adjustAmountLabel.hidden = false;
+            }
+            else {
+                minimumLabel.hidden = false;
+            }
         }
-        updateUI()
+        updateDoneButton()
     }
+    
+    func updateTime() {
+        // Use 60.0 for debugging so time goes faster :)
+        //accumulatedTime = accumulatedTimeLastPause - (startTime?.timeIntervalSinceNow)!
+        accumulatedTime = accumulatedTimeLastPause - ((startTime?.timeIntervalSinceNow)! * 60.0)
+        
+        updateCounter()
+        
+        // "blink" colon to indicate time is running
+        counterCover.hidden = !counterCover.hidden
+    }
+    
+    func updateCounter() {
+        let minutes = (floor(accumulatedAdjustedTime / 60) % 60)
+        let hours = (floor(accumulatedAdjustedTime / 3600.0) % 100)
+        let minutesString = timeFormatter.stringFromNumber(minutes)!
+        let hoursString = timeFormatter.stringFromNumber(hours)!
+        
+        counterLabel.text = "\(hoursString):\(minutesString)"
+    }
+    
+    func updateDoneButton() {
+        doneButton.enabled = !running && accumulatedAdjustedTime >= minimumWorkTime
+    }
+    
     
     /*
     // MARK: - Navigation
@@ -173,31 +161,26 @@ class NewWorkSessionViewController: UIViewController {
     
     @IBAction func pauseButtonPressed(sender: AnyObject) {
         run(!running)
-        updateUI()
     }
     
+    //
+    //  MARK: - Adjust time
+    
     @IBAction func downButtonPressed(sender: UIButton) {
-        let newAdjustTime = adjustTime - adjustIncrement
-        if (accumulatedTime + newAdjustTime >= 0.0 && newAdjustTime > 1000 * -60.0) {
-            adjustTime = newAdjustTime
-            accumulatedAdjustedTime = accumulatedTime + adjustTime
-            updateCounter()
-            let minutes = Int(adjustTime / 60.0)
-            adjustAmountLabel.text = "\(minutes) minutes"
-        }
-        else {
-            shakeAdjustTime()
-        }
+        changeAdjustTime(adjustTime - adjustIncrement)
     }
     
     @IBAction func upButtonPressed(sender: UIButton) {
-        let newAdjustTime = adjustTime + adjustIncrement
-        if (newAdjustTime <= 0.0) {
+        changeAdjustTime(adjustTime + adjustIncrement)
+    }
+    
+    func changeAdjustTime(newAdjustTime: NSTimeInterval) {
+        if (newAdjustTime <= 0.0 && accumulatedTime + newAdjustTime >= 0.0 && newAdjustTime > 1000 * -60.0) {
             adjustTime = newAdjustTime
-            accumulatedAdjustedTime = accumulatedTime + adjustTime
             updateCounter()
             let minutes = Int(adjustTime / 60.0)
             adjustAmountLabel.text = "\(minutes) minutes"
+            updateDoneButton()
         }
         else {
             shakeAdjustTime()
@@ -209,9 +192,9 @@ class NewWorkSessionViewController: UIViewController {
         animation.duration = 0.04
         animation.repeatCount = 5
         animation.autoreverses = true
-        animation.fromValue = NSValue(CGPoint: CGPointMake(adjustAmountLabel.center.x - 2.0, adjustAmountLabel.center.y))
-        animation.toValue = NSValue(CGPoint: CGPointMake(adjustAmountLabel.center.x + 2.0, adjustAmountLabel.center.y))
-        adjustAmountLabel.layer.addAnimation(animation, forKey: "position")
+        animation.fromValue = NSValue(CGPoint: CGPointMake(counterLabel.center.x - 4.0, counterLabel.center.y))
+        animation.toValue = NSValue(CGPoint: CGPointMake(counterLabel.center.x + 4.0, counterLabel.center.y))
+        counterLabel.layer.addAnimation(animation, forKey: "position")
     }
     
 }
