@@ -2,8 +2,8 @@
 //  WorkSessionViewController.swift
 //  OnTheClock1
 //
-//  Created by Work on 8/20/15.
-//  Copyright © 2015 Mark Sanford. All rights reserved.
+//  Created by Work on 1/9/16.
+//  Copyright © 2016 Mark Sanford. All rights reserved.
 //
 
 import UIKit
@@ -12,32 +12,59 @@ protocol WorkSessionControllerDelegate: class {
     func workSessionFinished(activityName: String, startTime: NSDate, duration: NSNumber)
 }
 
-class WorkSessionViewController: UIViewController, UINavigationControllerDelegate {
-    
-    // MARK: Properties
-    @IBOutlet weak var cancelButton: UIBarButtonItem!
-    @IBOutlet weak var doneButton: UIBarButtonItem!
-    @IBOutlet weak var activityLabel: UILabel!
-    @IBOutlet weak var startTimeLabel: UILabel!
-    @IBOutlet weak var minutesStackView: UIStackView!
-    @IBOutlet weak var minutesLabel: UILabel!
 
+class WorkSessionViewController: UIViewController {
+
+    /* THESE SHOULD BE SET BY CREATOR */
+    
     var activityString: String?
-
-    var timer: NSTimer?
-    var startTime: NSDate?
-    var firstStartTime: NSDate?
-    var accumulatedTimeLastPause: NSTimeInterval
-    var accumulatedTime: NSTimeInterval
-    var running: Bool = false
-    var finishing: Bool = false
-    let minimumWorkTime = 2.0
-    
-    var workSession: WorkSession?
-    
     weak var delegate: WorkSessionControllerDelegate?
     
+    /* User Interface */
     
+    @IBOutlet weak var doneButton: UIBarButtonItem!
+    
+    @IBOutlet weak var activityNameLabel: UILabel!
+    
+    @IBOutlet weak var counterLabel: UILabel!
+    @IBOutlet weak var counterCover: UIView!
+    
+    @IBOutlet weak var adjustLabel: UILabel!
+    @IBOutlet weak var downButton: UIButton!
+    @IBOutlet weak var upButton: UIButton!
+    @IBOutlet weak var adjustAmountLabel: UILabel!
+    
+    @IBOutlet weak var minimumLabel: UILabel!
+    
+    @IBOutlet weak var pauseButton: UIButton!
+    
+    let downButtonImage: UIImage! = UIImage(named: "left-arrow")?.imageWithRenderingMode(.AlwaysTemplate)
+    let upButtonImage: UIImage! = UIImage(named: "right-arrow")?.imageWithRenderingMode(.AlwaysTemplate)
+    
+    /* State */
+    
+    var timer: NSTimer? = nil
+    var startTime: NSDate?
+    var firstStartTime: NSDate?
+    var accumulatedTimeLastPause: NSTimeInterval = 0.0
+    var accumulatedTime: NSTimeInterval = 0.0
+    var adjustTime: NSTimeInterval = 0.0
+    var accumulatedAdjustedTime: NSTimeInterval {
+        get {
+            return accumulatedTime + adjustTime
+        }
+    }
+    
+    var running: Bool = false
+    var finishing: Bool = false
+    let minimumWorkTime = 300.0
+    let adjustIncrement = 300.0
+    
+    let timeFormatter = NSNumberFormatter()
+
+    
+    
+    /*
     // TODO: Does this need to be implemented correctly?
     // could be "freeze dried" if put into background?
     required init?(coder aDecoder: NSCoder) {
@@ -46,46 +73,112 @@ class WorkSessionViewController: UIViewController, UINavigationControllerDelegat
         self.accumulatedTimeLastPause = 0.0
         super.init(coder: aDecoder)
     }
-
+    */
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("WorkSessionViewController viewDidLoad")
-        startTimeLabel.hidden = true
-        minutesStackView.hidden = true
+        activityNameLabel.text = activityString
+        downButton.setImage(downButtonImage, forState: .Normal)
+        downButton.tintColor = self.view.tintColor
+        upButton.setImage(upButtonImage, forState: .Normal)
+        upButton.tintColor = self.view.tintColor
         
-        activityLabel.text = activityString
+        counterLabel.font = counterLabel.font.monospacedDigitFont
         
-        self.navigationController?.delegate = self
+        timeFormatter.positiveFormat = "00"
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "willEnterBackground:", name: UIApplicationWillResignActiveNotification, object: nil)
-        
-        continueSession()
+        run(true)
+        changeAdjustTime(0.0)
     }
 
-    override func viewWillAppear(animated: Bool) {
-        //do stuff
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+
+    func run(newRunning: Bool) {
+        if (running == newRunning) { return }
+        running = newRunning
+        if (running) {
+            startTime = NSDate()
+            if firstStartTime === nil  { firstStartTime = startTime?.dateByAddingTimeInterval(0.0) }
+            timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: Selector("updateTime"), userInfo: nil, repeats: true)
+            pauseButton.setTitle("Stop", forState: .Normal)
+            pauseButton.titleLabel?.font = UIFont.systemFontOfSize(16)
+            adjustLabel.hidden = true;
+            downButton.hidden = true;
+            upButton.hidden = true;
+            adjustAmountLabel.hidden = true;
+            minimumLabel.hidden = true;
+        }
+        else {
+            timer?.invalidate()
+            
+            // don't accumulate fractional seconds, so that colon blinks on when time visibly changes
+            accumulatedTime = floor(accumulatedTime)
+            accumulatedTimeLastPause = accumulatedTime
+            
+            counterCover.hidden = true
+            pauseButton.setTitle("Resume", forState: .Normal)
+            pauseButton.titleLabel?.font = UIFont.systemFontOfSize(13)
+            if (accumulatedTime >= minimumWorkTime) {
+                adjustLabel.hidden = false;
+                downButton.hidden = false;
+                upButton.hidden = false;
+                adjustAmountLabel.hidden = false;
+            }
+            else {
+                minimumLabel.hidden = false;
+            }
+        }
+        updateDoneButton()
     }
     
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated)
-        print("viewWillDisappear")
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+    func updateTime() {
+        // Use 60.0 for debugging so time goes faster :)
+        //accumulatedTime = accumulatedTimeLastPause - (startTime?.timeIntervalSinceNow)!
+        accumulatedTime = accumulatedTimeLastPause - ((startTime?.timeIntervalSinceNow)! * 300.0)
+        
+        updateCounter()
+        
+        // "blink" colon to indicate time is running
+        counterCover.hidden = !counterCover.hidden
     }
     
-    func willEnterBackground(notification: NSNotification) {
-        print("willEnterBackground")
+    func updateCounter() {
+        let minutes = (floor(accumulatedAdjustedTime / 60) % 60)
+        let hours = (floor(accumulatedAdjustedTime / 3600.0) % 100)
+        let minutesString = timeFormatter.stringFromNumber(minutes)!
+        let hoursString = timeFormatter.stringFromNumber(hours)!
+        
+        counterLabel.text = "\(hoursString):\(minutesString)"
     }
     
-    // MARK: UITextFieldDelegate
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
+    func updateDoneButton() {
+        doneButton.enabled = !running && accumulatedAdjustedTime >= minimumWorkTime
     }
     
+    
+    /*
     // MARK: - Navigation
-    @IBAction func cancel(sender: UIBarButtonItem) {
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+    }
+    */
+
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let btn = sender as? UIBarButtonItem {
+            if btn == doneButton {
+                delegate?.workSessionFinished(activityString!, startTime: startTime!, duration: accumulatedAdjustedTime)
+            }
+        }
+    }
+
+    @IBAction func cancelPressed(sender: UIBarButtonItem) {
         func cancelWorkSession() {
-            self.pause()
+            self.run(false)
             self.dismissViewControllerAnimated(true, completion: nil)
         }
         if accumulatedTime >= minimumWorkTime {
@@ -98,74 +191,46 @@ class WorkSessionViewController: UIViewController, UINavigationControllerDelegat
             cancelWorkSession()
         }
     }
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        print("WorkSessionViewController prepareForSegue")
-        if segue.identifier == "stopWorkSession" {
-            //stopWorkSessionViewController!.workSessionViewController = self
-            pause()
-            let stopWorkSessionViewController = segue.destinationViewController as? StopWorkSessionViewController
-            stopWorkSessionViewController!.delegate = self.delegate
-            stopWorkSessionViewController?.activityName = self.activityString
-            stopWorkSessionViewController?.startTime = firstStartTime
-            stopWorkSessionViewController?.duration = accumulatedTime
-        }
-    }
-
-    func continueSession() {
-        print("continueSession")
-        if (running == false) {
-            running = true
-            startTime = NSDate()
-            updateTime()
-            print("timer started at \(startTime)")
-            if firstStartTime === nil  {
-                firstStartTime = startTime?.dateByAddingTimeInterval(0.0)
-                let startTimeFormatter = NSDateFormatter()
-                startTimeFormatter.dateFormat = "h:mm a"
-                let startTimeText = startTimeFormatter.stringFromDate(startTime!)
-                startTimeLabel.text = "Started at \(startTimeText)"
-                startTimeLabel.hidden = false
-                minutesStackView.hidden = false
-                print("initial start at \(firstStartTime)")
-            }
-            doneButton.enabled = false
-            timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("updateTime"), userInfo: nil, repeats: true)
-        }
+    
+    /* Pause/Resume button */
+    
+    
+    @IBAction func pauseButtonPressed(sender: AnyObject) {
+        run(!running)
     }
     
-    func pause() {
-        print("pause")
-        if (running == true) {
-            running = false
-            timer?.invalidate()
-            updateTime()
-            accumulatedTimeLastPause = accumulatedTime
-            
-            let timeSinceStart = -(startTime?.timeIntervalSinceNow)!
-            print("timeSinceStart: \(timeSinceStart)")
-            print("accumulatedTime: + \(accumulatedTime)")
-        }
+    //
+    //  MARK: - Adjust time
+    
+    @IBAction func downButtonPressed(sender: UIButton) {
+        changeAdjustTime(adjustTime - adjustIncrement)
     }
     
-    func updateTime() {
-        print("updateTime")
-        accumulatedTime = accumulatedTimeLastPause - (startTime?.timeIntervalSinceNow)!
-        let minutes = Int(floor(accumulatedTime / 60.0))
-        minutesLabel.text = "\(minutes)"
-        doneButton.enabled = accumulatedTime >= minimumWorkTime
+    @IBAction func upButtonPressed(sender: UIButton) {
+        changeAdjustTime(adjustTime + adjustIncrement)
     }
     
-    // MARK: - UINavigationControllerDelegate
-    
-    func navigationController(navigationController: UINavigationController, willShowViewController viewController: UIViewController, animated: Bool) {
-        if (viewController == self) {
-            continueSession()
+    func changeAdjustTime(newAdjustTime: NSTimeInterval) {
+        if (newAdjustTime <= 0.0 && accumulatedTime + newAdjustTime >= 0.0 && newAdjustTime > 1000 * -60.0) {
+            adjustTime = newAdjustTime
+            updateCounter()
+            let minutes = Int(adjustTime / 60.0)
+            adjustAmountLabel.text = "\(minutes) minutes"
+            updateDoneButton()
         }
         else {
-            pause()
+            shakeAdjustTime()
         }
     }
-
+    
+    func shakeAdjustTime() {
+        let animation = CABasicAnimation(keyPath: "position")
+        animation.duration = 0.04
+        animation.repeatCount = 5
+        animation.autoreverses = true
+        animation.fromValue = NSValue(CGPoint: CGPointMake(counterLabel.center.x - 4.0, counterLabel.center.y))
+        animation.toValue = NSValue(CGPoint: CGPointMake(counterLabel.center.x + 4.0, counterLabel.center.y))
+        counterLabel.layer.addAnimation(animation, forKey: "position")
+    }
+    
 }

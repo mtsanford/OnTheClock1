@@ -27,6 +27,10 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
     var popupData = [Dictionary<String, AnyObject>]()
     var anonUser: PFUser?
     
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         activityTextField.delegate = self
@@ -39,16 +43,29 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
         */
         
         userButton.setImage(userImage, forState: .Normal)
-        userButton.tintColor = UIColor.OTCDark()
-        
         historyButton.setImage(historyImage, forState: .Normal)
-        historyButton.tintColor = UIColor.OTCDark()
-
+        
         updateRecentItems(true)
+
+        // UIControl.addTarget will get us change events, but only UI initialted.   The Subclass may programatically change the text too,
+        // so we'll observe the text property using the NSKeyValueObserving protocol
+        activityTextField.addTarget(self, action: "activityTextFieldChanged", forControlEvents: [UIControlEvents.EditingChanged])
+        activityTextField.addObserver(self, forKeyPath: "text", options: .New, context: nil)
     }
+    
     
     override func viewDidAppear(animated: Bool) {
         setUserButtonImage()
+    }
+    
+    func activityTextFieldChanged() {
+        startButton.enabled = activityTextField.text != nil && !activityTextField.text!.isEmpty
+    }
+
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        if keyPath! == "text" {
+            activityTextFieldChanged()
+        }
     }
     
     func updateRecentItems(setActivityText: Bool) {
@@ -94,14 +111,9 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
             workSessionViewController?.delegate = self
             workSessionViewController?.activityString = activityTextField.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
         }
-        if segue.identifier == "showWorkSessionHistory" {
-            //let navController = segue.destinationViewController as? UINavigationController
-            //let workSessionViewHistoryController = navController?.topViewController as? WorkSessionHistoryTableViewController
-        }
     }
     
     @IBAction func unwindToMainView(sender: UIStoryboardSegue) {
-        print("unwindToMainView")
     }
 
     // MARK: WorkSessionControllerDelegate
@@ -124,6 +136,8 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
     
     
     // MARK: UITextFieldDelegate
+    
+    
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true

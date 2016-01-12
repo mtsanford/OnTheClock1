@@ -83,7 +83,7 @@
                                 <inset key="contentEdgeInsets" minX="4" minY="4" maxX="4" maxY="4"/>
                                 <state key="normal" title="Start" backgroundImage="circle"/>
                                 <connections>
-                                    <segue destination="vXb-4x-4SI" kind="show" id="A18-IV-xqg"/>
+                                    <segue destination="vXb-4x-4SI" kind="show" identifier="workSessionSegue" id="A18-IV-xqg"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -264,10 +264,10 @@
             </objects>
             <point key="canvasLocation" x="872" y="349"/>
         </scene>
-        <!--New Work Session View Controller-->
+        <!--Work Session View Controller-->
         <scene sceneID="FY6-x2-7rs">
             <objects>
-                <viewController id="8Yt-nw-Bhi" customClass="NewWorkSessionViewController" customModule="OnTheClock1" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="8Yt-nw-Bhi" customClass="WorkSessionViewController" customModule="OnTheClock1" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Q2Z-sp-Qcy"/>
                         <viewControllerLayoutGuide type="bottom" id="iGi-Ol-wdT"/>
@@ -371,10 +371,14 @@
                     <navigationItem key="navigationItem" id="E8w-Q1-KHk">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="Je2-de-E5z">
                             <connections>
-                                <segue destination="x93-Rs-NoX" kind="unwind" unwindAction="unwindToMainView:" id="cDf-mJ-y6J"/>
+                                <action selector="cancelPressed:" destination="8Yt-nw-Bhi" id="nMk-eh-p2Y"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="6mZ-5U-ZbP"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="6mZ-5U-ZbP">
+                            <connections>
+                                <segue destination="x93-Rs-NoX" kind="unwind" unwindAction="unwindToMainView:" id="b8Y-vX-DoC"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="activityNameLabel" destination="cRw-97-ldM" id="PQI-Ca-OoH"/>
