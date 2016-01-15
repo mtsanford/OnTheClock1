@@ -46,7 +46,13 @@
 		96D8FE121BAC9638004BFBB3 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96D8FE0F1BAC9638004BFBB3 /* Bolts.framework */; };
 		96D8FE131BAC9638004BFBB3 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96D8FE101BAC9638004BFBB3 /* Parse.framework */; };
 		96D8FE141BAC9638004BFBB3 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96D8FE111BAC9638004BFBB3 /* ParseUI.framework */; };
+		96E8D5A31C484E190087C47B /* OTCData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E8D5A21C484E190087C47B /* OTCData.swift */; };
 		96E9F45A1B90D6B900EACD26 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 96E9F4591B90D6B900EACD26 /* libsqlite3.dylib */; };
+		96FDAD7C1C46B84100562E3E /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 96FDAD721C46B84100562E3E /* FMDatabase.m */; };
+		96FDAD7D1C46B84100562E3E /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 96FDAD741C46B84100562E3E /* FMDatabaseAdditions.m */; };
+		96FDAD7E1C46B84100562E3E /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 96FDAD761C46B84100562E3E /* FMDatabasePool.m */; };
+		96FDAD7F1C46B84100562E3E /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 96FDAD781C46B84100562E3E /* FMDatabaseQueue.m */; };
+		96FDAD801C46B84100562E3E /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 96FDAD7B1C46B84100562E3E /* FMResultSet.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,8 +110,20 @@
 		96D8FE0F1BAC9638004BFBB3 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = Frameworks/Bolts.framework; sourceTree = "<group>"; };
 		96D8FE101BAC9638004BFBB3 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = Frameworks/Parse.framework; sourceTree = "<group>"; };
 		96D8FE111BAC9638004BFBB3 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseUI.framework; path = Frameworks/ParseUI.framework; sourceTree = "<group>"; };
+		96E8D5A21C484E190087C47B /* OTCData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTCData.swift; sourceTree = "<group>"; };
 		96E9F4591B90D6B900EACD26 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = /usr/lib/libsqlite3.dylib; sourceTree = "<absolute>"; };
 		96FC38241B99FCBD005B2D36 /* OnTheClock1-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OnTheClock1-Bridging-Header.h"; sourceTree = "<group>"; };
+		96FDAD711C46B84100562E3E /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
+		96FDAD721C46B84100562E3E /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
+		96FDAD731C46B84100562E3E /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
+		96FDAD741C46B84100562E3E /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseAdditions.m; sourceTree = "<group>"; };
+		96FDAD751C46B84100562E3E /* FMDatabasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabasePool.h; sourceTree = "<group>"; };
+		96FDAD761C46B84100562E3E /* FMDatabasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabasePool.m; sourceTree = "<group>"; };
+		96FDAD771C46B84100562E3E /* FMDatabaseQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseQueue.h; sourceTree = "<group>"; };
+		96FDAD781C46B84100562E3E /* FMDatabaseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseQueue.m; sourceTree = "<group>"; };
+		96FDAD791C46B84100562E3E /* FMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDB.h; sourceTree = "<group>"; };
+		96FDAD7A1C46B84100562E3E /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
+		96FDAD7B1C46B84100562E3E /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +197,7 @@
 		9612CCAC1C051902000FC5BB /* supporting files */ = {
 			isa = PBXGroup;
 			children = (
+				96FDAD701C46B7F800562E3E /* fmdb */,
 				969C9C791C41C06000B55EAA /* MonoFont.swift */,
 				96C249161B85660F00AF01BE /* LaunchScreen.storyboard */,
 				96FC38241B99FCBD005B2D36 /* OnTheClock1-Bridging-Header.h */,
@@ -220,6 +239,7 @@
 				966B134C1BAC9CA600951E19 /* Activity.swift */,
 				968CC8C61C11FADA00EBF5C5 /* OTCUser.swift */,
 				9615917E1BA71C6F007A573A /* WorkSession.swift */,
+				96E8D5A21C484E190087C47B /* OTCData.swift */,
 				966B134E1BACE45B00951E19 /* DataSync.swift */,
 				9611DF991BED4BF500E54102 /* Utils.swift */,
 				96D751B41BEFD65C00778DDE /* MyLoginViewController.swift */,
@@ -237,6 +257,24 @@
 				96C249241B85660F00AF01BE /* Info.plist */,
 			);
 			path = OnTheClock1Tests;
+			sourceTree = "<group>";
+		};
+		96FDAD701C46B7F800562E3E /* fmdb */ = {
+			isa = PBXGroup;
+			children = (
+				96FDAD711C46B84100562E3E /* FMDatabase.h */,
+				96FDAD721C46B84100562E3E /* FMDatabase.m */,
+				96FDAD731C46B84100562E3E /* FMDatabaseAdditions.h */,
+				96FDAD741C46B84100562E3E /* FMDatabaseAdditions.m */,
+				96FDAD751C46B84100562E3E /* FMDatabasePool.h */,
+				96FDAD761C46B84100562E3E /* FMDatabasePool.m */,
+				96FDAD771C46B84100562E3E /* FMDatabaseQueue.h */,
+				96FDAD781C46B84100562E3E /* FMDatabaseQueue.m */,
+				96FDAD791C46B84100562E3E /* FMDB.h */,
+				96FDAD7A1C46B84100562E3E /* FMResultSet.h */,
+				96FDAD7B1C46B84100562E3E /* FMResultSet.m */,
+			);
+			name = fmdb;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -347,9 +385,12 @@
 				96630AE91C1FB36200332D3B /* WeekHistoryTableViewController.swift in Sources */,
 				969C9C7A1C41C06000B55EAA /* MonoFont.swift in Sources */,
 				96092D961B8D347C000A6BD4 /* MPGTextField.swift in Sources */,
+				96FDAD7E1C46B84100562E3E /* FMDatabasePool.m in Sources */,
+				96FDAD7C1C46B84100562E3E /* FMDatabase.m in Sources */,
 				960349161C20F682004EB8CD /* OTCColors.swift in Sources */,
 				96630AEB1C1FB81900332D3B /* DayHistoryTableViewController.swift in Sources */,
 				966B134D1BAC9CA600951E19 /* Activity.swift in Sources */,
+				96FDAD7D1C46B84100562E3E /* FMDatabaseAdditions.m in Sources */,
 				969C9C781C41A9FF00B55EAA /* WorkSessionViewController.swift in Sources */,
 				96C249101B85660F00AF01BE /* MainViewController.swift in Sources */,
 				9611DF9A1BED4BF500E54102 /* Utils.swift in Sources */,
@@ -357,8 +398,11 @@
 				96D751B51BEFD65C00778DDE /* MyLoginViewController.swift in Sources */,
 				966B134F1BACE45B00951E19 /* DataSync.swift in Sources */,
 				96630AE51C1F993500332D3B /* WorkSessionFullCell.swift in Sources */,
+				96E8D5A31C484E190087C47B /* OTCData.swift in Sources */,
 				96202E791BED15AB001EB6C6 /* DebugViewController.swift in Sources */,
+				96FDAD7F1C46B84100562E3E /* FMDatabaseQueue.m in Sources */,
 				96C2490E1B85660F00AF01BE /* AppDelegate.swift in Sources */,
+				96FDAD801C46B84100562E3E /* FMResultSet.m in Sources */,
 				963057BE1C0D115F00401840 /* WorkSessionSummaryCell.swift in Sources */,
 				969947FC1C1753A70030DDE0 /* HistoryTableViewController.swift in Sources */,
 				96630AE71C1FA9B500332D3B /* MonthHistoryTableViewController.swift in Sources */,

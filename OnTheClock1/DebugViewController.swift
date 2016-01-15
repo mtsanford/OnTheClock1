@@ -13,13 +13,24 @@ class DebugViewController: UIViewController {
     
     var someString = "initial value"
     
+    var databaseQueue: FMDatabaseQueue?
+    
     deinit {
         print("deinit")
+        databaseQueue?.close()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        let filemgr = NSFileManager.defaultManager()
+        let dirPaths = filemgr.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
+        
+        let databasePath = dirPaths[0].URLByAppendingPathComponent("testdatabase.db").path!
+        print(databasePath)
+        
+        databaseQueue = FMDatabaseQueue(path: databasePath)
+        
         // Do any additional setup after loading the view.
     }
     
@@ -29,6 +40,13 @@ class DebugViewController: UIViewController {
         createTestButtons()
     }
 
+    var dismissed = false;
+    
+    override func viewDidDisappear(animated: Bool) {
+        
+        dismissed = true;
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -37,21 +55,17 @@ class DebugViewController: UIViewController {
     // Development experiment functions
     
     let actions = [
-        [ "action": "saveNew", "text": "new local WS"],
+        [ "action": "userInfo", "text": "userInfo"],
         [ "action": "syncToParse", "text": "datasync.syncToParse"],
         [ "action": "saveToParse", "text": "ds.saveProvisionalWorkSessionsToParse"],
         [ "action": "unpinAll", "text": "Unpin all"],
-        [ "action": "letsCorruptTheDatastore", "text": "letsCorruptTheDatastore"],
-        [ "action": "pinPostFirst", "text": "pinPostFirst"],
         [ "action": "flatSave", "text": "flatSave"],
-        [ "action": "makePost", "text": "makePost"],
         [ "action": "makeWorkSessions", "text": "makeWorkSessions"],
-        [ "action": "timeZone", "text": "timeZone"],
-        [ "action": "testMoment", "text": "testMoment"],
-        [ "action": "timer", "text": "run timer"],
         [ "action": "getDate", "text": "get firstTime from user"],
         [ "action": "summary", "text": "get WS summary"],
         [ "action": "setFirstTime", "text": "setFirstTime"],
+        [ "action": "testDatabase", "text": "testDatabase"],
+        [ "action": "backgroundQuery", "text": "backgroundQuery"],
     ]
     
     func createTestButtons() {
@@ -72,6 +86,11 @@ class DebugViewController: UIViewController {
         }
         
         
+    }
+    
+    func userInfo(sender: AnyObject) {
+        print(PFUser.currentUser()?.objectId)
+        print(PFUser.currentUser()!)
     }
     
     func unpinAll(sender: AnyObject) {
@@ -97,19 +116,6 @@ class DebugViewController: UIViewController {
             return task
         }
     }
-    
-    func saveNew(sender: AnyObject) {
-        print("saveNew");
-        
-        let now = NSDate()
-        DataSync.sharedInstance.newWorkSession("activity2", start: now, duration: 50).continueWithSuccessBlock {
-            (task: BFTask!) -> AnyObject! in
-            print("saved new workSession to local store");
-            return task
-        }
-        
-    }
-    
     
     func saveToParse(sender: AnyObject) {
         print("saveToParse");
@@ -156,91 +162,6 @@ class DebugViewController: UIViewController {
     }
 
     
-    func letsCorruptTheDatastore(sender: AnyObject) {
-        
-        // create a post with a comment and pin it
-        let post1 = PFObject(className:"Post")
-        post1["text"] = "I am post #1"
-        let comment1 = PFObject(className:"Comment")
-        comment1["post"] = post1
-        
-        comment1.pinInBackground().continueWithSuccessBlock {
-            (task: BFTask!) -> AnyObject! in
-            
-            // Make another post with comment and pin it
-            let post2 = PFObject(className:"Post")
-            post2["text"] = "I am post #2"
-            let comment2 = PFObject(className:"Comment")
-            comment2["post"] = post2
-            return comment2.pinInBackground()
-            }.continueWithSuccessBlock {
-                (task: BFTask!) -> AnyObject! in
-                
-                // Now try to query local Post objects
-                let query = PFQuery(className:"Post")
-                query.fromLocalDatastore()
-                return query.findObjectsInBackground()
-            }.continueWithBlock {
-                (task: BFTask!) -> AnyObject! in
-                if (task.error != nil) { print(task.error) }
-                else if (task.result != nil) { print(task.result) }
-                return nil
-        }
-    }
-    
-    func pinPostFirst(sender: AnyObject) {
-        
-        // create a post with a comment and pin it
-        let post1 = PFObject(className:"Post")
-        post1["text"] = "I am post #1"
-        let comment1 = PFObject(className:"Comment")
-        comment1["post"] = post1
-        
-        let post2 = PFObject(className:"Post")
-        post2["text"] = "I am post #2"
-        let comment2 = PFObject(className:"Comment")
-        comment2["post"] = post2
-
-        post1.pinInBackground().continueWithSuccessBlock {
-            (task: BFTask!) -> AnyObject! in
-            return comment1.pinInBackground()
-        }.continueWithSuccessBlock {
-            (task: BFTask!) -> AnyObject! in
-            return post2.pinInBackground()
-        }.continueWithSuccessBlock {
-            (task: BFTask!) -> AnyObject! in
-            return comment2.pinInBackground()
-        }.continueWithSuccessBlock {
-                (task: BFTask!) -> AnyObject! in
-                
-                // Now try to query local Post objects
-                let query = PFQuery(className:"Post")
-                query.fromLocalDatastore()
-                return query.findObjectsInBackground()
-        }.continueWithBlock {
-                (task: BFTask!) -> AnyObject! in
-                if (task.error != nil) { print(task.error) }
-                else if (task.result != nil) { print(task.result) }
-                return nil
-        }
-    }
-    
-    func makePost(sender: AnyObject) {
-        
-        // create a post with a comment and pin it
-        let post1 = PFObject(className:"Post")
-        post1["text"] = "I am another post"
-        let comment1 = PFObject(className:"Comment")
-        comment1["post"] = post1
-        
-        comment1.pinInBackground().continueWithBlock {
-            (task: BFTask!) -> AnyObject! in
-            if (task.error != nil) { print(task.error) }
-            else if (task.result != nil) { print(task.result) }
-            return nil
-        }
-    }
-    
     func makeWorkSessions(sender: AnyObject) {
         let localTimeZone = NSTimeZone.localTimeZone()
 
@@ -280,49 +201,6 @@ class DebugViewController: UIViewController {
         }
         
     }
-    
-    func timeZone(sender: AnyObject) {
-        let currentLocale = NSLocale.currentLocale()
-        print(currentLocale)
-        print(currentLocale.localeIdentifier)
-        print(NSTimeZone.defaultTimeZone().name)
-    }
-    
-    func testMoment(sender: AnyObject) {
-        PFCloud.callFunctionInBackground("testMoment", withParameters: nil).continueWithBlock {
-            (task: BFTask!) -> AnyObject! in
-            print("testMoment returned")
-            self.someString = "testMoment done"
-            return nil
-        }
-    }
-    
-    func timer(sender: AnyObject) {
-        causeDelay().continueWithBlock { (task: BFTask!) -> AnyObject! in
-            print("delay done")
-            self.someString = "timer fired"
-            return nil
-        }
-    }
-    var ourDelayTask = BFTaskCompletionSource()
-    var timer: NSTimer? = nil
-    
-    func causeDelay() -> BFTask {
-        timer = NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: "timerFired", userInfo: nil, repeats: true)
-        return ourDelayTask.task
-    }
-    func timerFired() {
-        timer?.invalidate()
-        timer = nil
-        ourDelayTask.setResult(true)
-    }
-    
-    func getDate(sender: AnyObject) {
-        let user = PFUser.currentUser() as? OTCUser
-        print(user?.firstTime)
-    }
-
-    
     
     func summary(sender: AnyObject) {
         var parameters = Dictionary<NSObject, AnyObject>()
@@ -372,8 +250,84 @@ class DebugViewController: UIViewController {
             return nil
         }
     }
+
+    func testDatabase(sender: AnyObject) {
+    
+        let filemgr = NSFileManager.defaultManager()
+        let dirPaths = filemgr.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
+        
+        let databasePath = dirPaths[0].URLByAppendingPathComponent("testdatabase.db").path!
+        print(databasePath)
+        
+        if !filemgr.fileExistsAtPath(databasePath as String) {
+        
+        let contactDB = FMDatabase(path: databasePath as String)
+        
+        if contactDB == nil {
+            print("Error: \(contactDB.lastErrorMessage())")
+        }
+        
+        if contactDB.open() {
+            var sql_stmt = "CREATE TABLE IF NOT EXISTS ACTIVITY (ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT, LAST INTEGER)"
+            if !contactDB.executeStatements(sql_stmt) {
+                print("Error: \(contactDB.lastErrorMessage())")
+            }
+            sql_stmt = "INSERT INTO ACTIVITY (NAME, LAST) VALUES ('test', 1000)"
+            if !contactDB.executeStatements(sql_stmt) {
+                print("Error: \(contactDB.lastErrorMessage())")
+            }
+            contactDB.close()
+            } else {
+                print("Error: \(contactDB.lastErrorMessage())")
+            }
+        }
+    }
+
+    
+    func backgroundQuery(sender: AnyObject) {
+        getTheData() {
+            (result: [(String, Int)]) -> Void in
+            if self.dismissed {
+                print("dismissed so not updating UI")
+                return
+            }
+            dispatch_async(dispatch_get_main_queue()) { () -> Void in
+                print(result)
+            }
+        }
+        /*
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
+            NSThread.sleepForTimeInterval(3.0)
+            dispatch_async(dispatch_get_main_queue()) { () -> Void in
+                print("done")
+            }
+        }
+        */
+    }
     
     
+    func getTheData(cb: [(String, Int)] -> Void) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
+            var returnValue = [(String, Int)]()
+            self.databaseQueue?.inDatabase({ (db: FMDatabase!) -> Void in
+                let sql_stmt = "SELECT * FROM ACTIVITY WHERE 1"
+                let result = db.executeQuery(sql_stmt, withArgumentsInArray: nil)
+                if (result != nil) {
+                    while result.next() {
+                        //let d = result.resultDict()
+                        returnValue.append((result.stringForColumn("name"), Int(result.intForColumn("last"))))
+                    }
+                    NSThread.sleepForTimeInterval(3.0)
+                    cb(returnValue)
+                    print("after cb")
+                }
+                else { print("Error: \(db.lastErrorMessage())") }
+                
+            })
+            print("after inDatabase")
+        }
+        
+    }
     
     
     /*

@@ -30,15 +30,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)
         
         PFUser.enableAutomaticUser()
+
+        print("Current on startup: \(PFUser.currentUser()?.objectId)")
+        print(PFUser.currentUser())
         
-        //let ddd = UIImage()
-        //UINavigationBar.appearance().tintColor = UIColor.OTCDark()
-        //UINavigationBar.appearance().setBackgroundImage(blankImage, forBarPosition: UIBarPosition.Any, barMetrics: UIBarMetrics.Default)
-        //UINavigationBar.appearance().shadowImage = blankImage
-        
-        
-        
-        //self.window?.tintColor = UIColor.OTCDark()
+        OTCData.initDatabase()
         
         return true
     }

@@ -118,6 +118,11 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
 
     // MARK: WorkSessionControllerDelegate
     func workSessionFinished(activityName: String, startTime: NSDate, duration: NSNumber) {
+        
+        let workSessionInfo = WorkSessionInfo(startTime: startTime, duration: duration.doubleValue, activityName: activityName)
+        OTCData.addWorkSession(workSessionInfo)
+        return;
+        
         DataSync.sharedInstance.newWorkSession(activityName, start: startTime, duration: duration).continueWithSuccessBlock {
             (task: BFTask!) -> AnyObject! in
             // Only sync to parse if the user is logged in
@@ -202,6 +207,8 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
             alert.addAction(UIAlertAction(title: "Sign out", style: UIAlertActionStyle.Default, handler: {
                 alert in
                 PFUser.logOut()
+                print("Current user after logout: \(PFUser.currentUser()?.objectId)")
+                print(PFUser.currentUser())
                 self.setUserButtonImage()
                 self.activityTextField.text = ""
                 self.updateRecentItems(true)
@@ -220,6 +227,10 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
         print("login with user")
         self.dismissViewControllerAnimated(true, completion: nil)
         setUserButtonImage()
+        
+        print("Current user after login: \(PFUser.currentUser()?.objectId)")
+        print(PFUser.currentUser())
+
         
         DataSync.sharedInstance.convertAnonymousData(self.anonUser!).continueWithSuccessBlock {
             (task: BFTask!) -> AnyObject! in
