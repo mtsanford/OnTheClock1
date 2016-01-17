@@ -2,21 +2,138 @@ var moment = require('cloud/moment-timezone-with-data.js');
 var WorkSession = Parse.Object.extend("WorkSession");
 var Activity = Parse.Object.extend("Activity");
 
-
 /*
 */
-Parse.Cloud.define("testMoment", function(request, response) {
-	var now = moment();
-	now.locale('be')	
-	console.log("weekday " + now.weekday())
-	console.log("locale " + now.locale())
-	console.log("now in America/Los_Angeles = " + now.tz('America/Los_Angeles').format());
-	
-	var user = request.user;
-	var firstDate = user.get*
-	
-	response.success()
+Parse.Cloud.define("sync", function(request, response) {
+	console.log("sync: \n" + JSON.stringify(request.params) );
+	response.success();
+
+	addNewWorkSessions(response.params.newWorkSessions).then( function(result) {
+			return getMostRecent(response.params.newWorkSessions);
+	}).then(function(result) {
+		
+	}.then(function(result) {
+		
+	}, function(error) {
+		
+	})
+
 });
+
+
+function addNewWorkSessions(newWorkSessions, user) {
+	var activityCacheByName = {},
+	    activityCacheById = {},
+		workSessionsToSave = [],
+	    promise = new Parse.Promise().as();
+
+		function getActivity(workSessionInfo) {
+		    var promise = new Parse.Promise();
+			var aQuery = new Parse.Query(Activity);
+	
+			if (workSessionInfo.activityId) {
+				if (activityCacheById[workSessionInfo.activityId]) {
+					promise = Parse.Promise.as(activityCacheById[workSessionInfo.activityId]);
+				}
+				else {
+					aQuery.get(workSessionInfo.activityId).then(function(activity) {
+						if (activity) {
+							activityCacheById[workSessionInfo.activityId] = activity;
+							promise.resolve(activity);
+						}
+						else {
+							promise.reject("New WorkSession refers to non-existent Activity id");
+						}
+					});
+				}
+			else if (workSessionInfo.activityName) {
+				if (activityCacheByName[workSessionInfo.activityName]) {
+					promise = Parse.Promise.as(activityCacheByName[workSessionInfo.activityName]);
+				}
+				else {
+					aQuery.equalTo("name", activityName);
+					aQuery.equalTo("user", user);
+					aQuery.first().then(function(activity) {
+						if (!activity) {
+							activity = new Activity();
+							activity.set("name", activityName);
+							activity.set("user", user);
+							activity.set("provisional", false);
+						}
+						activityCacheByName[workSessionInfo.activityName] = activity;
+						promise.resolve(activity);
+					});
+				}
+			}
+			else {
+				promise = Parse.Promise.error("New WorkSession has no Activity name or id");
+			}
+	
+			return promise;
+		}
+
+
+	_.each(newWorkSessions), function(workSessionInfo) {
+		
+		promise = promise.then(function() {
+
+			var wsQuery = new Parse.Query(WorkSession);
+			wsQuery.equalTo("start", workSessionInfo.startTime);
+			wsQuery.equalTo("user", user);
+			return wsQuery.first().then(function(result) {
+				if (result) {
+					// Worksession for this time already added
+					return Parse.Promise.as();
+				}
+				
+				workSession = new WorkSession();
+				workSession.set("user", user);
+				workSession.set("start", workSessionInfo.startTime);
+				workSession.set("duration", workSessionInfo.duration);		
+				workSession.set("provisional", false);
+				workSessionsToSave.push(workSession);
+				
+				return getActivity(workSessionInfo).then(function(activity) {
+					workSession.set("activity", activity);
+					var last = activity.get("last");
+					if (!last || workSessionInfo.startTime.getTime() > last.getTime()) {
+						activity.set("last", workSessionInfo.startTime); 
+					}
+					var total = activity.get("total") || 0.0;
+					activity.set("total", workSessionInfo.duration + total);
+				});
+			});
+			
+		});
+	});
+	
+	promise = promise.then(function() {
+		return Parse.Object.saveAll(workSessionsToSave);
+	});
+	
+	return promise;
+}
+
+// return a promise who's result is the Activity of the activity with activityName,
+// creating a new (unsaved) Activity if need be.
+function getActivity(activityName, user) {
+    var promise = new Parse.Promise();
+	var aQuery = new Parse.Query(Activity);
+	
+	aQuery.equalTo("name", activityName);
+	aQuery.equalTo("user", user);
+	aQuery.first().then(function(activity) {
+		if (!activity) {
+			activity = new Activity();
+			activity.set("name", activityName);
+			activity.set("user", user);
+			activity.set("provisional", false);
+		}
+		promise.resolve(activity);
+	});
+	
+	return promise;
+}
 
 /*
 */

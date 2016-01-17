@@ -24,6 +24,7 @@ class OTCData {
     
     static var dbQueue: FMDatabaseQueue?
     static var currentUserId = 0
+    static var synching = false
     
     // synchronous
     static func initDatabase() {
@@ -34,18 +35,22 @@ class OTCData {
         let databasePath = dirPaths[0].URLByAppendingPathComponent("smallstep.db").path!
         print(databasePath)
 
-        if filemgr.fileExistsAtPath(databasePath as String) { return };
-
+        let dbAlreadyExists = filemgr.fileExistsAtPath(databasePath as String)
+        
         dbQueue = FMDatabaseQueue(path: databasePath as String)
+        
+        if dbAlreadyExists { return }
         
         dbQueue?.inDatabase({ (db) -> Void in
         
             // Anonymous user is specified by empty string ("") for userid
+            // parseid is the Parse objectId.
+            // parseid == '' means that the record does not have an id in Parse yet
             
             sql_stmt =
                   "CREATE TABLE IF NOT EXISTS activity ("
                 + "  id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "  parseid TEXT, "
+                + "  parseid TEXT DEFAULT '', "
                 + "  userid TEXT NOT NULL, "
                 + "  name TEXT, "
                 + "  lastTime INTEGER, "
@@ -59,9 +64,8 @@ class OTCData {
             sql_stmt =
                   "CREATE TABLE IF NOT EXISTS worksession ("
                 + "  id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "  parseid TEXT, "
+                + "  parseid TEXT DEFAULT '', "
                 + "  userid TEXT NOT NULL, "
-                + "  needsPush INTEGER DEFAULT 1,"
                 + "  activityid INTEGER, "
                 + "  startTime INTEGER, "
                 + "  duration REAL "
@@ -80,7 +84,12 @@ class OTCData {
             if !db.executeStatements(sql_stmt) {
                 print("Error: \(db.lastErrorMessage())")
             }
-        
+            
+            sql_stmt = "CREATE INDEX parseid_index ON worksession (parseid, userid)"
+            if !db.executeStatements(sql_stmt) {
+                print("Error: \(db.lastErrorMessage())")
+            }
+            
         })
         
     }
@@ -144,4 +153,59 @@ class OTCData {
         
     }
     
+    // asynchronously since to parse.   Use NSNotification
+    static func syncToParse() {
+        let userId = PFUser.currentUser()?.objectId ?? ""
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let lastSyncDate = defaults.objectForKey("lastSyncDate") as? NSDate ?? NSDate(timeIntervalSince1970: 0.0)
+        var newWorkSessions = [NSDictionary]()
+
+        print(lastSyncDate)
+        
+        if (synching == true) { return }
+        synching = true;
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
+            OTCData.dbQueue?.inDatabase({ (db: FMDatabase!) -> Void in
+                let needsPushQuery =
+                      "SELECT ws.startTime AS startTime, ws.duration AS duration, act.name AS activityName, act.parseid as activityParseId "
+                    + "FROM worksession AS ws JOIN activity AS act ON act.id = ws.activityid "
+                    + "WHERE ws.userid = ? AND ws.parseid = ''"
+                let result = db.executeQuery(needsPushQuery, withArgumentsInArray: [userId])
+                if (result == nil) {
+                    print("Error: \(db.lastErrorMessage())")
+                    OTCData.synching = false
+                    return
+                }
+                while result.next() {
+                    var workSession = [
+                        "startTime" :  NSDate(timeIntervalSince1970: Double(result.longForColumn("startTime"))),
+                        "duration" : result.doubleForColumn("duration"),
+                        "activityName" : result.stringForColumn("activityName")
+                    ]
+                    if result.stringForColumn("activityParseId") == "" {
+                        workSession["activityName"] = result.stringForColumn("activityName")
+                    }
+                    else {
+                        workSession["activityId"] = result.stringForColumn("activityParseId")
+                    }
+                    newWorkSessions.append(workSession)
+                }
+                
+                var parameters = Dictionary<NSObject, AnyObject>()
+                parameters["newWorkSessions"] = newWorkSessions
+                parameters["lastSyncDate"] = lastSyncDate
+                PFCloud.callFunctionInBackground("sync", withParameters: parameters).continueWithBlock {
+                    (task: BFTask!) -> AnyObject! in
+                    print("sync returned")
+                    OTCData.synching = false
+                    return nil;
+                }
+                dispatch_async(dispatch_get_main_queue()) { () -> Void in
+                    print(newWorkSessions);
+                }
+            })
+        }
+    }
+
 }

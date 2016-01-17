@@ -121,6 +121,8 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
         
         let workSessionInfo = WorkSessionInfo(startTime: startTime, duration: duration.doubleValue, activityName: activityName)
         OTCData.addWorkSession(workSessionInfo)
+        
+        OTCData.syncToParse()
         return;
         
         DataSync.sharedInstance.newWorkSession(activityName, start: startTime, duration: duration).continueWithSuccessBlock {
