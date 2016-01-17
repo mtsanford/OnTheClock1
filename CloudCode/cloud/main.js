@@ -1,22 +1,75 @@
 var moment = require('cloud/moment-timezone-with-data.js');
+var _ = require("underscore");
+
 var WorkSession = Parse.Object.extend("WorkSession");
 var Activity = Parse.Object.extend("Activity");
 
+var log = {
+	add: function(text) {
+		this.theText += text + "\n";
+	},
+	print: function() {
+		console.log(this.theText);
+		this.theText = "";
+	},
+	
+	theText: ""
+}
+
 /*
+	// Add new work sessions, then return to the client all WorkSessions and Activities
+	// with a more recent updatedAt time than the client requested.
 */
 Parse.Cloud.define("sync", function(request, response) {
-	console.log("sync: \n" + JSON.stringify(request.params) );
-	response.success();
+	
+	var finalResult = { workSessions: [], activities: [], newLastSyncDate: Date() },
+	    user = request.user,
+	    lastSyncDate = request.params.lastSyncDate,
+	    newLastSyncDate = lastSyncDate,
+	    wsQuery = new Parse.Query(WorkSession),
+	    aQuery = new Parse.Query(Activity);
 
-	addNewWorkSessions(response.params.newWorkSessions).then( function(result) {
-			return getMostRecent(response.params.newWorkSessions);
-	}).then(function(result) {
-		
-	}.then(function(result) {
-		
+	addNewWorkSessions(request.params.newWorkSessions, user).then( function() {
+		wsQuery.equalTo("user", user);
+		wsQuery.greaterThan("updatedAt", lastSyncDate);
+		return wsQuery.find();
+	}).then(function(results) {
+		_.each(results, function(result) {
+			var workSessionInfo = {
+				id: result.id,
+				activityId: result.get("activity").id,
+				startTime: result.get("start"),
+				duration: result.get("duration"),
+				adjustment: result.get("adjustment")
+			};
+			finalResult.workSessions.push(workSessionInfo);
+			if (result.updatedAt.getTime() > newLastSyncDate.getTime()) {
+				newLastSyncDate = result.updatedAt;
+			}
+		});
+		aQuery.equalTo("user", user);
+		aQuery.greaterThan("updatedAt", lastSyncDate);
+		return aQuery.find();
+	}).then(function(results) {
+		_.each(results, function(result) {
+			var activityInfo = {
+				id: result.id,
+				name: result.get("name"),
+				last: result.get("last"),
+				total: result.get("total")
+			};
+			finalResult.activities.push(activityInfo);
+			if (result.updatedAt.getTime() > newLastSyncDate.getTime()) {
+				newLastSyncDate = result.updatedAt;
+			}
+		});
+		finalResult.newLastSyncDate = newLastSyncDate;
+		log.print();
+		response.success(finalResult);
 	}, function(error) {
-		
-	})
+		log.print();
+		response.error(error);
+	});
 
 });
 
@@ -25,30 +78,36 @@ function addNewWorkSessions(newWorkSessions, user) {
 	var activityCacheByName = {},
 	    activityCacheById = {},
 		workSessionsToSave = [],
-	    promise = new Parse.Promise().as();
-
+	    promise = new Parse.Promise.as();
+		
 		function getActivity(workSessionInfo) {
-		    var promise = new Parse.Promise();
-			var aQuery = new Parse.Query(Activity);
+		    var promise = new Parse.Promise(),
+			    aQuery = new Parse.Query(Activity),
+			    activityId = workSessionInfo.activityId,
+			    activityName = workSessionInfo.activityName;
 	
-			if (workSessionInfo.activityId) {
-				if (activityCacheById[workSessionInfo.activityId]) {
-					promise = Parse.Promise.as(activityCacheById[workSessionInfo.activityId]);
+			if (activityId) {
+				if (activityCacheById[activityId]) {
+					log.add("hit activityCacheById " + activityId);
+					promise = Parse.Promise.as(activityCacheById[activityId]);
 				}
 				else {
-					aQuery.get(workSessionInfo.activityId).then(function(activity) {
-						if (activity) {
-							activityCacheById[workSessionInfo.activityId] = activity;
+					aQuery.get(activityId).then(
+						function(activity) {
+							log.add("fetched activity by id " + activityId);
+							activityCacheById[activityId] = activity;
 							promise.resolve(activity);
+						},
+						function(error) {
+							promise.reject("Problem getting the new WorkSession's activity");
 						}
-						else {
-							promise.reject("New WorkSession refers to non-existent Activity id");
-						}
-					});
+					);
 				}
-			else if (workSessionInfo.activityName) {
-				if (activityCacheByName[workSessionInfo.activityName]) {
-					promise = Parse.Promise.as(activityCacheByName[workSessionInfo.activityName]);
+			}
+			else if (activityName) {
+				if (activityCacheByName[activityName]) {
+					log.add("hit activityCacheByName " + activityName);
+					promise = Parse.Promise.as(activityCacheByName[activityName]);
 				}
 				else {
 					aQuery.equalTo("name", activityName);
@@ -58,49 +117,57 @@ function addNewWorkSessions(newWorkSessions, user) {
 							activity = new Activity();
 							activity.set("name", activityName);
 							activity.set("user", user);
-							activity.set("provisional", false);
+							log.add("new activity " + activityName);
+						} else {
+							log.add("fetched activity by name " + activityName);
 						}
-						activityCacheByName[workSessionInfo.activityName] = activity;
+						activityCacheByName[activityName] = activity;
 						promise.resolve(activity);
 					});
 				}
 			}
 			else {
-				promise = Parse.Promise.error("New WorkSession has no Activity name or id");
+				promise = Parse.Promise.error("workSession has no Activity name or id");
 			}
 	
 			return promise;
 		}
 
+		log.add("newWorkSessions length: " + newWorkSessions.length);
 
-	_.each(newWorkSessions), function(workSessionInfo) {
+	_.each(newWorkSessions, function(workSessionInfo) {
 		
 		promise = promise.then(function() {
 
-			var wsQuery = new Parse.Query(WorkSession);
-			wsQuery.equalTo("start", workSessionInfo.startTime);
+			var wsQuery = new Parse.Query(WorkSession),
+			    startTime = workSessionInfo.startTime;
+			
+			wsQuery.equalTo("start", startTime);
 			wsQuery.equalTo("user", user);
 			return wsQuery.first().then(function(result) {
 				if (result) {
 					// Worksession for this time already added
+					log.add("existing WorkSession " + startTime);
 					return Parse.Promise.as();
 				}
 				
 				workSession = new WorkSession();
 				workSession.set("user", user);
-				workSession.set("start", workSessionInfo.startTime);
+				workSession.set("start", startTime);
 				workSession.set("duration", workSessionInfo.duration);		
-				workSession.set("provisional", false);
-				workSessionsToSave.push(workSession);
+				workSession.set("adjustment", workSessionInfo.adjustment);		
 				
+				log.add("new WorkSession: " + startTime)
 				return getActivity(workSessionInfo).then(function(activity) {
 					workSession.set("activity", activity);
 					var last = activity.get("last");
-					if (!last || workSessionInfo.startTime.getTime() > last.getTime()) {
-						activity.set("last", workSessionInfo.startTime); 
+					if (!last || startTime.getTime() > last.getTime()) {
+						activity.set("last", startTime); 
 					}
 					var total = activity.get("total") || 0.0;
 					activity.set("total", workSessionInfo.duration + total);
+					workSessionsToSave.push(workSession);
+				}, function(error) {
 				});
 			});
 			
@@ -114,26 +181,6 @@ function addNewWorkSessions(newWorkSessions, user) {
 	return promise;
 }
 
-// return a promise who's result is the Activity of the activity with activityName,
-// creating a new (unsaved) Activity if need be.
-function getActivity(activityName, user) {
-    var promise = new Parse.Promise();
-	var aQuery = new Parse.Query(Activity);
-	
-	aQuery.equalTo("name", activityName);
-	aQuery.equalTo("user", user);
-	aQuery.first().then(function(activity) {
-		if (!activity) {
-			activity = new Activity();
-			activity.set("name", activityName);
-			activity.set("user", user);
-			activity.set("provisional", false);
-		}
-		promise.resolve(activity);
-	});
-	
-	return promise;
-}
 
 /*
 */

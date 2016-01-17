@@ -15,7 +15,6 @@ class Activity: PFObject, PFSubclassing {
     @NSManaged var last: NSDate
     @NSManaged var totalTime: NSNumber
     @NSManaged var user: PFUser!
-    @NSManaged var provisional: Bool
     
     override class func initialize() {
         struct Static {

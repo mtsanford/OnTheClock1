@@ -15,7 +15,6 @@ class WorkSession: PFObject, PFSubclassing {
     @NSManaged var start: NSDate
     @NSManaged var duration: NSNumber
     @NSManaged var user: PFUser!
-    @NSManaged var provisional: Bool
     
     override class func initialize() {
         struct Static {

@@ -40,7 +40,7 @@ class DataSync {
         ourWorkSession.start = start
         ourWorkSession.duration = duration
         ourWorkSession.user = PFUser.currentUser()
-        ourWorkSession.provisional = true
+        //ourWorkSession.provisional = true
         
         var ourActivity: Activity! = nil
         let activityQuery: PFQuery! = Activity.query()
@@ -54,7 +54,7 @@ class DataSync {
                 ourActivity = Activity()
                 ourActivity.name = activityName
                 ourActivity.user = PFUser.currentUser()
-                ourActivity.provisional = true
+                //ourActivity.provisional = true
                 ourActivity.totalTime = 0.0
             } else {
                 ourActivity = task.result as! Activity

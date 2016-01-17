@@ -116,15 +116,19 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
     @IBAction func unwindToMainView(sender: UIStoryboardSegue) {
     }
 
+    @IBAction func syncPressed(sender: UIButton) {
+        OTCData.syncToParse()
+    }
+    
     // MARK: WorkSessionControllerDelegate
-    func workSessionFinished(activityName: String, startTime: NSDate, duration: NSNumber) {
+    func workSessionFinished(workSessionInfo: WorkSessionInfo) {
         
-        let workSessionInfo = WorkSessionInfo(startTime: startTime, duration: duration.doubleValue, activityName: activityName)
         OTCData.addWorkSession(workSessionInfo)
         
         OTCData.syncToParse()
         return;
         
+        /*
         DataSync.sharedInstance.newWorkSession(activityName, start: startTime, duration: duration).continueWithSuccessBlock {
             (task: BFTask!) -> AnyObject! in
             // Only sync to parse if the user is logged in
@@ -139,6 +143,7 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
             self.updateRecentItems(true)
             return nil
         }
+        */
     }
     
     

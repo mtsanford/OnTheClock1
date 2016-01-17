@@ -9,7 +9,7 @@
 import UIKit
 
 protocol WorkSessionControllerDelegate: class {
-    func workSessionFinished(activityName: String, startTime: NSDate, duration: NSNumber)
+    func workSessionFinished(workSessionInfo: WorkSessionInfo)
 }
 
 
@@ -171,7 +171,13 @@ class WorkSessionViewController: UIViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let btn = sender as? UIBarButtonItem {
             if btn == doneButton {
-                delegate?.workSessionFinished(activityString!, startTime: startTime!, duration: accumulatedAdjustedTime)
+                let workSessionInfo = WorkSessionInfo(
+                    activityName: activityString!,
+                    startTime: startTime!,
+                    duration: accumulatedAdjustedTime,
+                    adjustment: adjustTime
+                )
+                delegate?.workSessionFinished(workSessionInfo)
             }
         }
     }
