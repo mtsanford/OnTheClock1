@@ -45,7 +45,19 @@ class OTCData {
         
         dbQueue?.inDatabase({ (db) -> Void in
         
-            // Anonymous user is specified by empty string ("") for userid
+            // Anonymous user is specified by empty string ("") for parseid
+            // (this is different behavior than other two tables)
+            sql_stmt =
+                  "CREATE TABLE IF NOT EXISTS user ("
+                + "  id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "  parseid TEXT UNIQUE NOT NULL, "
+                + "  lastSyncDate INTEGER "
+                + ")"
+            
+            if !db.executeStatements(sql_stmt) {
+                print("Error: \(db.lastErrorMessage())")
+            }
+
             // parseid is the Parse objectId.
             // parseid == NULL means that the record does not have an id in Parse yet
             
@@ -156,121 +168,143 @@ class OTCData {
         
     }
     
-    // asynchronously since to parse.   Use NSNotification
+    // Asynchronously sync to parse.   Call on main thread!  Uses NSNotification if data has changed.
     static func syncToParse() {
         let userId = PFUser.currentUser()?.objectId ?? ""
-        let defaults = NSUserDefaults.standardUserDefaults()
-        let lastSyncDate = defaults.objectForKey("lastSyncDate") as? NSDate ?? NSDate(timeIntervalSince1970: 0.0)
-        var newWorkSessions = [NSDictionary]()
 
-        print(lastSyncDate)
-        
-        if (synching == true) { return }
-        synching = true;
+        if (OTCData.synching == true) { return }
+        OTCData.synching = true;
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
+            var newWorkSessions = [NSDictionary]()
+            var lastSyncDate: NSDate!
+            var fail = false
+            
             OTCData.dbQueue?.inDatabase({ (db: FMDatabase!) -> Void in
+                
+                // get the last time this user synched to Parse
+                let userQuery = "SELECT lastSyncDate FROM user WHERE parseid = ?"
+                let dateResult = db.executeQuery(userQuery, withArgumentsInArray: [userId ?? ""])
+                if (dateResult == nil) { print("Error: \(db.lastErrorMessage())"); fail = true; return; }
+                lastSyncDate = NSDate(timeIntervalSince1970: (dateResult.next() ?  dateResult.doubleForColumn("") : 0.0))
+
                 let needsPushQuery =
                       "SELECT ws.startTime AS startTime, ws.duration AS duration, ws.adjustment as adjustment, act.name AS activityName, act.parseid as activityParseId "
                     + "FROM worksession AS ws JOIN activity AS act ON act.id = ws.activityid "
                     + "WHERE ws.userid = ? AND ws.parseid IS NULL"
-                let result = db.executeQuery(needsPushQuery, withArgumentsInArray: [userId])
-                if (result == nil) {
-                    print("Error: \(db.lastErrorMessage())")
-                    OTCData.synching = false
-                    return
-                }
-                while result.next() {
+                let newWorkSessionsResult = db.executeQuery(needsPushQuery, withArgumentsInArray: [userId])
+                if (newWorkSessionsResult == nil) { print("Error: \(db.lastErrorMessage())"); fail = true; return; }
+                while newWorkSessionsResult.next() {
                     var workSession = [
-                        "startTime" :  NSDate(timeIntervalSince1970: Double(result.longForColumn("startTime"))),
-                        "duration" : result.doubleForColumn("duration"),
-                        "adjustment": result.doubleForColumn("adjustment"),
+                        "startTime" :  NSDate(timeIntervalSince1970: Double(newWorkSessionsResult.longForColumn("startTime"))),
+                        "duration" : newWorkSessionsResult.doubleForColumn("duration"),
+                        "adjustment": newWorkSessionsResult.doubleForColumn("adjustment"),
                     ]
-                    if result.columnIsNull("activityParseId") {
-                        workSession["activityName"] = result.stringForColumn("activityName")
+                    if newWorkSessionsResult.columnIsNull("activityParseId") {
+                        workSession["activityName"] = newWorkSessionsResult.stringForColumn("activityName")
                     }
                     else {
-                        workSession["activityId"] = result.stringForColumn("activityParseId")
+                        workSession["activityId"] = newWorkSessionsResult.stringForColumn("activityParseId")
                     }
                     newWorkSessions.append(workSession)
                 }
-                
-                var parameters = Dictionary<NSObject, AnyObject>()
-                parameters["newWorkSessions"] = newWorkSessions
-                parameters["lastSyncDate"] = lastSyncDate
-                
-                PFCloud.callFunctionInBackground("sync", withParameters: parameters).continueWithSuccessBlock {
-                    (task: BFTask!) -> AnyObject! in
-                    print(task.result)
-                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
-                        var syncResult = task.result as! Dictionary<String, AnyObject>
-                        
-                        // We're being handed proper new Parse objects, so go ahead and delete any provisional data
-                        db.executeUpdate("DELETE FROM activity WHERE parseid IS NULL", withArgumentsInArray: nil)
-                        db.executeUpdate("DELETE FROM worksession WHERE parseid IS NULL", withArgumentsInArray: nil)
-                        
-                        let activities = syncResult["activities"] as! Array<Dictionary<String,AnyObject>>
-                        for activity in activities {
-                            print("processing \(activity["id"])")
-                            let parseId = activity["id"]!
-                            let lastTime = Int(activity["last"]!.timeIntervalSince1970)
-                            let totalTime = activity["total"]!
-                            let name = activity["name"]!
-                            
-                            let existingActivityQuery = "SELECT id FROM activity WHERE parseid = ?"
-                            let queryResult = db.executeQuery(existingActivityQuery, withArgumentsInArray: [parseId])
-                            if (queryResult == nil) {
-                                print("Error: \(db.lastErrorMessage())")
-                                OTCData.synching = false
-                                return
-                            }
-                            if queryResult.next() {
-                                let updateActivityQuery = "UPDATE activity SET name = ?, lastTime = ?, totalTime = ? WHERE parseid = ?"
-                                if !db.executeUpdate(updateActivityQuery, withArgumentsInArray: [name, lastTime, totalTime, parseId]) {
-                                    print("Error: \(db.lastErrorMessage())")
-                                    OTCData.synching = false
-                                    return
-                                }
-                                print("updated activity: \(name)")
-                            }
-                            else {
-                                let newActivityQuery = "INSERT INTO activity (parseid, userid, name, lastTime, totalTime) VALUES (?, ?, ?, ?, ?)"
-                                if !db.executeUpdate(newActivityQuery, withArgumentsInArray: [parseId, userId, name, lastTime, totalTime]) {
-                                    print("Error: \(db.lastErrorMessage())")
-                                    OTCData.synching = false
-                                    return
-                                }
-                                print("new activity: \(name)")
-                            }
-                        }
-                        
-                        let worksessions = syncResult["workSessions"] as! Array<Dictionary<String,AnyObject>>
-                        for worksession in worksessions {
-                            let newWorkSessionQuery = "INSERT INTO worksession (parseid, userid, activityid, startTime, duration, adjustment) "
-                              + "VALUES (?, ?, (SELECT id FROM activity WHERE parseid = ?), ?, ?, ?)"
-                            if !db.executeUpdate(
-                                newWorkSessionQuery,
-                                withArgumentsInArray: [worksession["id"]!, userId, worksession["activityId"]!,
-                                  Int(worksession["startTime"]!.timeIntervalSince1970), worksession["duration"]!, worksession["adjustment"]!])
-                            {
-                                print("Error: \(db.lastErrorMessage())")
-                                OTCData.synching = false
-                                return
-                            }
-                            print("inserted new worksession: \(worksession["startTime"]!)")
-                        }
-
-                        
-                    }
-                    OTCData.synching = false
-                    return nil;
-                }.continueWithBlock { (task: BFTask!) -> AnyObject! in
-                    if (task.error != nil) { print(task.error) }
-                    return nil
-                }
-                //dispatch_async(dispatch_get_main_queue()) { () -> Void in
             })
+            
+            if (fail) { dispatch_async(dispatch_get_main_queue()) { () -> Void in OTCData.synching = false }; return; }
+                
+            var parameters = Dictionary<NSObject, AnyObject>()
+            parameters["newWorkSessions"] = newWorkSessions
+            parameters["lastSyncDate"] = lastSyncDate
+            
+            PFCloud.callFunctionInBackground("sync", withParameters: parameters).continueWithSuccessBlock {
+                (task: BFTask!) -> AnyObject! in
+                print(task.result)
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
+                    let syncResult = task.result as! Dictionary<String, AnyObject>
+                    if (!_saveSyncResults(userId, syncResult: syncResult)) {
+                        dispatch_async(dispatch_get_main_queue()) { () -> Void in OTCData.synching = false }
+                    }
+                    else {
+                        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+                            // Do some notification that sync has succeeded
+                            OTCData.synching = false
+                        }
+                    }
+                }
+                return nil;
+            }.continueWithBlock { (task: BFTask!) -> AnyObject! in
+                if (task.error != nil) { print(task.error) }
+                dispatch_async(dispatch_get_main_queue()) { () -> Void in OTCData.synching = false }
+                return nil
+            }
         }
     }
 
+    private static func _saveSyncResults(userId: String, syncResult: Dictionary<String, AnyObject>) -> Bool {
+        var fail = false
+        
+        dbQueue?.inTransaction({ (db, rollback) -> Void in
+            // We're being handed proper new Parse objects, so go ahead and delete any provisional data
+            if !db.executeStatements("DELETE FROM activity WHERE parseid IS NULL;") {
+                print("Error: \(db.lastErrorMessage())"); fail = true; rollback.initialize(true); return;
+            }
+            if !db.executeStatements("DELETE FROM worksession WHERE parseid IS NULL;") {
+                print("Error: \(db.lastErrorMessage())"); fail = true; rollback.initialize(true); return;
+            }
+            
+            // Now insert or update activites
+            let activities = syncResult["activities"] as! Array<Dictionary<String,AnyObject>>
+            for activity in activities {
+                let parseId = activity["id"]!
+                let lastTime = Int(activity["last"]!.timeIntervalSince1970)
+                let totalTime = activity["total"]!
+                let name = activity["name"]!
+                
+                let existingActivityQuery = "SELECT id FROM activity WHERE parseid = ?"
+                let queryResult = db.executeQuery(existingActivityQuery, withArgumentsInArray: [parseId])
+                if (queryResult == nil) { print("Error: \(db.lastErrorMessage())"); fail = true; rollback.initialize(true); return; }
+                if queryResult.next() {
+                    let updateActivityQuery = "UPDATE activity SET name = ?, lastTime = ?, totalTime = ? WHERE parseid = ?"
+                    if !db.executeUpdate(updateActivityQuery, withArgumentsInArray: [name, lastTime, totalTime, parseId]) {
+                        print("Error: \(db.lastErrorMessage())"); fail = true; rollback.initialize(true); return;
+                    }
+                    print("updated activity: \(name)")
+                }
+                else {
+                    let newActivityQuery = "INSERT INTO activity (parseid, userid, name, lastTime, totalTime) VALUES (?, ?, ?, ?, ?)"
+                    if !db.executeUpdate(newActivityQuery, withArgumentsInArray: [parseId, userId, name, lastTime, totalTime]) {
+                        print("Error: \(db.lastErrorMessage())"); fail = true; rollback.initialize(true); return;
+                    }
+                    print("new activity: \(name)")
+                }
+            }
+            
+            // Now insert the new work sessions
+            let worksessions = syncResult["workSessions"] as! Array<Dictionary<String,AnyObject>>
+            for worksession in worksessions {
+                let newWorkSessionQuery = "INSERT INTO worksession (parseid, userid, activityid, startTime, duration, adjustment) "
+                    + "VALUES (?, ?, (SELECT id FROM activity WHERE parseid = ?), ?, ?, ?)"
+                if !db.executeUpdate(
+                    newWorkSessionQuery,
+                    withArgumentsInArray: [worksession["id"]!, userId, worksession["activityId"]!,
+                        Int(worksession["startTime"]!.timeIntervalSince1970), worksession["duration"]!, worksession["adjustment"]!])
+                {
+                    print("Error: \(db.lastErrorMessage())"); fail = true; rollback.initialize(true); return;
+                }
+                print("inserted new worksession: \(worksession["startTime"]!)")
+            }
+            
+            // Lastly, update the lastSyncDate record for the user
+            let userQuery = "INSERT OR REPLACE INTO user (parseid, lastSyncDate) VALUES (?, ?)"
+            let newLastSyncDate = syncResult["newLastSyncDate"] as! NSDate
+            if !db.executeUpdate(userQuery, withArgumentsInArray: [userId ?? "", newLastSyncDate]) {
+                print("Error: \(db.lastErrorMessage())"); fail = true; rollback.initialize(true); return;
+            }
+            
+        })
+        
+        return fail
+    }
+    
+    
 }
