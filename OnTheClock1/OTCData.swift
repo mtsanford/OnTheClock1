@@ -165,6 +165,41 @@ class OTCData {
         
     }
     
+    
+    // Get the most recent activites, in decending order of lastTime
+    static func getRecentActivites(cb: ([ActivityInfo]) -> Void ) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
+            var result = [ActivityInfo]()
+            OTCData.dbQueue?.inDatabase({ (db: FMDatabase!) -> Void in
+                let userParseId = PFUser.currentUser()?.objectId ?? ""
+                let activityQuery =
+                    "SELECT a.name AS name, a.lastTime AS lastTime, a.totalTime AS totalTime "
+                  + "FROM activity AS a JOIN user AS u ON a.userid = u.parseid "
+                  + "WHERE u.parseid = ? "
+                  + "ORDER BY lastTime DESC "
+                  + "LIMIT 100"
+                
+                let activityResult = db.executeQuery(activityQuery, withArgumentsInArray: [userParseId])
+                if (activityResult == nil) {
+                    print("Error: \(db.lastErrorMessage())");
+                    return;
+                }
+                while activityResult.next() {
+                    let activityInfo = ActivityInfo(
+                        lastTime: NSDate(timeIntervalSince1970: activityResult.doubleForColumn("lastTime")),
+                        totalTime: activityResult.doubleForColumn("totalTime"),
+                        name: activityResult.stringForColumn("name")
+                    )
+                    result.append(activityInfo)
+                }
+            })
+            dispatch_async(dispatch_get_main_queue()) { () -> Void in
+                return cb(result)
+            }
+        }
+    }
+    
+    
     // Asynchronously sync to parse.   Call on main thread!  Uses NSNotification if data has changed.
     static func syncToParse() {
         // synching only makes sense for non-anonymous user

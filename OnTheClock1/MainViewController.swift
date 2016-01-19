@@ -23,7 +23,7 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
     let historyImage: UIImage! = UIImage(named: "history")?.imageWithRenderingMode(.AlwaysTemplate)
     
     var activityString: String?
-    var recentActivities: [Activity]?
+    var recentActivities: [ActivityInfo]?
     var popupData = [Dictionary<String, AnyObject>]()
     var anonUser: PFUser?
     
@@ -36,23 +36,18 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
         activityTextField.delegate = self
         activityTextField.mDelegate = self
         
-        /*
-        let paddingView = UIView(frame: CGRectMake(0,0,5,self.activityTextField.frame.height))
-        activityTextField.leftView = paddingView
-        activityTextField.leftViewMode = UITextFieldViewMode.Always
-        */
-        
         userButton.setImage(userImage, forState: .Normal)
         historyButton.setImage(historyImage, forState: .Normal)
         
         updateRecentItems(true)
+        OTCData.syncToParse()
 
         // UIControl.addTarget will get us change events, but only UI initialted.   The Subclass may programatically change the text too,
         // so we'll observe the text property using the NSKeyValueObserving protocol
         activityTextField.addTarget(self, action: "activityTextFieldChanged", forControlEvents: [UIControlEvents.EditingChanged])
         activityTextField.addObserver(self, forKeyPath: "text", options: .New, context: nil)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "dataUpdated", name: OTCData.updateNotificationKey, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "dataUpdatedNotification", name: OTCData.updateNotificationKey, object: nil)
     }
     
     
@@ -70,37 +65,31 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
         }
     }
     
-    func dataUpdated() {
-        print("dataUpdated notification received.   Please commence carpet bombing immediately!");
+    func dataUpdatedNotification() {
+        updateRecentItems(true);
     }
     
     func updateRecentItems(setActivityText: Bool) {
-        DataSync.sharedInstance.getRecentActivities().continueWithExecutor(BFExecutor.mainThreadExecutor(), withBlock: {
-            (task: BFTask!) -> BFTask! in
-            self.recentActivities = task.result as? [Activity]
+        OTCData.getRecentActivites { (info: [ActivityInfo]) -> Void in
+            self.recentActivities = info
             self.updatePopupData()
             if (setActivityText) { self.setDefaultActivityText() }
-            return nil
-        })
+        }
     }
     
     func updatePopupData() {
         popupData.removeAll()
-        if self.recentActivities != nil && self.recentActivities!.count > 0 {
-            for (_, activity) in self.recentActivities!.enumerate() {
-                let popupItem = [ "DisplayText" : activity.name, "DisplaySubText" : Utils.agoStringFromDate(activity.last) ]
+        if self.recentActivities != nil {
+            for activity in recentActivities! {
+                let popupItem = [ "DisplayText" : activity.name, "DisplaySubText" : Utils.agoStringFromDate(activity.lastTime) ]
                 self.popupData.append(popupItem)
             }
         }
     }
     
     func setDefaultActivityText() {
-        if self.activityTextField.text?.characters.count == 0 {
-            var activityString: String = ""
-            if self.recentActivities != nil && self.recentActivities!.count > 0 {
-                activityString = self.recentActivities![0].name
-            }
-            self.activityTextField.text = activityString
+        if activityTextField.text?.characters.count == 0 {
+            self.activityTextField.text = (recentActivities != nil && recentActivities!.count > 0) ? recentActivities![0].name : ""
         }
     }
     
@@ -130,26 +119,9 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
     func workSessionFinished(workSessionInfo: WorkSessionInfo) {
         
         OTCData.addWorkSession(workSessionInfo)
-        
+        updateRecentItems(true)
         OTCData.syncToParse()
         return;
-        
-        /*
-        DataSync.sharedInstance.newWorkSession(activityName, start: startTime, duration: duration).continueWithSuccessBlock {
-            (task: BFTask!) -> AnyObject! in
-            // Only sync to parse if the user is logged in
-            if (!PFAnonymousUtils.isLinkedWithUser(PFUser.currentUser())) {
-                return DataSync.sharedInstance.syncToParse()
-            }
-            else {
-                return nil
-            }
-        }.continueWithBlock {
-            (task: BFTask!) -> AnyObject! in
-            self.updateRecentItems(true)
-            return nil
-        }
-        */
     }
     
     
