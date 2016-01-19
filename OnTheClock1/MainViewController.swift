@@ -51,6 +51,8 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
         // so we'll observe the text property using the NSKeyValueObserving protocol
         activityTextField.addTarget(self, action: "activityTextFieldChanged", forControlEvents: [UIControlEvents.EditingChanged])
         activityTextField.addObserver(self, forKeyPath: "text", options: .New, context: nil)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "dataUpdated", name: OTCData.updateNotificationKey, object: nil)
     }
     
     
@@ -66,6 +68,10 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
         if keyPath! == "text" {
             activityTextFieldChanged()
         }
+    }
+    
+    func dataUpdated() {
+        print("dataUpdated notification received.   Please commence carpet bombing immediately!");
     }
     
     func updateRecentItems(setActivityText: Bool) {

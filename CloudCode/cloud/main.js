@@ -16,20 +16,30 @@ var log = {
 	theText: ""
 }
 
-/*
-	// Add new work sessions, then return to the client all WorkSessions and Activities
-	// with a more recent updatedAt time than the client requested.
-*/
+// Add new work sessions, then return to the client all WorkSessions and Activities
+// with a more recent updatedAt time than the client requested.
 Parse.Cloud.define("sync", function(request, response) {
 	
-	var finalResult = { workSessions: [], activities: [], newLastSyncDate: Date() },
+	var finalResult = { workSessions: [], activities: [], newLastSyncDate: Date(), dataStale: false },
 	    user = request.user,
 	    lastSyncDate = request.params.lastSyncDate,
-	    newLastSyncDate = lastSyncDate,
+	    newLastSyncDate = new Date(lastSyncDate.getTime()),
 	    wsQuery = new Parse.Query(WorkSession),
 	    aQuery = new Parse.Query(Activity);
 
-	addNewWorkSessions(request.params.newWorkSessions, user).then( function() {
+	// See if there have been changes since the client last synced.   Updates
+	// to WorkSessions are not currently allowed, so just need to check Activity.
+	mostRecentChangeQuery = new Parse.Query(Activity);
+	mostRecentChangeQuery.equalTo("user", user);
+	mostRecentChangeQuery.descending("updatedAt");
+	mostRecentChangeQuery.limit(1);
+	mostRecentChangeQuery.find().then(function(results) {
+		if (results.length > 0 && results[0].updatedAt.getTime() > lastSyncDate.getTime()) {
+			finalResult.dataStale = true;
+			log.add("More recent update found: " + results[0].get("name") + " " + results[0].updatedAt);
+		}
+		return addNewWorkSessions(request.params.newWorkSessions, user);
+	}).then( function() {
 		wsQuery.equalTo("user", user);
 		wsQuery.greaterThan("updatedAt", lastSyncDate);
 		return wsQuery.find();

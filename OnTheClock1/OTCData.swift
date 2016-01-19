@@ -27,6 +27,8 @@ class OTCData {
     static var dbQueue: FMDatabaseQueue?
     static var synching = false
     
+    static let updateNotificationKey = "me.marksanford.otcdata.updated"
+    
     // synchronous
     static func initDatabase() {
         var sql_stmt: String!
@@ -170,7 +172,7 @@ class OTCData {
 
         let userId = PFUser.currentUser()!.objectId!
         
-        if (OTCData.synching == true) { return }
+        if (OTCData.synching == true) { print("already synching"); return }
         OTCData.synching = true;
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
@@ -224,8 +226,8 @@ class OTCData {
                         let saveSuccess = _saveSyncResults(userId, syncResult: syncResult)
                         dispatch_async(dispatch_get_main_queue()) { () -> Void in
                             OTCData.synching = false
-                            if (saveSuccess) {
-                                // Do some notification that sync has succeeded
+                            if (saveSuccess && syncResult["dataStale"] as! Bool) {
+                                NSNotificationCenter.defaultCenter().postNotificationName(OTCData.updateNotificationKey, object: nil)
                             }
                         }
                     }
@@ -303,7 +305,7 @@ class OTCData {
             
         })
         
-        return fail
+        return !fail
     }
     
     
