@@ -50,8 +50,7 @@ class OTCData {
             // (this is different behavior than other two tables)
             sql_stmt =
                   "CREATE TABLE IF NOT EXISTS user ("
-                + "  id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "  parseid TEXT UNIQUE NOT NULL, "
+                + "  parseid TEXT PRIMARY KEY, "
                 + "  lastSyncDate INTEGER "
                 + ")"
             
@@ -108,6 +107,29 @@ class OTCData {
             
         })
         
+    }
+    
+    //
+    //
+    static func convertAnonymousData(cb: (Bool -> Void)?) {
+        if PFUser.currentUser()?.objectId == nil { cb!(false); return }
+        
+        let userId = PFUser.currentUser()!.objectId!
+        var success = true;
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
+            dbQueue?.inTransaction({ (db, rollback) -> Void in
+                let updateActivitesQuery = "UPDATE activity SET userid = ? WHERE userid = ''"
+                if !db.executeUpdate(updateActivitesQuery, withArgumentsInArray: [userId]) {
+                    print("Error: \(db.lastErrorMessage())"); rollback.initialize(true); success = false; return
+                }
+                let updateWorkSessionsQuery = "UPDATE worksession SET userid = ? WHERE userid = ''"
+                if !db.executeUpdate(updateWorkSessionsQuery, withArgumentsInArray: [userId]) {
+                    print("Error: \(db.lastErrorMessage())"); rollback.initialize(true); success = false; return
+                }
+            })
+            if (cb != nil) { dispatch_async(dispatch_get_main_queue()) { () -> Void in return cb!(success) } }
+        }
     }
     
     //
@@ -172,12 +194,7 @@ class OTCData {
             var result = [ActivityInfo]()
             OTCData.dbQueue?.inDatabase({ (db: FMDatabase!) -> Void in
                 let userParseId = PFUser.currentUser()?.objectId ?? ""
-                let activityQuery =
-                    "SELECT a.name AS name, a.lastTime AS lastTime, a.totalTime AS totalTime "
-                  + "FROM activity AS a JOIN user AS u ON a.userid = u.parseid "
-                  + "WHERE u.parseid = ? "
-                  + "ORDER BY lastTime DESC "
-                  + "LIMIT 100"
+                let activityQuery = "SELECT * FROM activity WHERE userid = ? ORDER BY lastTime DESC LIMIT 200"
                 
                 let activityResult = db.executeQuery(activityQuery, withArgumentsInArray: [userParseId])
                 if (activityResult == nil) {
@@ -200,7 +217,7 @@ class OTCData {
     }
     
     
-    // Asynchronously sync to parse.   Call on main thread!  Uses NSNotification if data has changed.
+    // Asynchronously sync to parse.   Call on main thread.  Uses NSNotification if data has changed.
     static func syncToParse() {
         // synching only makes sense for non-anonymous user
         if (PFUser.currentUser()?.objectId == nil) { return }
@@ -333,7 +350,7 @@ class OTCData {
             
             // Lastly, update the lastSyncDate record for the user
             let userQuery = "INSERT OR REPLACE INTO user (parseid, lastSyncDate) VALUES (?, ?)"
-            let newLastSyncDate = syncResult["newLastSyncDate"] as! NSDate
+            let newLastSyncDate = Int((syncResult["newLastSyncDate"] as! NSDate).timeIntervalSince1970)
             if !db.executeUpdate(userQuery, withArgumentsInArray: [userId, newLastSyncDate]) {
                 print("Error: \(db.lastErrorMessage())"); fail = true; rollback.initialize(true); return;
             }

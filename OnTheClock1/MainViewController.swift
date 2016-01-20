@@ -216,14 +216,11 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
         print("Current user after login: \(PFUser.currentUser()?.objectId)")
         print(PFUser.currentUser())
 
-        
-        DataSync.sharedInstance.convertAnonymousData(self.anonUser!).continueWithSuccessBlock {
-            (task: BFTask!) -> AnyObject! in
-            return DataSync.sharedInstance.syncToParse()
-        }.continueWithSuccessBlock {
-            (task: BFTask!) -> AnyObject! in
+        // TODO Should we query user if they want to convert anon data?
+        OTCData.convertAnonymousData { (success: Bool) -> Void in
+            print("convertAnonymousData \(success)")
             self.updateRecentItems(true)
-            return nil
+            OTCData.syncToParse()
         }
     }
     
@@ -242,10 +239,10 @@ class MainViewController: UIViewController, PFLogInViewControllerDelegate, PFSig
         print("signup success")
         setUserButtonImage()
         self.dismissViewControllerAnimated(true, completion: nil)
-        DataSync.sharedInstance.syncToParse().continueWithSuccessBlock {
-            (task: BFTask!) -> AnyObject! in
+
+        OTCData.convertAnonymousData { (success: Bool) -> Void in
             self.updateRecentItems(true)
-            return nil
+            OTCData.syncToParse()
         }
     }
     
