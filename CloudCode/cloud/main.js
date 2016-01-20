@@ -17,7 +17,9 @@ var log = {
 }
 
 // Add new work sessions, then return to the client all WorkSessions and Activities
-// with a more recent updatedAt time than the client requested.
+// with a more recent updatedAt time than the client requested.   Note that these
+// returned objects INCLUDE the new work sessions (with a proper objectId), and 
+// associated new/existing Activity objects.
 Parse.Cloud.define("sync", function(request, response) {
 	
 	var finalResult = { workSessions: [], activities: [], newLastSyncDate: Date(), dataStale: false },
@@ -26,6 +28,9 @@ Parse.Cloud.define("sync", function(request, response) {
 	    newLastSyncDate = new Date(lastSyncDate.getTime()),
 	    wsQuery = new Parse.Query(WorkSession),
 	    aQuery = new Parse.Query(Activity);
+
+	// TODO: Need to handle the case where the sync is just too big!  Too many new worksessions from client,
+	// or too many updates from parse
 
 	// See if there have been changes since the client last synced.   Updates
 	// to WorkSessions are not currently allowed, so just need to check Activity.
@@ -42,6 +47,7 @@ Parse.Cloud.define("sync", function(request, response) {
 	}).then( function() {
 		wsQuery.equalTo("user", user);
 		wsQuery.greaterThan("updatedAt", lastSyncDate);
+		wsQuery.limit(1000);
 		return wsQuery.find();
 	}).then(function(results) {
 		_.each(results, function(result) {
@@ -59,6 +65,7 @@ Parse.Cloud.define("sync", function(request, response) {
 		});
 		aQuery.equalTo("user", user);
 		aQuery.greaterThan("updatedAt", lastSyncDate);
+		aQuery.limit(1000);
 		return aQuery.find();
 	}).then(function(results) {
 		_.each(results, function(result) {
