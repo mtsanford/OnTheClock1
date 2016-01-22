@@ -19,16 +19,12 @@ class MyLoginViewController: PFLogInViewController {
         
         let logo = UILabel()
         
-        logo.text = "Small Steps"
+        logo.text = "Stepnow"
         logo.font = UIFont.systemFontOfSize(36)
-        logo.textColor = UIColor.OTCDark()
         self.logInView?.logo = logo
         self.fields = [PFLogInFields.Default, PFLogInFields.Facebook, PFLogInFields.Twitter]
         
         self.logInView?.dismissButton?.setImage(cancelImage, forState: .Normal)
-        self.logInView?.dismissButton?.tintColor = UIColor.OTCDark()
-        
-        self.logInView?.tintColor = UIColor.OTCDark()
         
         self.signUpController = MySignUpViewController()
         

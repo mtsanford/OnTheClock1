@@ -95,7 +95,7 @@
 		969947FB1C1753A70030DDE0 /* HistoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTableViewController.swift; sourceTree = "<group>"; };
 		969C9C771C41A9FE00B55EAA /* WorkSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkSessionViewController.swift; sourceTree = "<group>"; };
 		969C9C791C41C06000B55EAA /* MonoFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonoFont.swift; sourceTree = "<group>"; };
-		96C2490A1B85660F00AF01BE /* OnTheClock1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheClock1.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		96C2490A1B85660F00AF01BE /* NowStep.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NowStep.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		96C2490D1B85660F00AF01BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		96C2490F1B85660F00AF01BE /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		96C249121B85660F00AF01BE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -221,7 +221,7 @@
 		96C2490B1B85660F00AF01BE /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				96C2490A1B85660F00AF01BE /* OnTheClock1.app */,
+				96C2490A1B85660F00AF01BE /* NowStep.app */,
 				96C2491E1B85660F00AF01BE /* OnTheClock1Tests.xctest */,
 			);
 			name = Products;
@@ -294,7 +294,7 @@
 			);
 			name = OnTheClock1;
 			productName = OnTheClock1;
-			productReference = 96C2490A1B85660F00AF01BE /* OnTheClock1.app */;
+			productReference = 96C2490A1B85660F00AF01BE /* NowStep.app */;
 			productType = "com.apple.product-type.application";
 		};
 		96C2491D1B85660F00AF01BE /* OnTheClock1Tests */ = {
@@ -548,7 +548,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.marksanford.OnTheClock1;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = NowStep;
 				PROVISIONING_PROFILE = "";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "OnTheClock1/OnTheClock1-Bridging-Header.h";
@@ -572,7 +572,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.marksanford.OnTheClock1;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = NowStep;
 				PROVISIONING_PROFILE = "";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "OnTheClock1/OnTheClock1-Bridging-Header.h";

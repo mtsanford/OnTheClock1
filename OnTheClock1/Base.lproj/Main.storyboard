@@ -81,7 +81,7 @@
                                     <constraint firstAttribute="width" constant="64" id="nns-26-6Hj"/>
                                 </constraints>
                                 <inset key="contentEdgeInsets" minX="4" minY="4" maxX="4" maxY="4"/>
-                                <state key="normal" title="Start" backgroundImage="circle"/>
+                                <state key="normal" title="Go!" backgroundImage="circle"/>
                                 <connections>
                                     <segue destination="vXb-4x-4SI" kind="show" identifier="workSessionSegue" id="A18-IV-xqg"/>
                                 </connections>

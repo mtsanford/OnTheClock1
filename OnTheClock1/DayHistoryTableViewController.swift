@@ -45,7 +45,6 @@ class DayHistoryTableViewController: HistoryTableViewController {
         detailInnerButton = UIButton()
         detailInnerButton.setImage(offImage, forState: .Normal)
         detailInnerButton.setImage(onImage, forState: .Selected)
-        detailInnerButton.tintColor = UIColor.OTCDark()
         detailInnerButton.frame = CGRect(x: 0, y: 0, width: 35, height: 33)
         detailButton.customView = detailInnerButton
         detailInnerButton.addTarget(self, action: "detailPressed:", forControlEvents: .TouchUpInside)

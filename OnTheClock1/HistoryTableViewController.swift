@@ -36,7 +36,6 @@ class HistoryTableViewController: UITableViewController {
         
         spinner = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
         spinner.startAnimating()
-        spinner.color = UIColor.OTCDark()
         spinner.frame = CGRectMake(0, 0, 320, 44)
         
         startLoadingMore()
@@ -105,9 +104,6 @@ class HistoryTableViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        if let headerView = view as? UITableViewHeaderFooterView {
-            headerView.textLabel?.textColor = UIColor.OTCDark()
-        }
         view.tintColor = UIColor.OTCLightGray()
     }
     
